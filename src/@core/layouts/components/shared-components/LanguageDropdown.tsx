@@ -12,6 +12,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
+import { useRouter } from 'next/router'
 
 interface Props {
   settings: Settings
@@ -21,9 +22,11 @@ interface Props {
 const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   // ** Hook
   const { i18n } = useTranslation()
+  const router = useRouter()
 
-  const handleLangItemClick = (lang: 'en' | 'fr' | 'ar') => {
+  const handleLangItemClick = (lang: 'uz' | 'ru') => {
     i18n.changeLanguage(lang)
+    router.push(router.asPath, router.asPath, { locale: lang })
   }
 
   // ** Change html `lang` attribute when changing locale
@@ -38,35 +41,24 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
       menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4.25, minWidth: 130 } } }}
       options={[
         {
-          text: 'English',
+          text: "O'zbekcha",
           menuItemProps: {
             sx: { py: 2 },
-            selected: i18n.language === 'en',
+            selected: i18n.language === 'uz' || i18n.language === '',
             onClick: () => {
-              handleLangItemClick('en')
+              handleLangItemClick('uz')
               saveSettings({ ...settings, direction: 'ltr' })
             }
           }
         },
         {
-          text: 'French',
+          text: 'Русский',
           menuItemProps: {
             sx: { py: 2 },
-            selected: i18n.language === 'fr',
+            selected: i18n.language === 'ru',
             onClick: () => {
-              handleLangItemClick('fr')
+              handleLangItemClick('ru')
               saveSettings({ ...settings, direction: 'ltr' })
-            }
-          }
-        },
-        {
-          text: 'Arabic',
-          menuItemProps: {
-            sx: { py: 2 },
-            selected: i18n.language === 'ar',
-            onClick: () => {
-              handleLangItemClick('ar')
-              saveSettings({ ...settings, direction: 'rtl' })
             }
           }
         }
