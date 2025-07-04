@@ -14,12 +14,12 @@ i18n
     },
     fallbackLng: 'uz',
     debug: false,
-    keySeparator: false,
+    keySeparator: '.',
     react: {
       useSuspense: false
     },
     detection: {
-      order: ['path', 'localStorage', 'navigator'],
+      order: ['localStorage', 'navigator'],
       lookupFromPathIndex: 0,
       caches: ['localStorage']
     },

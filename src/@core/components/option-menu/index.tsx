@@ -47,7 +47,7 @@ const MenuItemWrapper = ({ children, option }: { children: ReactNode; option: Op
 
 const OptionsMenu = (props: OptionsMenuType) => {
   // ** Props
-  const { icon, options, menuProps, iconProps, leftAlignMenu, iconButtonProps } = props
+  const { icon, options, menuProps, iconProps, leftAlignMenu, iconButtonProps, customTrigger } = props
 
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -66,8 +66,8 @@ const OptionsMenu = (props: OptionsMenuType) => {
 
   return (
     <>
-      <IconButton aria-haspopup='true' onClick={handleClick} {...iconButtonProps}>
-        {icon ? icon : <Icon icon='tabler:dots-vertical' {...iconProps} />}
+      <IconButton aria-haspopup='true' onClick={handleClick} {...iconButtonProps} sx={{ borderRadius: '6px' }}>
+        {customTrigger ? customTrigger : icon ? icon : <Icon icon='tabler:dots-vertical' {...iconProps} />}
       </IconButton>
       <Menu
         keepMounted

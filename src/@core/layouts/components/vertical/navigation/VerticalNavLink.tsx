@@ -29,6 +29,7 @@ import CanViewNavLink from 'src/layouts/components/acl/CanViewNavLink'
 // ** Util Imports
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { handleURLQueries } from 'src/@core/layouts/utils'
+import Icon from 'src/@core/components/icon/icon'
 
 interface Props {
   parent?: boolean
@@ -158,7 +159,6 @@ const VerticalNavLink = ({
           >
             <UserIcon icon={icon as string} />
           </ListItemIcon>
-
           <MenuItemTextMetaWrapper
             sx={{
               ...(isSubToSub ? { ml: 2 } : {}),
@@ -181,6 +181,13 @@ const VerticalNavLink = ({
               />
             ) : null}
           </MenuItemTextMetaWrapper>
+          {/* <Icon
+            svg='/icons/chevron-down.svg'
+            width={28}
+            height={28}
+            color='#fff'
+            styles={{ transform: 'rotate(270deg)' }}
+          /> */}
         </MenuNavLink>
       </ListItem>
     </CanViewNavLink>

@@ -1,5 +1,7 @@
 // ** Type Import
+import { green } from '@mui/material/colors'
 import { OwnerStateThemeType } from './'
+import { fontSize } from '@mui/system'
 
 const input = () => {
   return {
@@ -9,6 +11,9 @@ const input = () => {
           '&.MuiInputLabel-shrink': {
             transform: 'translate(14px, -8px) scale(0.75)'
           }
+        },
+        filled: {
+          fontSize: 24
         }
       }
     },
@@ -23,7 +28,8 @@ const input = () => {
           },
           '&.Mui-disabled:before': {
             borderBottomStyle: 'solid'
-          }
+          },
+          height: 44
         })
       }
     },
@@ -43,7 +49,8 @@ const input = () => {
           },
           '&:hover:not(.Mui-disabled):before': {
             borderBottom: `1px solid rgba(${theme.palette.customColors.main}, 0.28)`
-          }
+          },
+          height: 44
         })
       }
     },
@@ -67,7 +74,8 @@ const input = () => {
           },
           '&.Mui-focused': {
             boxShadow: theme.shadows[2]
-          }
+          },
+          height: 44
         })
       }
     },

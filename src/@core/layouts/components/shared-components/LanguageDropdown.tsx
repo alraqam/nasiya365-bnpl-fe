@@ -1,5 +1,5 @@
 // ** React Import
-import { useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -17,9 +17,10 @@ import { useRouter } from 'next/router'
 interface Props {
   settings: Settings
   saveSettings: (values: Settings) => void
+  trigger?: ReactNode
 }
 
-const LanguageDropdown = ({ settings, saveSettings }: Props) => {
+const LanguageDropdown = ({ settings, saveSettings, trigger }: Props) => {
   // ** Hook
   const { i18n } = useTranslation()
   const router = useRouter()
@@ -38,6 +39,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     <OptionsMenu
       iconButtonProps={{ color: 'inherit' }}
       icon={<Icon fontSize='1.625rem' icon='tabler:language' />}
+      customTrigger={trigger}
       menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4.25, minWidth: 130 } } }}
       options={[
         {

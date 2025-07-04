@@ -22,3 +22,13 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+
+.page-title {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7367f0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

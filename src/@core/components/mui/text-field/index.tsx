@@ -4,6 +4,7 @@ import { forwardRef } from 'react'
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
+import Icon from '../../icon/icon'
 
 const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => ({
   alignItems: 'flex-start',
@@ -11,8 +12,8 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => ({
     transform: 'none',
     lineHeight: 1.154,
     position: 'relative',
-    marginBottom: theme.spacing(1),
-    fontSize: theme.typography.body2.fontSize,
+    marginBottom: theme.spacing(2),
+    fontSize: 14,
     color: `${theme.palette.text.primary} !important`
   },
   '& .MuiInputBase-root': {
@@ -157,7 +158,22 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => ({
 
 const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
   // ** Props
-  const { size = 'small', InputLabelProps, ...rest } = props
+  const { size = 'small', InputLabelProps, sx, ...rest } = props
+
+  const selectStyles = {
+    '& .MuiInputBase-root': {
+      border: 'none',
+      backgroundColor: '#fff !important',
+      boxShadow: '0px 1px 8px 0px #53505E14 !important',
+      color: '#000 !important'
+    },
+    '& .MuiInputBase-input': {
+      color: '#000 !important'
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: '#000 !important'
+    }
+  }
 
   return (
     <TextFieldStyled
@@ -165,7 +181,19 @@ const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
       inputRef={ref}
       {...rest}
       variant='filled'
+      SelectProps={{
+        IconComponent: () => (
+          <Icon
+            svg='/icons/chevron-down.svg'
+            height={30}
+            width={30}
+            color='#000'
+            styles={{ marginRight: '10px', marginTop: '10px' }}
+          />
+        )
+      }}
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
+      sx={props.select ? selectStyles : sx}
     />
   )
 })

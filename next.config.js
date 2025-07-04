@@ -9,7 +9,7 @@ module.exports = {
   i18n: {
     locales: ['uz', 'ru'],
     defaultLocale: 'uz',
-    localeDetection: false
+    localeDetection: true
   },
   trailingSlash: true,
   reactStrictMode: false,

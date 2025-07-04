@@ -8,6 +8,8 @@ const Card = (skin: Skin) => {
       styleOverrides: {
         root: ({ theme }: OwnerStateThemeType) => ({
           ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` }),
+          boxShadow: '0px 1px 8px 0px #53505E14',
+          color: '#000 !important',
           '& .card-more-options': {
             marginTop: theme.spacing(-1),
             marginRight: theme.spacing(-3)

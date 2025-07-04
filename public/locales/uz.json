@@ -1,4 +1,35 @@
 {
-    "welcome": "Xush kelibsiz!",
-    "hello": "Salom, Dunyo!"
+    "welcome": "Nasiya 365-ga xush kelibsiz! 👋🏻",
+    "welcome-description": "Hisobingizga kirish uchun maʼlumotlarni kiriting.",
+    "view": "Ko'rish",
+    "balance": "Balans",
+    "login": {
+        "phone": "Telefon raqam",
+        "password": "Parol",
+        "no-phone": "Telefon raqamingizni kiriting",
+        "no-password": "Parolingizni kiriting"
+    },
+    "pages": {
+        "dashboard": "Dashboard"
+    },
+    "periods": {
+        "monthly": "Oylik",
+        "yearly": "Yillik",
+        "general": "Umumiy",
+        "custom": "Sanani tanlash"
+    },
+    "months": {
+        "january": "Yanvar",
+        "february": "Fevral",
+        "march": "Mart",
+        "april": "Aprel",
+        "may": "May",
+        "june": "Iyun",
+        "july": "Iyul",
+        "august": "Avgust",
+        "september": "Sentabr",
+        "october": "Oktabr",
+        "november": "Noyabr",
+        "december": "Dekabr"
+    }
 }

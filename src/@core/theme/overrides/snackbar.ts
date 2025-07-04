@@ -1,4 +1,5 @@
 // ** Type Imports
+import { red } from '@mui/material/colors'
 import { OwnerStateThemeType } from './'
 import { Skin } from 'src/@core/layouts/types'
 
@@ -8,7 +9,7 @@ const Snackbar = (skin: Skin) => {
       styleOverrides: {
         root: ({ theme }: OwnerStateThemeType) => ({
           ...(skin === 'bordered' && { boxShadow: 'none' }),
-          backgroundColor: `rgb(${theme.palette.customColors.main})`,
+          backgroundColor: '#fff',
           color: theme.palette.common[theme.palette.mode === 'light' ? 'white' : 'black']
         })
       }

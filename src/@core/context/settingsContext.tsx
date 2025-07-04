@@ -100,7 +100,6 @@ const restoreSettings = (): Settings | null => {
 // set settings in localStorage
 const storeSettings = (settings: Settings) => {
   const initSettings = Object.assign({}, settings)
-
   delete initSettings.appBar
   delete initSettings.footer
   delete initSettings.layout

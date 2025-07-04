@@ -22,6 +22,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { Stack } from '@mui/material'
 
 interface Props {
   settings: Settings
@@ -89,23 +90,31 @@ const UserDropdown = (props: Props) => {
 
   return (
     <Fragment>
-      <Badge
-        overlap='circular'
-        onClick={handleDropdownOpen}
-        sx={{ ml: 2, cursor: 'pointer' }}
-        badgeContent={<BadgeContentSpan />}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-      >
-        <Avatar
-          alt='John Doe'
-          src='/images/avatars/1.png'
+      <Stack direction='row' alignItems='center' gap={3} onClick={handleDropdownOpen}>
+        <Badge
+          overlap='circular'
           onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38 }}
-        />
-      </Badge>
+          sx={{ ml: 2, cursor: 'pointer' }}
+          badgeContent={<BadgeContentSpan />}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+        >
+          <Avatar
+            alt='John Doe'
+            src='/images/avatars/1.png'
+            onClick={handleDropdownOpen}
+            sx={{ width: 38, height: 38 }}
+          />
+        </Badge>
+        <Typography
+          sx={theme => ({ color: '#000', [theme.breakpoints.down('sm')]: { display: 'none' } })}
+          variant='button'
+        >
+          Sherzod Abdujalilov
+        </Typography>
+      </Stack>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
