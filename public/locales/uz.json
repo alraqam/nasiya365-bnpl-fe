@@ -3,6 +3,8 @@
     "welcome-description": "Hisobingizga kirish uchun maʼlumotlarni kiriting.",
     "view": "Ko'rish",
     "balance": "Balans",
+    "device-stats": "Qurilmalar statistikasi",
+    "income-stats": "Kirim chiqim statistikasi",
     "login": {
         "phone": "Telefon raqam",
         "password": "Parol",
@@ -10,7 +12,8 @@
         "no-password": "Parolingizni kiriting"
     },
     "pages": {
-        "dashboard": "Dashboard"
+        "dashboard": "Dashboard",
+        "clients": "Mijozlar"
     },
     "periods": {
         "monthly": "Oylik",

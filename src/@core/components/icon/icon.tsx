@@ -1,16 +1,18 @@
-import { styled } from '@mui/system'
+import { Theme, useTheme } from '@mui/material/styles'
+import { styled, SxProps } from '@mui/system'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   svg: string
   width?: number
   height?: number
-  styles?: { [key: string]: string }
+  styles?: ((theme: Theme) => { [key: string]: string }) | { [key: string]: string }
   color?: string
 }
 
 const CustomIcon = styled('div')<React.HTMLAttributes<HTMLDivElement>>(({ theme }) => ({}))
 
-const Icon = ({ svg, width = 50, height = 50, styles, color = '#666666', ...props }: Props) => {
+const Icon = ({ svg, width = 20, height = 20, styles, color = '#666666', ...props }: Props) => {
+  const theme = useTheme()
   return (
     <CustomIcon
       sx={{
@@ -23,7 +25,7 @@ const Icon = ({ svg, width = 50, height = 50, styles, color = '#666666', ...prop
         backgroundRepeat: 'no-repeat',
         WebkitMaskSize: 'contain',
         maskSize: 'contain',
-        ...(styles || {})
+        ...(typeof styles === 'function' ? styles(theme) : styles)
       }}
       onClick={props.onClick}
     ></CustomIcon>

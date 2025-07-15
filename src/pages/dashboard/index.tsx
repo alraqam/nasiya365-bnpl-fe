@@ -2,17 +2,42 @@
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 import { useTranslation } from 'next-i18next'
 import Title from 'src/@core/components/title'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import { Box, Button, MenuItem, Stack } from '@mui/material'
+import { Box, Button, MenuItem, Stack, styled } from '@mui/material'
 import { useState } from 'react'
 import { MONTHS, YEARS } from 'src/@core/utils/constants'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
-import { minWidth } from '@mui/system'
+
+const DeviceStatCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 26,
+  gap: 6
+}))
+
+const IncomeStatCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: 26
+}))
+
+const StepCard = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 40,
+  height: 40,
+  backgroundColor: 'rgba(115, 103, 240, 0.16)',
+  color: theme.palette.text.primary,
+  borderRadius: 6,
+  padding: 6
+}))
 
 const initialYear = new Date().getFullYear().toString()
 const initialMonth = MONTHS[new Date().getMonth()]
@@ -29,16 +54,14 @@ const Home = () => {
     to: new Date()
   })
 
-  console.log(custom.from)
-
   const { t } = useTranslation()
 
   return (
-    <Grid container spacing={6}>
+    <Stack flexDirection='column' spacing={6}>
       {/* Title at the top */}
-      <Grid item xs={12} alignItems='start'>
+      <Box>
         <Title title='Dashboard' />
-      </Grid>
+      </Box>
 
       {/* Container with space-between layout */}
       <Grid item xs={12}>
@@ -219,7 +242,141 @@ const Home = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+
+      <Grid item xs={12}>
+        <Grid container flexDirection={'column'}>
+          <Typography variant='h5' sx={{ color: '#000', marginBottom: 5 }}>
+            {t('device-stats')}
+          </Typography>
+          <Grid container spacing={6}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <DeviceStatCard>
+                <StepCard>1</StepCard>
+                <Typography variant='h5'>97k</Typography>
+                <Typography variant='h6'>Mijozlar</Typography>
+              </DeviceStatCard>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Grid container flexDirection={'column'}>
+          <Typography variant='h5' sx={{ color: '#000', marginBottom: 5 }}>
+            {t('income-stats')}
+          </Typography>
+          <Grid container spacing={6}>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>
+              <IncomeStatCard>
+                <Stack direction='column' gap={1}>
+                  <Typography variant='h5'>97k</Typography>
+                  <Typography variant='caption'>Mijozlar</Typography>
+                </Stack>
+                <StepCard>1</StepCard>
+              </IncomeStatCard>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Stack>
   )
 }
 

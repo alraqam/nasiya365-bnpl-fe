@@ -8,6 +8,11 @@ const navigation = (): VerticalNavItemsType => {
       title: t('pages.dashboard'),
       path: '/dashboard',
       icon: 'tabler:dashboard'
+    },
+    {
+      title: t('pages.clients'),
+      path: '/clients',
+      icon: 'tabler:users-group'
     }
   ]
 }
