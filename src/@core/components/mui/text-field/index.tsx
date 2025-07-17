@@ -160,21 +160,6 @@ const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
   // ** Props
   const { size = 'small', InputLabelProps, sx, ...rest } = props
 
-  const selectStyles = {
-    '& .MuiInputBase-root': {
-      border: 'none',
-      backgroundColor: '#fff !important',
-      boxShadow: '0px 1px 8px 0px #53505E14 !important',
-      color: '#000 !important'
-    },
-    '& .MuiInputBase-input': {
-      color: '#000 !important'
-    },
-    '& .MuiInputBase-input::placeholder': {
-      color: '#000 !important'
-    }
-  }
-
   return (
     <TextFieldStyled
       size={size}
@@ -185,15 +170,15 @@ const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
         IconComponent: () => (
           <Icon
             svg='/icons/chevron-down.svg'
-            height={30}
-            width={30}
-            color='#000'
-            styles={{ marginRight: '10px', marginTop: '10px' }}
+            height={25}
+            width={25}
+            color='#2F2B3DE5'
+            styles={{ marginRight: '10px', marginTop: '5px' }}
           />
         )
       }}
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
-      sx={props.select ? selectStyles : sx}
+      sx={sx}
     />
   )
 })

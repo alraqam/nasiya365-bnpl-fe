@@ -5,6 +5,10 @@
     "balance": "Balans",
     "device-stats": "Qurilmalar statistikasi",
     "income-stats": "Kirim chiqim statistikasi",
+    "reload": "Qayta yuklash",
+    "manage-columns": "Ma'lumotlar tartibi",
+    "add-client": "Mijoz qo'shish",
+    "client": "Mijoz",
     "login": {
         "phone": "Telefon raqam",
         "password": "Parol",

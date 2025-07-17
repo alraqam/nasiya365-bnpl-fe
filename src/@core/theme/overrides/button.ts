@@ -16,7 +16,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.primary.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -24,7 +25,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -32,7 +34,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.success.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -40,7 +43,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.error.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -48,7 +52,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.warning.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -56,7 +61,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.info.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -64,7 +70,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.primary.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -72,7 +79,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -80,7 +88,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.success.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -88,7 +97,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.error.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -96,7 +106,8 @@ const Button = () => {
           style: ({ theme }: OwnerStateThemeType) => ({
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.warning.main, 0.08)
-            }
+            },
+            height: '44px'
           })
         },
         {
@@ -169,7 +180,25 @@ const Button = () => {
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.success.main, 0.24) },
             height: '44px'
           })
+        },
+        {
+          props: { variant: 'greyish' },
+          style: ({ theme }: OwnerStateThemeType) => ({
+            color: '#000',
+            backgroundColor: theme.palette.grey[200],
+            '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.grey[200], 0.24) },
+            height: '44px'
+          })
         }
+        // {
+        //   props: { variant: 'greyish', color: 'secondary' },
+        //   style: ({ theme }: OwnerStateThemeType) => ({
+        //     color: '#000',
+        //     backgroundColor: theme.palette.grey[200],
+        //     '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.grey[200], 0.24) },
+        //     height: '44px'
+        //   })
+        // }
       ],
       styleOverrides: {
         root: ({ ownerState, theme }: OwnerStateThemeType) => ({
@@ -230,6 +259,12 @@ const Button = () => {
           height: 44
         }),
         tonal: ({ theme }: OwnerStateThemeType) => ({
+          padding: theme.spacing(2.5, 5),
+          '&.Mui-disabled': {
+            backgroundColor: theme.palette.action.disabledBackground
+          }
+        }),
+        greyish: ({ theme }: OwnerStateThemeType) => ({
           padding: theme.spacing(2.5, 5),
           '&.Mui-disabled': {
             backgroundColor: theme.palette.action.disabledBackground

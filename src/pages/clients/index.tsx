@@ -1,10 +1,26 @@
-import { Button, Stack, Menu, MenuItem, FormControlLabel, Checkbox, Typography } from '@mui/material'
+import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, InputAdornment } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Box } from '@mui/system'
+import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
+import ManageColumns from 'src/@core/components/ManageColumns'
+import useManageColumns from 'src/hooks/useManageColumns'
+import CustomFooter from 'src/@core/components/TableFooter'
+import { useTranslation } from 'react-i18next'
+import useModal from 'src/@core/store/modal'
+import styled from '@emotion/styled'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import InputMask from 'react-input-mask'
+import Link from 'next/link'
+
+const Form = styled('form')(({ theme }) => ({
+  width: '480px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px'
+}))
 
 const initialColumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', minWidth: 100 },
@@ -12,7 +28,26 @@ const initialColumns: GridColDef[] = [
   { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
   { field: 'address', headerName: 'Manzil', minWidth: 150 },
   { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
-  { field: 'state', headerName: 'Holati', minWidth: 300 },
+  {
+    field: 'state',
+    headerName: 'Holati',
+    minWidth: 300,
+    renderCell: params => {
+      const getStatusColor = (status: string) => {
+        switch (status.toLowerCase()) {
+          case 'active':
+            return 'success'
+          case 'inactive':
+            return 'error'
+          case 'pending':
+            return 'warning'
+          default:
+            return 'default'
+        }
+      }
+      return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
+    }
+  },
   { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
   { field: 'email', headerName: 'Email', minWidth: 300 },
   {
@@ -21,11 +56,31 @@ const initialColumns: GridColDef[] = [
     minWidth: 200,
     renderCell: () => (
       <Box sx={{ display: 'flex' }}>
-        <Button sx={{ padding: '4px', width: 'fit-content' }}>
-          <Icon svg='/icons/edit.svg' width={24} height={24} />
+        <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+          <Icon
+            svg='/icons/edit.svg'
+            width={24}
+            height={24}
+            styles={theme => ({
+              backgroundColor: theme.palette.text.primary,
+              '&:hover': {
+                backgroundColor: theme.palette.warning.main
+              }
+            })}
+          />
         </Button>
-        <Button sx={{ padding: '4px', width: 'fit-content' }}>
-          <Icon svg='/icons/trash.svg' width={24} height={24} />
+        <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+          <Icon
+            svg='/icons/trash.svg'
+            width={24}
+            height={24}
+            styles={theme => ({
+              backgroundColor: theme.palette.text.primary,
+              '&:hover': {
+                backgroundColor: theme.palette.error.main
+              }
+            })}
+          />
         </Button>
       </Box>
     )
@@ -33,38 +88,34 @@ const initialColumns: GridColDef[] = [
 ]
 
 const Clients = () => {
-  // State for column visibility
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(() => {
-    // Initialize all columns as visible
-    return initialColumns.reduce((acc, col) => {
-      acc[col.field] = true
-      return acc
-    }, {} as Record<string, boolean>)
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  })
+  const {
+    anchorEl,
+    handleSetAnchorEl,
+    handleCloseAnchorEl,
+    handleColumnToggle,
+    columnVisibility,
+    visibleColumns,
+    open
+  } = useManageColumns(initialColumns)
+  const [filters, setFilters] = useState({
+    name: '',
+    passport: '',
+    phone: ''
   })
 
-  // State for dropdown menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-
-  // Handle menu open/close
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      [event.target.name]: event.target.value
+    })
   }
 
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  // Handle column visibility toggle
-  const handleColumnToggle = (field: string) => {
-    setColumnVisibility(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }))
-  }
-
-  // Filter columns based on visibility
-  const visibleColumns = initialColumns.filter(col => columnVisibility[col.field])
+  const { modal, clearModal } = useModal()
+  const { t } = useTranslation()
 
   return (
     <>
@@ -78,7 +129,7 @@ const Clients = () => {
             gap: 2
           })}
         >
-          <Title title='Clients' />
+          <Title title={t('pages.clients')} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -89,79 +140,51 @@ const Clients = () => {
               flexWrap: 'wrap'
             }}
           >
-            <Button variant='tonal' sx={{ gap: 2 }}>
-              <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.primary.main })} />
-              Qayta yuklash
+            <Button
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+            >
+              <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t('reload')}
             </Button>
 
             {/* Column Management Button */}
             <Button
               variant='tonal'
-              sx={{ gap: 2 }}
-              onClick={handleClick}
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+              onClick={handleSetAnchorEl}
               aria-controls={open ? 'column-menu' : undefined}
               aria-haspopup='true'
               aria-expanded={open ? 'true' : undefined}
             >
-              Ma'lumotlar tartibi
-              <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.primary.main })} />
+              {t('manage-columns')}
+              <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
             </Button>
-
-            {/* Column Management Menu */}
-            <Menu
-              id='column-menu'
+            <ManageColumns
+              columnVisibility={columnVisibility}
+              handleColumnToggle={handleColumnToggle}
               anchorEl={anchorEl}
               open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'column-button'
-              }}
-              PaperProps={{
-                sx: {
-                  minWidth: 250,
-                  '& .MuiMenuItem-root': {
-                    padding: '8px 16px'
-                  }
-                }
-              }}
-            >
-              {initialColumns.map(column => (
-                <MenuItem key={column.field} sx={{ padding: '0px !important' }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={columnVisibility[column.field]}
-                        onChange={() => handleColumnToggle(column.field)}
-                        size='small'
-                        sx={{
-                          color: 'primary.main', // default color when unchecked
-                          '&.Mui-checked': {
-                            color: 'secondary.main', // color when checked
-                            backgroundColor: 'primary' // background stays transparent
-                          },
-                          '&:hover': {
-                            backgroundColor: 'action.hover' // subtle hover effect
-                          }
-                        }}
-                      />
-                    }
-                    label={column.headerName}
-                    sx={{
-                      width: '100%',
-                      margin: 0,
-                      '& .MuiFormControlLabel-label': {
-                        fontSize: '0.875rem'
-                      }
-                    }}
-                  />
-                </MenuItem>
-              ))}
-            </Menu>
+              handleCloseAnchorEl={handleCloseAnchorEl}
+              initialColumns={initialColumns}
+            />
 
-            <Button variant='contained' sx={{ gap: 2 }}>
-              <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-              Mijoz qo'shish
-            </Button>
+            <Link href='/clients/create'>
+              <Button variant='contained' sx={{ gap: 2 }}>
+                <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
+                {t('add-client')}
+              </Button>
+            </Link>
           </Stack>
         </Stack>
 
@@ -172,10 +195,83 @@ const Clients = () => {
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
-            pagination
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            slots={{
+              footer: () => (
+                <CustomFooter
+                  rowCount={clients.length}
+                  page={paginationModel.page}
+                  pageSize={paginationModel.pageSize}
+                  onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
+                />
+              )
+            }}
           />
         </Box>
       </Stack>
+
+      <Dialog open={modal === 'search-clients'} onClose={clearModal}>
+        <DialogTitle>
+          <Typography variant='h5' align='center'>
+            Mijoz izlash
+          </Typography>
+          <Typography variant='body2' align='center'>
+            Mijozni ma'lumotlarini qidiring
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Form>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>Mijoz</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder='Mijoz ism familyasi'
+                name='name'
+                value={filters.name}
+                onChange={handleChange}
+              />
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>Pasport</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder='Pasport seriyasi'
+                name='passport'
+                value={filters.passport}
+                onChange={handleChange}
+              />
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>Telefon raqam</Typography>
+              <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
+                {(inputProps: any) => (
+                  <CustomTextField
+                    {...inputProps}
+                    placeholder='00 000 00 00'
+                    variant='outlined'
+                    fullWidth
+                    sx={{ borderRadius: '8px' }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start' sx={{ marginRight: '4px' }}>
+                          +998
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
+              </InputMask>
+            </Box>
+            <Box display='flex' justifyContent='center' gap={4}>
+              <Button variant='outlined' type='button' onClick={clearModal}>
+                Yopish
+              </Button>
+              <Button variant='contained'>Izlash</Button>
+            </Box>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

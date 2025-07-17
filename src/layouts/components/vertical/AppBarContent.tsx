@@ -18,6 +18,8 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 // ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
+import useModal from 'src/@core/store/modal'
+import { useRouter } from 'next/router'
 
 interface Props {
   hidden: boolean
@@ -40,13 +42,20 @@ const StyledImg = styled('img')(({ theme }) => ({
 const AppBarContent = (props: Props) => {
   const [search, setSearch] = useState('')
 
+  const { setModal } = useModal()
+
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
   const { i18n } = useTranslation()
   const theme = useTheme()
+  const router = useRouter()
+  const pathname = router.pathname
 
-  const handleSearch = () => {
-    console.log(search)
+  const handleSearchClick = () => {
+    switch (pathname) {
+      case '/clients':
+        setModal('search-clients')
+    }
   }
 
   return (
@@ -57,8 +66,8 @@ const AppBarContent = (props: Props) => {
             <Icon fontSize='1.5rem' icon='tabler:menu-2' />
           </IconButton>
         ) : null}
-        <Stack display='flex' direction='row'>
-          <Icon2 svg='/icons/search.svg' width={44} height={44} onClick={handleSearch}></Icon2>
+        <Stack display='flex' direction='row' onClick={handleSearchClick}>
+          <Icon2 svg='/icons/search.svg' width={44} height={44}></Icon2>
           <CustomTextField
             sx={{
               '& .MuiInputBase-root': { border: 'none', '&.Mui-focused': { boxShadow: 'none' } },
