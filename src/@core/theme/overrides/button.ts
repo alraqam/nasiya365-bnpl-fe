@@ -17,7 +17,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.primary.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -26,7 +28,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -35,7 +39,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.success.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -44,7 +50,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.error.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -53,7 +61,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.warning.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -62,7 +72,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.info.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -71,7 +83,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.primary.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -80,7 +94,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -89,7 +105,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.success.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -98,7 +116,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.error.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -107,7 +127,9 @@ const Button = () => {
             '&:hover': {
               backgroundColor: hexToRGBA(theme.palette.warning.main, 0.08)
             },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -118,22 +140,15 @@ const Button = () => {
             }
           })
         },
-        // {
-        //   props: { variant: 'contained', color: 'primary' },
-        //   style: ({ theme }: OwnerStateThemeType) => ({
-        //     // height: 120,
-        //     '&:hover': {
-        //       backgroundColor: hexToRGBA(theme.palette.info.main, 0.08)
-        //     }
-        //   })
-        // },
         {
           props: { variant: 'tonal', color: 'primary' },
           style: ({ theme }: OwnerStateThemeType) => ({
             color: theme.palette.primary.main,
             backgroundColor: hexToRGBA(theme.palette.primary.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.primary.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -142,7 +157,9 @@ const Button = () => {
             color: theme.palette.secondary.main,
             backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.secondary.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -151,7 +168,9 @@ const Button = () => {
             color: theme.palette.error.main,
             backgroundColor: hexToRGBA(theme.palette.error.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.error.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -160,7 +179,9 @@ const Button = () => {
             color: theme.palette.warning.main,
             backgroundColor: hexToRGBA(theme.palette.warning.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.warning.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -169,7 +190,9 @@ const Button = () => {
             color: theme.palette.info.main,
             backgroundColor: hexToRGBA(theme.palette.info.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.info.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -178,7 +201,9 @@ const Button = () => {
             color: theme.palette.success.main,
             backgroundColor: hexToRGBA(theme.palette.success.main, 0.16),
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.success.main, 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         },
         {
@@ -187,18 +212,11 @@ const Button = () => {
             color: '#000',
             backgroundColor: theme.palette.grey[200],
             '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.grey[200], 0.24) },
-            height: '44px'
+            height: '44px',
+            paddingLeft: '32px',
+            paddingRight: '32px'
           })
         }
-        // {
-        //   props: { variant: 'greyish', color: 'secondary' },
-        //   style: ({ theme }: OwnerStateThemeType) => ({
-        //     color: '#000',
-        //     backgroundColor: theme.palette.grey[200],
-        //     '&:hover, &:active': { backgroundColor: hexToRGBA(theme.palette.grey[200], 0.24) },
-        //     height: '44px'
-        //   })
-        // }
       ],
       styleOverrides: {
         root: ({ ownerState, theme }: OwnerStateThemeType) => ({
@@ -256,7 +274,9 @@ const Button = () => {
           '&:hover': {
             boxShadow: theme.shadows[2]
           },
-          height: 44
+          height: 44,
+          paddingLeft: '32px',
+          paddingRight: '32px'
         }),
         tonal: ({ theme }: OwnerStateThemeType) => ({
           padding: theme.spacing(2.5, 5),

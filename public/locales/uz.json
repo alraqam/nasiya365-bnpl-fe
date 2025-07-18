@@ -8,7 +8,12 @@
     "reload": "Qayta yuklash",
     "manage-columns": "Ma'lumotlar tartibi",
     "add-client": "Mijoz qo'shish",
+    "add-product": "Mahsulot qo'shish",
+    "add-order": "Buyurtma qo'shish",
     "client": "Mijoz",
+    "product": "Mahsulot",
+    "devices": "Qurilmalar",
+    "reminder": "Eslatma",
     "login": {
         "phone": "Telefon raqam",
         "password": "Parol",
@@ -17,7 +22,9 @@
     },
     "pages": {
         "dashboard": "Dashboard",
-        "clients": "Mijozlar"
+        "clients": "Mijozlar",
+        "products": "Mahsulotlar",
+        "orders": "Buyurtmalar"
     },
     "periods": {
         "monthly": "Oylik",

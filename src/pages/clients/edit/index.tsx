@@ -1,5 +1,5 @@
 import { Button, Stack, Typography, InputAdornment, Grid, Card, MenuItem, IconButton, Alert } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from 'src/@core/components/title'
 import { Box, styled } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
@@ -9,7 +9,7 @@ import InputMask from 'react-input-mask'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
 import Dropzone from 'react-dropzone'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -54,7 +54,10 @@ const HoverOverlay = styled('div')({
   transition: 'opacity 0.3s ease'
 })
 
-const CreateClient = () => {
+const EditClient = () => {
+  const { t } = useTranslation()
+  const router = useRouter()
+
   const [form, setForm] = useState({
     surname: '',
     name: '',
@@ -77,6 +80,11 @@ const CreateClient = () => {
     applicationFile: null as File | null,
     passportFile: null as File | null
   })
+  const { id } = router.query
+
+  useEffect(() => {
+    // Api call goes here to update fields with existing values
+  }, [id])
 
   const [filePreviews, setFilePreviews] = useState({
     application: null as string | null,
@@ -303,8 +311,6 @@ const CreateClient = () => {
     console.log(form)
   }
 
-  const { t } = useTranslation()
-
   return (
     <>
       <Stack
@@ -316,9 +322,7 @@ const CreateClient = () => {
         })}
       >
         <Box display='flex' gap={1}>
-          <Link href='/clients' style={{ textDecoration: 'none' }}>
-            <Title title={t('pages.clients')} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
-          </Link>
+          <Title title={t('pages.clients')} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
           <Typography variant='h6' color='#7F7F7FE5'>
             /
           </Typography>
@@ -677,4 +681,4 @@ const CreateClient = () => {
   )
 }
 
-export default CreateClient
+export default EditClient

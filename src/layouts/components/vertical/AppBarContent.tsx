@@ -55,6 +55,13 @@ const AppBarContent = (props: Props) => {
     switch (pathname) {
       case '/clients':
         setModal('search-clients')
+        break
+      case '/products':
+        setModal('search-products')
+        break
+      case '/orders':
+        setModal('search-orders')
+        break
     }
   }
 

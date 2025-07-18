@@ -1,18 +1,26 @@
-import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, InputAdornment } from '@mui/material'
+import {
+  Button,
+  Stack,
+  Chip,
+  DialogContent,
+  Dialog,
+  DialogTitle,
+  Typography,
+  InputAdornment,
+  MenuItem
+} from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import ManageColumns from 'src/@core/components/ManageColumns'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import { useTranslation } from 'react-i18next'
 import useModal from 'src/@core/store/modal'
 import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import InputMask from 'react-input-mask'
 import Link from 'next/link'
 
 const Form = styled('form')(({ theme }) => ({
@@ -59,7 +67,7 @@ const initialColumns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex' }}>
-          <Link href={`/clients/edit?id=${id}`}>
+          <Link href={`/orders/edit?id=${id}`}>
             <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
               <Icon
                 svg='/icons/edit.svg'
@@ -93,7 +101,7 @@ const initialColumns: GridColDef[] = [
   }
 ]
 
-const Clients = () => {
+const Orders = () => {
   const { modal, clearModal } = useModal()
   const { t } = useTranslation()
 
@@ -101,19 +109,13 @@ const Clients = () => {
     page: 0,
     pageSize: 10
   })
-  const {
-    anchorEl,
-    handleSetAnchorEl,
-    handleCloseAnchorEl,
-    handleColumnToggle,
-    columnVisibility,
-    visibleColumns,
-    open
-  } = useManageColumns(initialColumns)
+  const { visibleColumns, open } = useManageColumns(initialColumns)
   const [filters, setFilters] = useState({
-    name: '',
-    passport: '',
-    phone: ''
+    status: '',
+    order: '',
+    client: '',
+    imei: '',
+    payment_deadline: ''
   })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +127,7 @@ const Clients = () => {
 
   const handleSearch = async () => {
     console.log(filters)
-    // Backend interaction goes here
+    // backend interaction goes here
   }
 
   return (
@@ -140,7 +142,7 @@ const Clients = () => {
             gap: 2
           })}
         >
-          <Title title={t('pages.clients')} />
+          <Title title={t('pages.orders')} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -151,6 +153,21 @@ const Clients = () => {
               flexWrap: 'wrap'
             }}
           >
+            <Link href='/orders/reminder'>
+              <Button
+                variant='tonal'
+                sx={theme => ({
+                  gap: 2,
+                  backgroundColor: '#2F2B3D0F',
+                  color: theme.palette.text.primary,
+                  '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+                })}
+              >
+                <Icon svg='/icons/bell.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+                {t('reminder')}
+              </Button>
+            </Link>
+
             <Button
               variant='tonal'
               sx={theme => ({
@@ -164,36 +181,10 @@ const Clients = () => {
               {t('reload')}
             </Button>
 
-            {/* Column Management Button */}
-            <Button
-              variant='tonal'
-              sx={theme => ({
-                gap: 2,
-                backgroundColor: '#2F2B3D0F',
-                color: theme.palette.text.primary,
-                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
-              })}
-              onClick={handleSetAnchorEl}
-              aria-controls={open ? 'column-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}
-            >
-              {t('manage-columns')}
-              <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-            </Button>
-            <ManageColumns
-              columnVisibility={columnVisibility}
-              handleColumnToggle={handleColumnToggle}
-              anchorEl={anchorEl}
-              open={open}
-              handleCloseAnchorEl={handleCloseAnchorEl}
-              initialColumns={initialColumns}
-            />
-
-            <Link href='/clients/create'>
+            <Link href='/orders/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t('add-client')}
+                {t('add-order')}
               </Button>
             </Link>
           </Stack>
@@ -222,57 +213,63 @@ const Clients = () => {
         </Box>
       </Stack>
 
-      <Dialog open={modal === 'search-clients'} onClose={clearModal}>
+      <Dialog open={modal === 'search-orders'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            Mijoz izlash
+            Buyurtma izlash
           </Typography>
           <Typography variant='body2' align='center'>
-            Mijozni ma'lumotlarini qidiring
+            Buyurtma malumotlarini kiriting
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>Status</Typography>
+              <CustomTextField select fullWidth name='status' value={filters.status} onChange={handleChange}>
+                <MenuItem value='active'>Aktiv</MenuItem>
+                <MenuItem value='inactive'>Aktiv emas</MenuItem>
+              </CustomTextField>
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>Buyurtma</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder='Buyurtma raqamini kiriting'
+                name='order'
+                value={filters.order}
+                onChange={handleChange}
+              />
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
               <Typography>Mijoz</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='Mijoz ism familyasi'
-                name='name'
-                value={filters.name}
+                name='client'
+                value={filters.client}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Pasport</Typography>
+              <Typography>Imei</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Pasport seriyasi'
-                name='passport'
-                value={filters.passport}
+                placeholder='Qurilmani tanlang'
+                name='imei'
+                value={filters.imei}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Telefon raqam</Typography>
-              <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
-                {(inputProps: any) => (
-                  <CustomTextField
-                    {...inputProps}
-                    placeholder='00 000 00 00'
-                    variant='outlined'
-                    fullWidth
-                    sx={{ borderRadius: '8px' }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start' sx={{ marginRight: '4px' }}>
-                          +998
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              </InputMask>
+              <Typography>To'lov muddati</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder="To'lov muddatini kiriting"
+                name='payment_deadline'
+                value={filters.payment_deadline}
+                onChange={handleChange}
+              />
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
               <Button variant='outlined' type='button' onClick={clearModal}>
@@ -289,4 +286,4 @@ const Clients = () => {
   )
 }
 
-export default Clients
+export default Orders
