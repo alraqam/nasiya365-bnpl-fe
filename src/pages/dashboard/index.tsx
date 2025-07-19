@@ -2,7 +2,6 @@
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { useTranslation } from 'next-i18next'
 import Title from 'src/@core/components/title'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { Box, Button, MenuItem, Stack, styled } from '@mui/material'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 import { MONTHS, YEARS } from 'src/@core/utils/constants'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const DeviceStatCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -54,13 +54,13 @@ const Home = () => {
     to: new Date()
   })
 
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   return (
     <Stack flexDirection='column' spacing={6}>
       {/* Title at the top */}
       <Box>
-        <Title title='Dashboard' />
+        <Title title={t.pages.dashboard} />
       </Box>
 
       {/* Container with space-between layout */}
@@ -90,10 +90,10 @@ const Home = () => {
                 })}
               >
                 <CustomTextField select fullWidth value={type} onChange={e => setType(e.target.value as typeof type)}>
-                  <MenuItem value='monthly'>{t('periods.monthly')}</MenuItem>
-                  <MenuItem value='yearly'>{t('periods.yearly')}</MenuItem>
-                  <MenuItem value='general'>{t('periods.general')}</MenuItem>
-                  <MenuItem value='custom'>{t('periods.custom')}</MenuItem>
+                  <MenuItem value='monthly'>{t.periods.monthly}</MenuItem>
+                  <MenuItem value='yearly'>{t.periods.yearly}</MenuItem>
+                  <MenuItem value='general'>{t.periods.general}</MenuItem>
+                  <MenuItem value='custom'>{t.periods.custom}</MenuItem>
                 </CustomTextField>
               </Box>
               {type === 'monthly' && (
@@ -125,7 +125,7 @@ const Home = () => {
                   >
                     {MONTHS.map((month, index) => (
                       <MenuItem key={index} value={month}>
-                        {t(`months.${month}`)}
+                        {t.months[month as keyof typeof t.months]}
                       </MenuItem>
                     ))}
                   </CustomTextField>
@@ -226,7 +226,7 @@ const Home = () => {
                   variant='tonal'
                   sx={theme => ({ minWidth: '140px', [theme.breakpoints.down('md')]: { minWidth: '100%' } })}
                 >
-                  {t('view')}
+                  {t.view}
                 </Button>
               </Box>
             </Grid>
@@ -236,7 +236,7 @@ const Home = () => {
           <Grid item sx={theme => ({ [theme.breakpoints.down('md')]: { ml: 'auto' } })}>
             <Card>
               <Card sx={{ px: 4, height: '44px', display: 'flex', alignItems: 'center', color: '#000 !important' }}>
-                {t('balance')}: $9 223.90
+                {t.balance}: $9 223.90
               </Card>
             </Card>
           </Grid>
@@ -246,7 +246,7 @@ const Home = () => {
       <Grid item xs={12}>
         <Grid container flexDirection={'column'}>
           <Typography variant='h5' sx={{ color: '#000', marginBottom: 5 }}>
-            {t('device-stats')}
+            {t['device-stats']}
           </Typography>
           <Grid container spacing={6}>
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
@@ -298,7 +298,7 @@ const Home = () => {
       <Grid item xs={12}>
         <Grid container flexDirection={'column'}>
           <Typography variant='h5' sx={{ color: '#000', marginBottom: 5 }}>
-            {t('income-stats')}
+            {t['income-stats']}
           </Typography>
           <Grid container spacing={6}>
             <Grid item xs={12} sm={4} md={4} lg={3} xl={3}>

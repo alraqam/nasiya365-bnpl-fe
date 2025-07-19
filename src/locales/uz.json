@@ -1,0 +1,138 @@
+{
+    "welcome": "Nasiya 365-ga xush kelibsiz! 👋🏻",
+    "welcome-description": "Hisobingizga kirish uchun maʼlumotlarni kiriting.",
+    "view": "Ko'rish",
+    "balance": "Balans",
+    "device-stats": "Qurilmalar statistikasi",
+    "income-stats": "Kirim chiqim statistikasi",
+    "reload": "Qayta yuklash",
+    "manage-columns": "Ma'lumotlar tartibi",
+    "add-client": "Mijoz qo'shish",
+    "add-product": "Mahsulot qo'shish",
+    "add-order": "Buyurtma qo'shish",
+    "edit-client": "Mijozni tahrirlash",
+    "edit-product": "Mahsulotni tahrirlash",
+    "edit-order": "Buyurtmani tahrirlash",
+    "client": "Mijoz",
+    "product": "Mahsulot",
+    "devices": "Qurilmalar",
+    "reminder": "Eslatma",
+    "man": "Erkak",
+    "woman": "Ayol",
+    "active": "Aktiv",
+    "inactive": "Aktiv emas",
+    "close": "Yopish",
+    "search": "Izlash",
+    "given": "Berilgan",
+    "not-given": "Berilmagan",
+    "login": {
+        "phone": "Telefon raqam",
+        "password": "Parol",
+        "no-phone": "Telefon raqamingizni kiriting",
+        "no-password": "Parolingizni kiriting"
+    },
+    "pages": {
+        "dashboard": "Dashboard",
+        "clients": "Mijozlar",
+        "products": "Mahsulotlar",
+        "orders": "Buyurtmalar"
+    },
+    "forms": {
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "file": {
+            "label": "Faylni shu yerga torting yoki suring",
+            "or": "Yoki",
+            "fileUpload": "Faylni yuklash",
+            "alert": "Fayl hajmi 2 MB dan katta bo'lmasligi kerak va quyidagi formatlar qabul qilinadi: JPG, PNG"
+        },
+        "client": {
+            "dialog": {
+                "search-title": "Mijoz izlash",
+                "search-desc": "Mijozni ma'lumotlarini qidiring"
+            },
+            "surname": "Familya",
+            "name": "Ism",
+            "patronymic": "Otasining ismi",
+            "phone": "Telefon raqami",
+            "email": "Email",
+            "gender": "Jinsni tanlang",
+            "workplace": "Ish joyi",
+            "profession": "Kasbi",
+            "passport": "Pasport",
+            "client": "Mijoz",
+            "passportSeries": "Pasport seriyasi",
+            "passportIssuer": "Kim tomonidan berilgan",
+            "passportIssueDate": "Qachon berilgan",
+            "birthday": "Tu'g'ilgan kuni",
+            "birthPlace": "Tu'g'ilgan joyi",
+            "address": "Yashash manzili",
+            "registeredAddress": "Ro'yxatdan o'tgan manzili",
+            "guarantor": "Kafil (F.I.O)",
+            "guarantor-phone": "Kafil telefon raqami",
+            "status": "Statusni tanlang",
+            "application": "Tilxat",
+            "passortCopy": "Pasport nusxasi / ID karta"
+        },
+        "products": {
+            "dialog": {
+                "search-title": "Mahsulot izlash",
+                "search-desc": "Mahsulot ma'lumotlarini qidiring"
+            },
+            "supplier": "Yetkazib beruvchi",
+            "imei": "Imei",
+            "model": "Model",
+            "account": "Akkount (Gmail)",
+            "name": "Ism"
+        },
+        "orders": {
+            "dialog": {
+                "search-title": "Buyurtma izlash",
+                "search-desc": "Buyurtma ma'lumotlarini qidiring",
+                "change-payment-date-title": "To’lov kuni",
+                "change-payment-date-desc": "To’lov muddatini o’zgartiring"
+            },
+            "client": "Mijoz",
+            "status": "Status",
+            "order": "Buyurtma",
+            "comment": "Izoh",
+            "device": "Qurilma",
+            "device_doc": "Qurilma qutisi",
+            "payment_due_monthly": "To'lov muddati (oy)",
+            "payment_due_day": "To'lov sanasi",
+            "order_date": "Buyurtma sanasi",
+            "total_price": "Umumiy narx",
+            "price": "Narx",
+            "initial_payment": "Boshlang'ich to'lov",
+            "imei": "Imei",
+            "payment_deadline": "To'lov muddati",
+            "payment_date": "To'lov kunini belgilash",
+            "placeholder": {
+                "order": "Buyurtma raqamini kiriting",
+                "client": "Mijoz ism familyasi",
+                "imei": "Qurilmani tanlang",
+                "payment_deadline": "To'lov muddatini kiriting"
+            }
+        }
+    },
+    "periods": {
+        "monthly": "Oylik",
+        "yearly": "Yillik",
+        "general": "Umumiy",
+        "custom": "Sanani tanlash"
+    },
+    "months": {
+        "january": "Yanvar",
+        "february": "Fevral",
+        "march": "Mart",
+        "april": "Aprel",
+        "may": "May",
+        "june": "Iyun",
+        "july": "Iyul",
+        "august": "Avgust",
+        "september": "Sentabr",
+        "october": "Oktabr",
+        "november": "Noyabr",
+        "december": "Dekabr"
+    }
+}

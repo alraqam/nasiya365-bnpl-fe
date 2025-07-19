@@ -12,6 +12,7 @@ import useModal from 'src/@core/store/modal'
 import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const Form = styled('form')(({ theme }) => ({
   width: '480px',
@@ -43,6 +44,7 @@ const initialColumns: GridColDef[] = [
             return 'default'
         }
       }
+
       return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
     }
   },
@@ -93,7 +95,7 @@ const initialColumns: GridColDef[] = [
 
 const Products = () => {
   const { modal, clearModal } = useModal()
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -116,6 +118,7 @@ const Products = () => {
 
   const handleSearch = async () => {
     console.log(filters)
+
     // backend interaction goes here
   }
 
@@ -131,7 +134,7 @@ const Products = () => {
             gap: 2
           })}
         >
-          <Title title={t('pages.products')} />
+          <Title title={t.pages.products} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -152,7 +155,7 @@ const Products = () => {
               })}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-              {t('reload')}
+              {t.reload}
             </Button>
 
             <Button
@@ -167,14 +170,14 @@ const Products = () => {
               aria-haspopup='true'
               aria-expanded={open ? 'true' : undefined}
             >
-              {t('devices')}
+              {t.devices}
               <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
             </Button>
 
             <Link href='/products/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t('add-product')}
+                {t['add-product']}
               </Button>
             </Link>
           </Stack>
@@ -206,16 +209,16 @@ const Products = () => {
       <Dialog open={modal === 'search-products'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            Mahsulot izlash
+            {t.forms.products.dialog['search-title']}
           </Typography>
           <Typography variant='body2' align='center'>
-            Mahsulot ma'lumotlarini qidiring
+            {t.forms.products.dialog['search-desc']}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Yetkazib beruvchi</Typography>
+              <Typography>{t.forms.products.supplier}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='Abdurasul Husanov  A20'
@@ -225,7 +228,7 @@ const Products = () => {
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Imei</Typography>
+              <Typography>{t.forms.products.imei}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='353844107321626'
@@ -235,7 +238,7 @@ const Products = () => {
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Model</Typography>
+              <Typography>{t.forms.products.model}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='Iphone 14 pro max 256 gb purple'
@@ -245,7 +248,7 @@ const Products = () => {
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Akkount (Gmail)</Typography>
+              <Typography>{t.forms.products.account}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='technomobileuz0029@gmail.com'
@@ -256,10 +259,10 @@ const Products = () => {
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
               <Button variant='outlined' type='button' onClick={clearModal}>
-                Yopish
+                {t.close}
               </Button>
               <Button variant='contained' onClick={handleSearch}>
-                Izlash
+                {t.search}
               </Button>
             </Box>
           </Form>

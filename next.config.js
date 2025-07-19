@@ -6,11 +6,7 @@ const path = require('path')
 // Remove this if you're not using Fullcalendar features
 
 module.exports = {
-  i18n: {
-    locales: ['uz', 'ru'],
-    defaultLocale: 'uz',
-    localeDetection: true
-  },
+  output: 'export',
   trailingSlash: true,
   reactStrictMode: false,
   webpack: config => {

@@ -3,15 +3,15 @@ import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { alpha, Box } from '@mui/system'
+import { Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
-import { useTranslation } from 'react-i18next'
 import useModal from 'src/@core/store/modal'
 import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const Form = styled('form')(({ theme }) => ({
   width: '480px',
@@ -22,7 +22,7 @@ const Form = styled('form')(({ theme }) => ({
 
 const OrdersReminder = () => {
   const { modal, clearModal, setModal } = useModal()
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
@@ -47,6 +47,7 @@ const OrdersReminder = () => {
               return 'default'
           }
         }
+
         return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
       }
     },
@@ -140,12 +141,12 @@ const OrdersReminder = () => {
         >
           <Box display='flex' gap={1}>
             <Link href='/orders' style={{ textDecoration: 'none' }}>
-              <Title title={t('pages.orders')} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
+              <Title title={t.pages.orders} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
             </Link>
             <Typography variant='h6' color='#7F7F7FE5'>
               /
             </Typography>
-            <Title title={t('reminder')} />
+            <Title title={t.reminder} />
           </Box>
         </Stack>
 
@@ -175,16 +176,16 @@ const OrdersReminder = () => {
       <Dialog open={modal === 'edit-payment-date'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            To’lov kuni
+            {t.forms.orders.dialog['change-payment-date-title']}
           </Typography>
           <Typography variant='body2' align='center'>
-            To’lov kunini o’zgartirish
+            {t.forms.orders.dialog['change-payment-date-desc']}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>To’lov kunini belgilash</Typography>
+              <Typography>{t.forms.orders.payment_date}</Typography>
               <CustomTextField
                 fullWidth
                 name='paymentDate'
@@ -201,10 +202,10 @@ const OrdersReminder = () => {
                   setPaymentDate('')
                 }}
               >
-                Yopish
+                {t.forms.cancel}
               </Button>
               <Button variant='contained' onClick={handleSavePaymentDate}>
-                Saqlash
+                {t.forms.submit}
               </Button>
             </Box>
           </Form>

@@ -6,7 +6,8 @@ const useManageColumns = (initialColumns: GridColDef[]) => {
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(() => {
     return initialColumns.reduce((acc, col) => {
       acc[col.field] = true
-      return acc
+      
+return acc
     }, {} as Record<string, boolean>)
   })
 

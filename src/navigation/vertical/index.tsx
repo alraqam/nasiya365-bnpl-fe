@@ -1,30 +1,34 @@
 // ** Type import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
-import { t } from 'i18next'
+import { useLang } from 'src/providers/LanguageProvider'
 
-const navigation = (): VerticalNavItemsType => {
-  return [
+const useNavigation = (): VerticalNavItemsType => {
+  const { t } = useLang()
+
+  const items = [
     {
-      title: t('pages.dashboard'),
+      title: t.pages.dashboard,
       path: '/dashboard',
       icon: 'tabler:brand-speedtest'
     },
     {
-      title: t('pages.clients'),
+      title: t.pages.clients,
       path: '/clients',
       icon: 'tabler:users-group'
     },
     {
-      title: t('pages.products'),
+      title: t.pages.products,
       path: '/products',
       icon: 'tabler:cube'
     },
     {
-      title: t('pages.orders'),
+      title: t.pages.orders,
       path: '/orders',
       icon: 'tabler:shopping-cart'
     }
   ]
+
+  return items
 }
 
-export default navigation
+export default useNavigation

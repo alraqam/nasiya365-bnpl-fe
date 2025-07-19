@@ -13,6 +13,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
 import { useRouter } from 'next/router'
+import { AppLang, useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
   settings: Settings
@@ -22,18 +23,18 @@ interface Props {
 
 const LanguageDropdown = ({ settings, saveSettings, trigger }: Props) => {
   // ** Hook
-  const { i18n } = useTranslation()
+  const { t, changeLang, lang } = useLang()
   const router = useRouter()
 
-  const handleLangItemClick = (lang: 'uz' | 'ru') => {
-    i18n.changeLanguage(lang)
+  const handleLangItemClick = (lang: AppLang) => {
+    changeLang(lang)
     router.push(router.asPath, router.asPath, { locale: lang })
   }
 
   // ** Change html `lang` attribute when changing locale
   useEffect(() => {
-    document.documentElement.setAttribute('lang', i18n.language)
-  }, [i18n.language])
+    document.documentElement.setAttribute('lang', lang)
+  }, [lang])
 
   return (
     <OptionsMenu
@@ -46,7 +47,7 @@ const LanguageDropdown = ({ settings, saveSettings, trigger }: Props) => {
           text: "O'zbekcha",
           menuItemProps: {
             sx: { py: 2 },
-            selected: i18n.language === 'uz' || i18n.language === '',
+            selected: lang === 'uz',
             onClick: () => {
               handleLangItemClick('uz')
               saveSettings({ ...settings, direction: 'ltr' })
@@ -57,7 +58,7 @@ const LanguageDropdown = ({ settings, saveSettings, trigger }: Props) => {
           text: 'Русский',
           menuItemProps: {
             sx: { py: 2 },
-            selected: i18n.language === 'ru',
+            selected: lang === 'ru',
             onClick: () => {
               handleLangItemClick('ru')
               saveSettings({ ...settings, direction: 'ltr' })

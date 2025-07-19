@@ -2,8 +2,6 @@
 import { Stack, styled, Typography, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import { width } from '@mui/system'
-import { useTranslation } from 'next-i18next'
 import { useState } from 'react'
 
 // ** Icon Imports
@@ -16,10 +14,10 @@ import { Settings } from 'src/@core/context/settingsContext'
 import LanguageDropdown from 'src/@core/layouts/components/shared-components/LanguageDropdown'
 
 // ** Components
-import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import useModal from 'src/@core/store/modal'
 import { useRouter } from 'next/router'
+import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
   hidden: boolean
@@ -43,10 +41,10 @@ const AppBarContent = (props: Props) => {
   const [search, setSearch] = useState('')
 
   const { setModal } = useModal()
+  const { t, lang } = useLang()
 
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
-  const { i18n } = useTranslation()
   const theme = useTheme()
   const router = useRouter()
   const pathname = router.pathname
@@ -83,7 +81,7 @@ const AppBarContent = (props: Props) => {
                 fontSize: '17px'
               }
             }}
-            placeholder='Izlash'
+            placeholder={t.search}
             onChange={e => setSearch(e.target.value)}
           />
         </Stack>
@@ -95,7 +93,7 @@ const AppBarContent = (props: Props) => {
           saveSettings={saveSettings}
           trigger={
             <Stack direction='row' spacing={2} alignItems='center'>
-              <StyledImg src={i18n.language === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'} alt='uzb flag' />
+              <StyledImg src={lang === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'} alt='uzb flag' />
               <Box
                 display='flex'
                 alignItems='center'
@@ -103,7 +101,7 @@ const AppBarContent = (props: Props) => {
                 sx={theme => ({ [theme.breakpoints.down('sm')]: { display: 'none' } })}
               >
                 <Typography variant='button' color='#000'>
-                  {i18n.language === 'uz' ? "O'zbekcha" : 'Русский'}
+                  {lang === 'uz' ? "O'zbekcha" : 'Русский'}
                 </Typography>
                 <Icon2 svg='/icons/chevron-down.svg' width={18} height={18} color='#000' />
               </Box>

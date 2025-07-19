@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import { Box, styled } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import { useTranslation } from 'react-i18next'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
 import Dropzone from 'react-dropzone'
 import Link from 'next/link'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -55,6 +55,8 @@ const HoverOverlay = styled('div')({
 })
 
 const CreateClient = () => {
+  const { t } = useLang()
+
   const [form, setForm] = useState({
     surname: '',
     name: '',
@@ -219,7 +221,7 @@ const CreateClient = () => {
                           }
                         })}
                       >
-                        Faylni yuklash
+                        {t.forms.file.fileUpload}
                       </Button>
                       <IconButton
                         sx={{
@@ -254,12 +256,12 @@ const CreateClient = () => {
                       <Icon svg='/icons/upload.svg' color='#808390' width={24} height={24} />
                     </IconButton>
                     <Typography variant='body1' align='center'>
-                      Faylni shu yerga torting yoki suring
+                      {t.forms.file.label}
                     </Typography>
                     <Typography variant='body1' sx={{ color: '#ccc' }}>
-                      Yoki
+                      {t.forms.file.or}
                     </Typography>
-                    <Button variant='tonal'>Faylni yuklash</Button>
+                    <Button variant='tonal'>{t.forms.file.fileUpload}</Button>
                   </div>
                 )}
               </div>
@@ -267,7 +269,7 @@ const CreateClient = () => {
           )}
         </Dropzone>
         <Alert severity='warning' icon={false}>
-          Fayl hajmi 2 MB dan katta bo'lmasligi kerak va quyidagi formatlar qabul qilinadi: JPG, PNG
+          {t.forms.file.alert}
         </Alert>
       </Card>
     )
@@ -303,8 +305,6 @@ const CreateClient = () => {
     console.log(form)
   }
 
-  const { t } = useTranslation()
-
   return (
     <>
       <Stack
@@ -317,12 +317,12 @@ const CreateClient = () => {
       >
         <Box display='flex' gap={1}>
           <Link href='/clients' style={{ textDecoration: 'none' }}>
-            <Title title={t('pages.clients')} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
+            <Title title={t.pages.clients} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
           </Link>
           <Typography variant='h6' color='#7F7F7FE5'>
             /
           </Typography>
-          <Title title={t('client')} />
+          <Title title={t['add-client']} />
         </Box>
 
         <Grid container flex={1} spacing={4}>
@@ -333,7 +333,7 @@ const CreateClient = () => {
                 {/* Surname */}
                 <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <Typography variant='body1'>
-                    Familya <span style={{ color: 'red' }}>*</span>
+                    {t.forms.client.surname} <span style={{ color: 'red' }}>*</span>
                   </Typography>
                   <CustomTextField fullWidth name='surname' value={form.surname} onChange={handleChange} />
                 </Grid>
@@ -341,20 +341,20 @@ const CreateClient = () => {
                 {/* Name */}
                 <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <Typography variant='body1'>
-                    Ism <span style={{ color: 'red' }}>*</span>
+                    {t.forms.client.name} <span style={{ color: 'red' }}>*</span>
                   </Typography>
                   <CustomTextField fullWidth name='name' value={form.name} onChange={handleChange} />
                 </Grid>
 
                 {/* Patronymic */}
                 <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Sharif</Typography>
+                  <Typography variant='body1'>{t.forms.client.patronymic}</Typography>
                   <CustomTextField fullWidth name='patronymic' value={form.patronymic} onChange={handleChange} />
                 </Grid>
 
                 {/* Phone */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Telefon raqami</Typography>
+                  <Typography variant='body1'>{t.forms.client.phone}</Typography>
                   {form.phones.map((phone, index) => (
                     <InputMask
                       key={index}
@@ -417,34 +417,34 @@ const CreateClient = () => {
 
                 {/* Email */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Email</Typography>
+                  <Typography variant='body1'>{t.forms.client.email}</Typography>
                   <CustomTextField fullWidth name='email' value={form.email} onChange={handleChange} />
                 </Grid>
 
                 {/* Gender */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Jinsni tanlang</Typography>
+                  <Typography variant='body1'>{t.forms.client.gender}</Typography>
                   <CustomTextField select fullWidth name='gender' value={form.gender} onChange={handleChange}>
-                    <MenuItem value='male'>Erkak</MenuItem>
-                    <MenuItem value='female'>Ayol</MenuItem>
+                    <MenuItem value='male'>{t.man}</MenuItem>
+                    <MenuItem value='female'>{t.woman}</MenuItem>
                   </CustomTextField>
                 </Grid>
 
                 {/* Workplace */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Ish joyi</Typography>
+                  <Typography variant='body1'>{t.forms.client.workplace}</Typography>
                   <CustomTextField fullWidth name='workplace' value={form.workplace} onChange={handleChange} />
                 </Grid>
 
                 {/* Profession */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Kasbi</Typography>
+                  <Typography variant='body1'>{t.forms.client.profession}</Typography>
                   <CustomTextField fullWidth name='profession' value={form.profession} onChange={handleChange} />
                 </Grid>
 
                 {/* Passport series */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Pasport seriyasi</Typography>
+                  <Typography variant='body1'>{t.forms.client.passportSeries}</Typography>
                   <CustomTextField
                     fullWidth
                     name='passportSeries'
@@ -455,7 +455,7 @@ const CreateClient = () => {
 
                 {/* Passport Issuer */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Kim tomonidan berilgan</Typography>
+                  <Typography variant='body1'>{t.forms.client.passportIssuer}</Typography>
                   <CustomTextField
                     fullWidth
                     name='passportIssuer'
@@ -466,7 +466,7 @@ const CreateClient = () => {
 
                 {/* Passport issue date */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Qachon berilgan</Typography>
+                  <Typography variant='body1'>{t.forms.client.passportIssueDate}</Typography>
                   <DatePickerWrapper
                     sx={theme => ({
                       [theme.breakpoints.down('md')]: {
@@ -497,7 +497,7 @@ const CreateClient = () => {
 
                 {/* Birth date */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Tu'gilgan kuni</Typography>
+                  <Typography variant='body1'>{t.forms.client.birthday}</Typography>
                   <DatePickerWrapper
                     sx={theme => ({
                       [theme.breakpoints.down('md')]: {
@@ -528,19 +528,19 @@ const CreateClient = () => {
 
                 {/* Birth place */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Tug'ilgan joyi</Typography>
+                  <Typography variant='body1'>{t.forms.client.birthPlace}</Typography>
                   <CustomTextField fullWidth name='birthPlace' value={form.birthPlace} onChange={handleChange} />
                 </Grid>
 
                 {/* Address */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Yashash manzili</Typography>
+                  <Typography variant='body1'>{t.forms.client.address}</Typography>
                   <CustomTextField fullWidth name='address' value={form.address} onChange={handleChange} />
                 </Grid>
 
                 {/* Registered Address */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Ro'yxatdan o'tgan manzili</Typography>
+                  <Typography variant='body1'>{t.forms.client.registeredAddress}</Typography>
                   <CustomTextField
                     fullWidth
                     name='registeredAddress'
@@ -551,13 +551,13 @@ const CreateClient = () => {
 
                 {/* Guarantor */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Kafil (F.I.O)</Typography>
+                  <Typography variant='body1'>{t.forms.client.guarantor}</Typography>
                   <CustomTextField fullWidth name='guarantor' value={form.guarantor} onChange={handleChange} />
                 </Grid>
 
                 {/* Guarantor Phone */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Kafil telefon raqami</Typography>
+                  <Typography variant='body1'>{t.forms.client['guarantor-phone']}</Typography>
                   {form.guarantorPhones.map((phone, index) => (
                     <InputMask
                       key={index}
@@ -620,10 +620,10 @@ const CreateClient = () => {
 
                 {/* Status */}
                 <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>Statusni tanlang</Typography>
+                  <Typography variant='body1'>{t.forms.client.status}</Typography>
                   <CustomTextField select fullWidth name='status' value={form.status} onChange={handleChange}>
-                    <MenuItem value='active'>Aktiv</MenuItem>
-                    <MenuItem value='inactive'>Aktiv emas</MenuItem>
+                    <MenuItem value='active'>{t.active}</MenuItem>
+                    <MenuItem value='inactive'>{t.inactive}</MenuItem>
                   </CustomTextField>
                 </Grid>
               </Grid>
@@ -638,10 +638,10 @@ const CreateClient = () => {
               }}
             >
               <Button variant='outlined' onClick={onCancel}>
-                Bekor qilish
+                {t.forms.cancel}
               </Button>
               <Button variant='contained' onClick={onSubmit}>
-                Saqlash
+                {t.forms.submit}
               </Button>
             </Stack>
           </Grid>
@@ -650,10 +650,10 @@ const CreateClient = () => {
           <Grid item xs={12} md={4}>
             <Stack direction='column' gap={4}>
               {/* Application */}
-              {renderDropzone('application', 'Tilxat')}
+              {renderDropzone('application', t.forms.client.application)}
 
               {/* Passport copy */}
-              {renderDropzone('passport', 'Pasport nusxasi / ID karta')}
+              {renderDropzone('passport', t.forms.client.passortCopy)}
             </Stack>
           </Grid>
         </Grid>
@@ -666,10 +666,10 @@ const CreateClient = () => {
           }}
         >
           <Button variant='outlined' onClick={onCancel} sx={{ flex: 1 }}>
-            Bekor qilish
+            {t.forms.cancel}
           </Button>
           <Button variant='contained' onClick={onSubmit} sx={{ flex: 1 }}>
-            Saqlash
+            {t.forms.submit}
           </Button>
         </Stack>
       </Stack>

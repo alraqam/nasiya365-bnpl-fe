@@ -39,9 +39,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useTranslation } from 'next-i18next'
-import { t } from 'i18next'
 import { Snackbar } from '@mui/material'
 import CustomSnackbar from 'src/@core/components/mui/snackbar'
+import { useLang } from 'src/providers/LanguageProvider'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -100,7 +100,7 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   // ** Hooks
   const auth = useAuth()
@@ -177,9 +177,9 @@ const LoginPage = () => {
           <Box sx={{ width: '100%', maxWidth: 400 }}>
             <Box sx={{ my: 6 }}>
               <Typography variant='h3' sx={{ mb: 1.5 }}>
-                {t('welcome')}
+                {t.welcome}
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>{t('welcome-description')}</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{t['welcome-description']}</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 6 }}>
@@ -191,7 +191,7 @@ const LoginPage = () => {
                     <CustomTextField
                       fullWidth
                       autoFocus
-                      label={t('login.phone')}
+                      label={t.login['no-phone']}
                       value={value}
                       onBlur={onBlur}
                       onChange={onChange}
@@ -229,7 +229,7 @@ const LoginPage = () => {
                       fullWidth
                       value={value}
                       onBlur={onBlur}
-                      label={t('login.password')}
+                      label={t.login.password}
                       onChange={onChange}
                       id='auth-login-v2-password'
                       error={Boolean(errors.password)}
@@ -259,13 +259,14 @@ const LoginPage = () => {
           </Box>
         </Box>
       </RightWrapper>
-      <CustomSnackbar
-        message={t('login.no-phone')}
+
+      {/* <CustomSnackbar
+        message={t.login['no-phone']}
         open={true}
         autoHideDuration={2000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         onClose={() => console.log('2 seconds passed')}
-      />
+      /> */}
     </Box>
   )
 }

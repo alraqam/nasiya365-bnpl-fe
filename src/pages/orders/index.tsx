@@ -1,14 +1,4 @@
-import {
-  Button,
-  Stack,
-  Chip,
-  DialogContent,
-  Dialog,
-  DialogTitle,
-  Typography,
-  InputAdornment,
-  MenuItem
-} from '@mui/material'
+import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
@@ -17,11 +7,11 @@ import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
-import { useTranslation } from 'react-i18next'
 import useModal from 'src/@core/store/modal'
 import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const Form = styled('form')(({ theme }) => ({
   width: '480px',
@@ -53,6 +43,7 @@ const initialColumns: GridColDef[] = [
             return 'default'
         }
       }
+
       return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
     }
   },
@@ -103,7 +94,7 @@ const initialColumns: GridColDef[] = [
 
 const Orders = () => {
   const { modal, clearModal } = useModal()
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -142,7 +133,7 @@ const Orders = () => {
             gap: 2
           })}
         >
-          <Title title={t('pages.orders')} />
+          <Title title={t.pages.orders} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -164,7 +155,7 @@ const Orders = () => {
                 })}
               >
                 <Icon svg='/icons/bell.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-                {t('reminder')}
+                {t.reminder}
               </Button>
             </Link>
 
@@ -178,13 +169,13 @@ const Orders = () => {
               })}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-              {t('reload')}
+              {t.reload}
             </Button>
 
             <Link href='/orders/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t('add-order')}
+                {t['add-order']}
               </Button>
             </Link>
           </Stack>
@@ -216,56 +207,56 @@ const Orders = () => {
       <Dialog open={modal === 'search-orders'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            Buyurtma izlash
+            {t.forms.orders.dialog['search-title']}
           </Typography>
           <Typography variant='body2' align='center'>
-            Buyurtma malumotlarini kiriting
+            {t.forms.orders.dialog['search-desc']}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Status</Typography>
+              <Typography>{t.forms.orders.status}</Typography>
               <CustomTextField select fullWidth name='status' value={filters.status} onChange={handleChange}>
-                <MenuItem value='active'>Aktiv</MenuItem>
-                <MenuItem value='inactive'>Aktiv emas</MenuItem>
+                <MenuItem value='active'>{t.active}</MenuItem>
+                <MenuItem value='inactive'>{t.inactive}</MenuItem>
               </CustomTextField>
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Buyurtma</Typography>
+              <Typography>{t.forms.orders.order}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Buyurtma raqamini kiriting'
+                placeholder={t.forms.orders.placeholder.order}
                 name='order'
                 value={filters.order}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Mijoz</Typography>
+              <Typography>{t.forms.orders.client}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Mijoz ism familyasi'
+                placeholder={t.forms.orders.placeholder.client}
                 name='client'
                 value={filters.client}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Imei</Typography>
+              <Typography>{t.forms.orders.imei}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Qurilmani tanlang'
+                placeholder={t.forms.orders.placeholder.imei}
                 name='imei'
                 value={filters.imei}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>To'lov muddati</Typography>
+              <Typography>{t.forms.orders.payment_deadline}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder="To'lov muddatini kiriting"
+                placeholder={t.forms.orders.placeholder.payment_deadline}
                 name='payment_deadline'
                 value={filters.payment_deadline}
                 onChange={handleChange}
@@ -273,10 +264,10 @@ const Orders = () => {
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
               <Button variant='outlined' type='button' onClick={clearModal}>
-                Yopish
+                {t.forms.cancel}
               </Button>
               <Button variant='contained' onClick={handleSearch}>
-                Izlash
+                {t.forms.submit}
               </Button>
             </Box>
           </Form>

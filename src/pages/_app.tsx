@@ -32,6 +32,7 @@ import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
 import AuthGuard from 'src/@core/components/auth/AuthGuard'
 import GuestGuard from 'src/@core/components/auth/GuestGuard'
+import { LanguageProvider } from 'src/providers/LanguageProvider'
 
 // ** Spinner Import
 import Spinner from 'src/@core/components/spinner'
@@ -134,7 +135,7 @@ const App = (props: ExtendedAppProps) => {
                 <ThemeComponent settings={settings}>
                   <Guard authGuard={authGuard} guestGuard={guestGuard}>
                     <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authGuard={authGuard}>
-                      {getLayout(<Component {...pageProps} />)}
+                      <LanguageProvider>{getLayout(<Component {...pageProps} />)}</LanguageProvider>
                     </AclGuard>
                   </Guard>
                   <ReactHotToast>

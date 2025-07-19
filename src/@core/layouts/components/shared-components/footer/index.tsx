@@ -5,7 +5,6 @@ import Box from '@mui/material/Box'
 import { LayoutProps } from 'src/@core/layouts/types'
 
 // ** Footer Content Component
-import FooterContent from './FooterContent'
 
 interface Props {
   settings: LayoutProps['settings']

@@ -1,12 +1,12 @@
 import { Box, Button, Card, Grid, InputAdornment, MenuItem, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
-import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Title from 'src/@core/components/title'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import Icon from 'src/@core/components/icon/icon'
 import DatePicker from 'react-datepicker'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const initialFormState = {
   client: '',
@@ -22,7 +22,7 @@ const initialFormState = {
 }
 
 const CreateOrder = () => {
-  const { t } = useTranslation()
+  const { t } = useLang()
   const [form, setForm] = useState(initialFormState)
 
   const handleChange = (field: keyof typeof form) => (e: any) => {
@@ -44,7 +44,7 @@ const CreateOrder = () => {
   }
 
   const onSubmit = () => {
-    console.log('Submitted form:', form)
+    console.log(form)
     // Backend interaction goes here
   }
 
@@ -52,60 +52,60 @@ const CreateOrder = () => {
     <Stack sx={{ flexDirection: 'column', gap: 5 }}>
       <Box display='flex' gap={1}>
         <Link href='/orders' style={{ textDecoration: 'none' }}>
-          <Title title={t('pages.orders')} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
+          <Title title={t.pages.orders} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
         </Link>
         <Typography variant='h6' color='#7F7F7FE5'>
           /
         </Typography>
-        <Title title={t('add-order')} />
+        <Title title={t['add-order']} />
       </Box>
 
       <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <Typography variant='body1'>Mijoz</Typography>
+            <Typography variant='body1'>{t.forms.orders.client}</Typography>
             <CustomTextField fullWidth value={form.client} onChange={handleChange('client')} />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography variant='body1'>Izoh</Typography>
+            <Typography variant='body1'>{t.forms.orders.comment}</Typography>
             <CustomTextField fullWidth value={form.comment} onChange={handleChange('comment')} />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <Typography variant='body1'>
-              Qurilma <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.device} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField fullWidth value={form.device} onChange={handleChange('device')} />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <Typography variant='body1'>
-              Qurilma qutisi <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.device_doc} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField select fullWidth value={form.deviceDocument} onChange={handleChange('deviceDocument')}>
-              <MenuItem value='true'>Berildi</MenuItem>
-              <MenuItem value='false'>Berilmadi</MenuItem>
+              <MenuItem value='true'>{t.given}</MenuItem>
+              <MenuItem value='false'>{t['not-given']}</MenuItem>
             </CustomTextField>
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography variant='body1'>
-              To'lov muddati (oy) <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.payment_due_monthly} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField fullWidth value={form.paymentDueMonth} onChange={handleChange('paymentDueMonth')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography variant='body1'>
-              To'lov sanasi (kuni) <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.payment_due_day} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField fullWidth value={form.paymentDay} onChange={handleChange('paymentDay')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography variant='body1'>
-              Buyurtma sanasi <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.order_date} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <DatePickerWrapper>
               <DatePicker
@@ -132,7 +132,7 @@ const CreateOrder = () => {
 
           <Grid item xs={12} md={4}>
             <Typography variant='body1'>
-              Umumiy narxi <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.total_price} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField
               fullWidth
@@ -150,7 +150,7 @@ const CreateOrder = () => {
 
           <Grid item xs={12} md={4}>
             <Typography variant='body1'>
-              Narxi <span style={{ color: 'red' }}>*</span>
+              {t.forms.orders.price} <span style={{ color: 'red' }}>*</span>
             </Typography>
             <CustomTextField
               fullWidth
@@ -167,7 +167,7 @@ const CreateOrder = () => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Typography variant='body1'>Boshlang'ich to'lov</Typography>
+            <Typography variant='body1'>{t.forms.orders.initial_payment}</Typography>
             <CustomTextField
               fullWidth
               value={form.downPayment}
@@ -186,10 +186,10 @@ const CreateOrder = () => {
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button variant='outlined' onClick={onCancel} sx={{ width: { xs: '100%', md: 'max-content' } }}>
-          Bekor qilish
+          {t.forms.cancel}
         </Button>
         <Button variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
-          Saqlash
+          {t.forms.submit}
         </Button>
       </Stack>
     </Stack>

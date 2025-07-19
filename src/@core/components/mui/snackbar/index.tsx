@@ -39,7 +39,8 @@ const DestructiveAlert = React.forwardRef<HTMLDivElement, AlertProps>(function D
 
 export default function CustomSnackbar(props: SnackbarProps) {
   const { message } = props
-  return (
+  
+return (
     <Snackbar {...props} sx={{ display: 'flex', alignItems: 'center' }}>
       <DestructiveAlert severity='error'>{message}</DestructiveAlert>
     </Snackbar>

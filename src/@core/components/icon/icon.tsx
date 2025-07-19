@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import { Theme, useTheme } from '@mui/material/styles'
-import { styled, SxProps } from '@mui/system'
+import { SxProps } from '@mui/system'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   svg: string

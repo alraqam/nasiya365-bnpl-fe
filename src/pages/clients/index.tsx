@@ -8,12 +8,12 @@ import Icon from 'src/@core/components/icon/icon'
 import ManageColumns from 'src/@core/components/ManageColumns'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
-import { useTranslation } from 'react-i18next'
 import useModal from 'src/@core/store/modal'
 import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const Form = styled('form')(({ theme }) => ({
   width: '480px',
@@ -45,6 +45,7 @@ const initialColumns: GridColDef[] = [
             return 'default'
         }
       }
+
       return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
     }
   },
@@ -95,7 +96,7 @@ const initialColumns: GridColDef[] = [
 
 const Clients = () => {
   const { modal, clearModal } = useModal()
-  const { t } = useTranslation()
+  const { t } = useLang()
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -140,7 +141,7 @@ const Clients = () => {
             gap: 2
           })}
         >
-          <Title title={t('pages.clients')} />
+          <Title title={t.pages.clients} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -161,7 +162,7 @@ const Clients = () => {
               })}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-              {t('reload')}
+              {t.reload}
             </Button>
 
             {/* Column Management Button */}
@@ -178,7 +179,7 @@ const Clients = () => {
               aria-haspopup='true'
               aria-expanded={open ? 'true' : undefined}
             >
-              {t('manage-columns')}
+              {t['manage-columns']}
               <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
             </Button>
             <ManageColumns
@@ -193,7 +194,7 @@ const Clients = () => {
             <Link href='/clients/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t('add-client')}
+                {t['add-client']}
               </Button>
             </Link>
           </Stack>
@@ -225,16 +226,16 @@ const Clients = () => {
       <Dialog open={modal === 'search-clients'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            Mijoz izlash
+            {t.forms.client.dialog['search-title']}
           </Typography>
           <Typography variant='body2' align='center'>
-            Mijozni ma'lumotlarini qidiring
+            {t.forms.client.dialog['search-desc']}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Mijoz</Typography>
+              <Typography>{t.forms.client.client}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='Mijoz ism familyasi'
@@ -244,7 +245,7 @@ const Clients = () => {
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Pasport</Typography>
+              <Typography>{t.forms.client.passport}</Typography>
               <CustomTextField
                 fullWidth
                 placeholder='Pasport seriyasi'
@@ -254,7 +255,7 @@ const Clients = () => {
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>Telefon raqam</Typography>
+              <Typography>{t.forms.client.phone}</Typography>
               <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
                 {(inputProps: any) => (
                   <CustomTextField
@@ -276,10 +277,10 @@ const Clients = () => {
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
               <Button variant='outlined' type='button' onClick={clearModal}>
-                Yopish
+                {t.close}
               </Button>
               <Button variant='contained' onClick={handleSearch}>
-                Izlash
+                {t.search}
               </Button>
             </Box>
           </Form>
