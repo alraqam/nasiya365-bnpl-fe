@@ -31,8 +31,8 @@ const StyledImg = styled('img')(({ theme }) => ({
   height: 24,
   borderRadius: 999,
   [theme.breakpoints.down('sm')]: {
-    width: 36,
-    height: 36,
+    width: 28,
+    height: 28,
     marginTop: '5px'
   }
 }))
@@ -60,6 +60,14 @@ const AppBarContent = (props: Props) => {
       case '/orders':
         setModal('search-orders')
         break
+      case '/employees':
+        setModal('search-employees')
+        break
+      case '/expenses':
+        setModal('search-expenses')
+        break
+      case '/investment/investors':
+        setModal('search-investors')
     }
   }
 
@@ -79,7 +87,8 @@ const AppBarContent = (props: Props) => {
               '& .MuiInputBase-input': {
                 paddingLeft: '4px !important',
                 fontSize: '17px'
-              }
+              },
+              display: { md: 'inline-block', xs: 'none' }
             }}
             placeholder={t.search}
             onChange={e => setSearch(e.target.value)}
@@ -93,7 +102,11 @@ const AppBarContent = (props: Props) => {
           saveSettings={saveSettings}
           trigger={
             <Stack direction='row' spacing={2} alignItems='center'>
-              <StyledImg src={lang === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'} alt='uzb flag' />
+              <StyledImg
+                src={lang === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'}
+                alt='uzb flag'
+                // sx={{ width: lang === 'ru' ? '18px' : '24px', height: lang === 'ru' ? '18px' : '24px' }}
+              />
               <Box
                 display='flex'
                 alignItems='center'

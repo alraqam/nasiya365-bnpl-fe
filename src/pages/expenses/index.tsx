@@ -7,22 +7,24 @@ import {
   DialogTitle,
   Typography,
   InputAdornment,
+  Card,
+  MenuItem,
   styled
 } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { alpha, Box } from '@mui/system'
+import { Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import ManageColumns from 'src/@core/components/ManageColumns'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import DatePicker from 'react-datepicker'
 
 const Form = styled('form')(({ theme }) => ({
   width: '100%',
@@ -73,7 +75,7 @@ const initialColumns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex' }}>
-          <Link href={`/clients/edit?id=${id}`}>
+          <Link href={`/expenses/edit?id=${id}`}>
             <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
               <Icon
                 svg='/icons/edit.svg'
@@ -107,7 +109,7 @@ const initialColumns: GridColDef[] = [
   }
 ]
 
-const Clients = () => {
+const Employees = () => {
   const { modal, clearModal } = useModal()
   const { t } = useLang()
 
@@ -115,15 +117,7 @@ const Clients = () => {
     page: 0,
     pageSize: 10
   })
-  const {
-    anchorEl,
-    handleSetAnchorEl,
-    handleCloseAnchorEl,
-    handleColumnToggle,
-    columnVisibility,
-    visibleColumns,
-    open
-  } = useManageColumns(initialColumns)
+  const { visibleColumns } = useManageColumns(initialColumns)
   const [filters, setFilters] = useState({
     name: '',
     passport: '',
@@ -154,7 +148,7 @@ const Clients = () => {
             gap: 2
           })}
         >
-          <Title title={t.pages.clients} />
+          <Title title={t.pages.expenses} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -165,49 +159,23 @@ const Clients = () => {
               flexWrap: 'wrap'
             }}
           >
-            <Button
-              variant='tonal'
-              sx={theme => ({
-                gap: 2,
-                backgroundColor: '#2F2B3D0F',
-                color: theme.palette.text.primary,
-                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
-              })}
+            <Card
+              sx={{
+                px: 4,
+                height: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                color: '#000 !important',
+                backgroundColor: '#2F2B3D0F'
+              }}
             >
-              <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-              {t.reload}
-            </Button>
+              {t['total-expense']}: $249 550.00
+            </Card>
 
-            {/* Column Management Button */}
-            <Button
-              variant='tonal'
-              sx={theme => ({
-                gap: 2,
-                backgroundColor: '#2F2B3D0F',
-                color: theme.palette.text.primary,
-                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
-              })}
-              onClick={handleSetAnchorEl}
-              aria-controls={open ? 'column-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}
-            >
-              {t['manage-columns']}
-              <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-            </Button>
-            <ManageColumns
-              columnVisibility={columnVisibility}
-              handleColumnToggle={handleColumnToggle}
-              anchorEl={anchorEl}
-              open={open}
-              handleCloseAnchorEl={handleCloseAnchorEl}
-              initialColumns={initialColumns}
-            />
-
-            <Link href='/clients/create'>
+            <Link href='/expenses/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t['add-client']}
+                {t['add-expense']}
               </Button>
             </Link>
           </Stack>
@@ -236,57 +204,74 @@ const Clients = () => {
         </Box>
       </Stack>
 
-      <Dialog open={modal === 'search-clients'} onClose={clearModal}>
+      <Dialog open={modal === 'search-expenses'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            {t.forms.client.dialog['search-title']}
+            {t.forms.expenses.dialog['search-title']}
           </Typography>
-          <Typography variant='body2' align='center'>
-            {t.forms.client.dialog['search-desc']}
-          </Typography>
+          {/* <Typography variant='body2' align='center'>
+            {t.forms.expenses.dialog['search-desc']}
+          </Typography> */}
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.client}</Typography>
-              <CustomTextField
-                fullWidth
-                placeholder='Mijoz ism familyasi'
-                name='name'
-                value={filters.name}
-                onChange={handleChange}
-              />
+              <Typography>{t.forms.expenses.expense}</Typography>
+              <CustomTextField fullWidth name='name' value={filters.name} onChange={handleChange} />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.passport}</Typography>
-              <CustomTextField
-                fullWidth
-                placeholder='Pasport seriyasi'
-                name='passport'
-                value={filters.passport}
-                onChange={handleChange}
-              />
+              <Typography>{t.forms.expenses.amount}</Typography>
+              <CustomTextField fullWidth name='passport' value={filters.passport} onChange={handleChange} />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.phone}</Typography>
-              <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
-                {(inputProps: any) => (
-                  <CustomTextField
-                    {...inputProps}
-                    placeholder='00 000 00 00'
-                    variant='outlined'
-                    fullWidth
-                    sx={{ borderRadius: '8px' }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start' sx={{ marginRight: '4px' }}>
-                          +998
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              </InputMask>
+              <Typography>{t.forms.expenses.type}</Typography>
+              <CustomTextField select fullWidth>
+                <MenuItem value='cost-price'>{t.forms.expenses['cost-price']}</MenuItem>
+                <MenuItem value='abandoned'>{t.forms.expenses.abandoned}</MenuItem>
+                <MenuItem value='other'>{t.other}</MenuItem>
+              </CustomTextField>
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>{t.forms.expenses['date-from']}</Typography>
+              <DatePickerWrapper>
+                <DatePicker
+                  onChange={date => console.log(date)}
+                  dateFormat='dd.MM.yyyy'
+                  customInput={
+                    <CustomTextField
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  }
+                />
+              </DatePickerWrapper>
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>{t.forms.expenses['data-to']}</Typography>
+              <DatePickerWrapper>
+                <DatePicker
+                  onChange={date => console.log(date)}
+                  dateFormat='dd.MM.yyyy'
+                  customInput={
+                    <CustomTextField
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  }
+                />
+              </DatePickerWrapper>
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
               <Button variant='outlined' type='button' onClick={clearModal}>
@@ -303,4 +288,4 @@ const Clients = () => {
   )
 }
 
-export default Clients
+export default Employees

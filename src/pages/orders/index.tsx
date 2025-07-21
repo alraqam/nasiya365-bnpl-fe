@@ -1,4 +1,4 @@
-import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem } from '@mui/material'
+import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem, styled } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
@@ -8,16 +8,19 @@ import Icon from 'src/@core/components/icon/icon'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
-import styled from '@emotion/styled'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
 
 const Form = styled('form')(({ theme }) => ({
-  width: '480px',
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: '20px'
+  gap: '20px',
+
+  [theme.breakpoints.up('sm')]: {
+    width: '480px'
+  }
 }))
 
 const initialColumns: GridColDef[] = [

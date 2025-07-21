@@ -3,6 +3,7 @@
     "welcome-description": "Hisobingizga kirish uchun maʼlumotlarni kiriting.",
     "view": "Ko'rish",
     "balance": "Balans",
+    "total-expense": "Umumiy xarajat",
     "device-stats": "Qurilmalar statistikasi",
     "income-stats": "Kirim chiqim statistikasi",
     "reload": "Qayta yuklash",
@@ -10,9 +11,17 @@
     "add-client": "Mijoz qo'shish",
     "add-product": "Mahsulot qo'shish",
     "add-order": "Buyurtma qo'shish",
+    "add-employee": "Xodim qo'shish",
+    "add-expense": "Xarajat qo'shish",
+    "add-investor": "Investor qo'shish",
+    "add-investment": "Investitsiya qo'shish",
     "edit-client": "Mijozni tahrirlash",
     "edit-product": "Mahsulotni tahrirlash",
     "edit-order": "Buyurtmani tahrirlash",
+    "edit-employee": "Xodimni tahrirlash",
+    "edit-expense": "Xarajatni tahrirlash",
+    "edit-investor": "Investorni tahrirlash",
+    "edit-investment": "Investitsiyani tahrirlash",
     "client": "Mijoz",
     "product": "Mahsulot",
     "devices": "Qurilmalar",
@@ -25,7 +34,9 @@
     "search": "Izlash",
     "given": "Berilgan",
     "not-given": "Berilmagan",
+    "other": "Boshqa",
     "login": {
+        "submit": "Login",
         "phone": "Telefon raqam",
         "password": "Parol",
         "no-phone": "Telefon raqamingizni kiriting",
@@ -35,7 +46,20 @@
         "dashboard": "Dashboard",
         "clients": "Mijozlar",
         "products": "Mahsulotlar",
-        "orders": "Buyurtmalar"
+        "orders": "Buyurtmalar",
+        "employees": "Xodimlar",
+        "expenses": "Xarajatlar",
+        "investment": {
+            "label": "Investitsiya",
+            "investors": "Investorlar",
+            "investments": "Investitsiyalar"
+        },
+        "settings": {
+            "label": "Sozlamalar",
+            "roles": "Rollar",
+            "controllers": "Kontroller",
+            "actions": "Amallar"
+        }
     },
     "forms": {
         "cancel": "Bekor qilish",
@@ -112,6 +136,83 @@
                 "client": "Mijoz ism familyasi",
                 "imei": "Qurilmani tanlang",
                 "payment_deadline": "To'lov muddatini kiriting"
+            }
+        },
+        "employees": {
+            "dialog": {
+                "search-title": "Xodim izlash",
+                "search-desc": "Xodim ma'lumotlarini qidiring"
+            },
+            "personal-details": "Shaxsiy ma'lumotlar",
+            "passport-details": "Pasport ma'lumotlari",
+            "employee": "Xodim",
+            "passport": "Pasport",
+            "phone": "Telefon raqam",
+            "email": "Email",
+            "family-status": "Oilayiy holati",
+            "number-of-children": "Bolalar soni",
+            "password": "Parol",
+            "confirm-password": "Parolni tasdiqlash",
+            "surname": "Familya",
+            "name": "Ismi",
+            "patronymic": "Sharifi",
+            "passport-series": "Pasport seriyasi",
+            "passport-issuer": "Kim tomonidan berilgan",
+            "passport-issue-date": "Qachon berilgan",
+            "birthday": "Tu'g'ilgan kuni",
+            "gender": "Jinsi",
+            "birthPlace": "Tu'g'ilgan joyi",
+            "address": "Yashash manzili",
+            "placeholder": {
+                "employee": "Xodim ism familyasi",
+                "pasport": "Pasport seriyasi",
+                "phone": "00 000 00 00"
+            }
+        },
+        "expenses": {
+            "dialog": {
+                "search-title": "Xarajat izlash",
+                "search-desc": "Xarajat ma'lumotlarini qidiring"
+            },
+            "expense": "Xarajat",
+            "amount": "Summa",
+            "type": "Turi",
+            "date-from": "Sana (dan)",
+            "data-to": "Sana (gacha)",
+            "cost-price": "Tannarx",
+            "abandoned": "Voz kechilgan",
+            "name": "Xarajat nomi",
+            "date": "Sana",
+            "placeholder": {
+                "name": "Xarajat nomini kiriting",
+                "amount": "Summani kiriting",
+                "date": "Sanani kiriting"
+            }
+        },
+        "investors": {
+            "dialog": {
+                "search-title": "Investor izlash",
+                "search-desc": "Investor ma'lumotlarini qidiring"
+            },
+            "investor": "Investor",
+            "passport": "Pasport",
+            "phone": "Telefon raqam",
+            "fio": "F.I.O",
+            "percent": "Foiz",
+            "placeholder": {
+                "fio": "F.I.O kiriting",
+                "investor": "Investor ism familyasi",
+                "passport": "Pasport seriyasi",
+                "phone": "00 000 00 00",
+                "percent": "Foizni kiriting"
+            }
+        },
+        "investments": {
+            "investor": "Investor",
+            "amount": "Summa",
+            "placeholder": {
+                "investor": "Investor kiriting",
+                "amount": "Summani kiriting"
             }
         }
     },

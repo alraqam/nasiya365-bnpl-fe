@@ -1,6 +1,5 @@
 // ** React Imports
 import { ReactNode } from 'react'
-import { appWithTranslation } from 'next-i18next'
 
 // ** Next Imports
 import Head from 'next/head'
@@ -16,7 +15,6 @@ import { CacheProvider } from '@emotion/react'
 import type { EmotionCache } from '@emotion/cache'
 
 // ** Config Imports
-import 'src/configs/i18n'
 import { defaultACLObj } from 'src/configs/acl'
 import themeConfig from 'src/configs/themeConfig'
 
@@ -151,4 +149,4 @@ const App = (props: ExtendedAppProps) => {
   )
 }
 
-export default appWithTranslation(App)
+export default App

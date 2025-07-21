@@ -15,14 +15,13 @@ import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import ManageColumns from 'src/@core/components/ManageColumns'
 import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import InputMask from 'react-input-mask'
 
 const Form = styled('form')(({ theme }) => ({
   width: '100%',
@@ -73,7 +72,7 @@ const initialColumns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex' }}>
-          <Link href={`/clients/edit?id=${id}`}>
+          <Link href={`/investment/investors/edit?id=${id}`}>
             <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
               <Icon
                 svg='/icons/edit.svg'
@@ -107,7 +106,7 @@ const initialColumns: GridColDef[] = [
   }
 ]
 
-const Clients = () => {
+const Investors = () => {
   const { modal, clearModal } = useModal()
   const { t } = useLang()
 
@@ -115,19 +114,12 @@ const Clients = () => {
     page: 0,
     pageSize: 10
   })
-  const {
-    anchorEl,
-    handleSetAnchorEl,
-    handleCloseAnchorEl,
-    handleColumnToggle,
-    columnVisibility,
-    visibleColumns,
-    open
-  } = useManageColumns(initialColumns)
+  const { visibleColumns, open } = useManageColumns(initialColumns)
   const [filters, setFilters] = useState({
-    name: '',
-    passport: '',
-    phone: ''
+    supplier: '',
+    imei: '',
+    model: '',
+    account: ''
   })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,7 +131,7 @@ const Clients = () => {
 
   const handleSearch = async () => {
     console.log(filters)
-    // Backend interaction goes here
+    // backend interaction goes here
   }
 
   return (
@@ -154,7 +146,7 @@ const Clients = () => {
             gap: 2
           })}
         >
-          <Title title={t.pages.clients} />
+          <Title title={t.pages.investment.investors} />
           <Stack
             sx={{
               flexDirection: 'row',
@@ -178,36 +170,10 @@ const Clients = () => {
               {t.reload}
             </Button>
 
-            {/* Column Management Button */}
-            <Button
-              variant='tonal'
-              sx={theme => ({
-                gap: 2,
-                backgroundColor: '#2F2B3D0F',
-                color: theme.palette.text.primary,
-                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
-              })}
-              onClick={handleSetAnchorEl}
-              aria-controls={open ? 'column-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}
-            >
-              {t['manage-columns']}
-              <Icon svg='/icons/chevron-down.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-            </Button>
-            <ManageColumns
-              columnVisibility={columnVisibility}
-              handleColumnToggle={handleColumnToggle}
-              anchorEl={anchorEl}
-              open={open}
-              handleCloseAnchorEl={handleCloseAnchorEl}
-              initialColumns={initialColumns}
-            />
-
-            <Link href='/clients/create'>
+            <Link href='/investment/investors/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t['add-client']}
+                {t['add-investor']}
               </Button>
             </Link>
           </Stack>
@@ -236,44 +202,44 @@ const Clients = () => {
         </Box>
       </Stack>
 
-      <Dialog open={modal === 'search-clients'} onClose={clearModal}>
+      <Dialog open={modal === 'search-investors'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
-            {t.forms.client.dialog['search-title']}
+            {t.forms.investors.dialog['search-title']}
           </Typography>
           <Typography variant='body2' align='center'>
-            {t.forms.client.dialog['search-desc']}
+            {t.forms.investors.dialog['search-desc']}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.client}</Typography>
+              <Typography>{t.forms.investors.investor}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Mijoz ism familyasi'
-                name='name'
-                value={filters.name}
+                placeholder={t.forms.investors.placeholder.investor}
+                name='supplier'
+                value={filters.supplier}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.passport}</Typography>
+              <Typography>{t.forms.investors.passport}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Pasport seriyasi'
-                name='passport'
-                value={filters.passport}
+                placeholder={t.forms.investors.placeholder.passport}
+                name='imei'
+                value={filters.imei}
                 onChange={handleChange}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.client.phone}</Typography>
-              <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
+              <Typography>{t.forms.investors.phone}</Typography>
+              <InputMask mask='99 999 99 99'>
                 {(inputProps: any) => (
                   <CustomTextField
                     {...inputProps}
-                    placeholder='00 000 00 00'
+                    placeholder={t.forms.investors.placeholder.phone}
                     variant='outlined'
                     fullWidth
                     sx={{ borderRadius: '8px' }}
@@ -303,4 +269,4 @@ const Clients = () => {
   )
 }
 
-export default Clients
+export default Investors

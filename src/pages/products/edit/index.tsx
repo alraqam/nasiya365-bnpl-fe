@@ -79,10 +79,10 @@ const CreateProduct = () => {
       </Card>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button variant='outlined' onClick={onCancel}>
+        <Button variant='outlined' onClick={onCancel} sx={{ width: { md: 'max-content', xs: '100%' } }}>
           {t.forms.cancel}
         </Button>
-        <Button variant='tonal' onClick={onSubmit}>
+        <Button variant='tonal' onClick={onSubmit} sx={{ width: { md: 'max-content', xs: '100%' } }}>
           {t.forms.submit}
         </Button>
       </Stack>

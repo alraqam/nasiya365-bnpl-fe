@@ -1,6 +1,6 @@
 import { alpha, Box, Pagination, PaginationItem, Typography } from '@mui/material'
 import Icon from './icon/icon'
-import { useTranslation } from 'react-i18next'
+import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
   rowCount: number
@@ -12,7 +12,7 @@ interface Props {
 const CustomFooter = ({ rowCount, page, pageSize, onPageChange }: Props) => {
   const totalPages = Math.ceil(rowCount / pageSize)
 
-  const { i18n } = useTranslation()
+  const { lang } = useLang()
 
   return (
     <Box
@@ -21,10 +21,11 @@ const CustomFooter = ({ rowCount, page, pageSize, onPageChange }: Props) => {
       alignItems='center'
       px={5}
       py={6}
+      gap={4}
       sx={{ flexDirection: { xs: 'column', md: 'row' } }}
     >
       <Typography color='text.secondary' fontSize={14}>
-        {i18n.language === 'uz'
+        {lang === 'uz'
           ? `${rowCount} ta ro'yxatdan ${page * pageSize + 1} dan ${Math.min(
               (page + 1) * pageSize,
               rowCount

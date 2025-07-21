@@ -27,14 +27,22 @@ const Dialog = (skin: Skin) => {
     MuiDialogTitle: {
       styleOverrides: {
         root: ({ theme }: OwnerStateThemeType) => ({
-          padding: theme.spacing(5, 6, 1)
+          padding: theme.spacing(5, 6, 1),
+          [theme.breakpoints.down('md')]: {
+            padding: 0,
+            paddingTop: 16
+          }
         })
       }
     },
     MuiDialogContent: {
       styleOverrides: {
         root: ({ theme }: OwnerStateThemeType) => ({
-          padding: `${theme.spacing(5, 6)} !important`
+          padding: `${theme.spacing(5, 6)} !important`,
+          [theme.breakpoints.down('md')]: {
+            paddingRight: '0px !important',
+            paddingLeft: '0px !important'
+          }
         })
       }
     },

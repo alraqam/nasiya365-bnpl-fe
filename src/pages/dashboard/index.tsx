@@ -10,6 +10,7 @@ import { MONTHS, YEARS } from 'src/@core/utils/constants'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
 import { useLang } from 'src/providers/LanguageProvider'
+import { fontWeight } from '@mui/system'
 
 const DeviceStatCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -39,10 +40,25 @@ const StepCard = styled(Box)(({ theme }) => ({
   padding: 6
 }))
 
+const selectStyles = {
+  boxShadow: '0px 1px 8px 0px #53505E14',
+  borderRadius: '6px',
+  backgroundColor: '#fff',
+  '& .MuiInputBase-root': {
+    border: 'none',
+    '& .MuiSelect-select': {
+      color: '#2F2B3DE5',
+      fontWeight: '500'
+    }
+  }
+}
+
 const initialYear = new Date().getFullYear().toString()
 const initialMonth = MONTHS[new Date().getMonth()]
 
 const Home = () => {
+  const { t } = useLang()
+
   const [type, setType] = useState<'monthly' | 'yearly' | 'general' | 'custom'>('monthly')
   const [monthly, setMonthly] = useState({
     year: initialYear,
@@ -53,8 +69,6 @@ const Home = () => {
     from: new Date(),
     to: new Date()
   })
-
-  const { t } = useLang()
 
   return (
     <Stack flexDirection='column' spacing={6}>
@@ -89,7 +103,13 @@ const Home = () => {
                   }
                 })}
               >
-                <CustomTextField select fullWidth value={type} onChange={e => setType(e.target.value as typeof type)}>
+                <CustomTextField
+                  select
+                  fullWidth
+                  value={type}
+                  onChange={e => setType(e.target.value as typeof type)}
+                  sx={selectStyles}
+                >
                   <MenuItem value='monthly'>{t.periods.monthly}</MenuItem>
                   <MenuItem value='yearly'>{t.periods.yearly}</MenuItem>
                   <MenuItem value='general'>{t.periods.general}</MenuItem>
@@ -98,17 +118,20 @@ const Home = () => {
               </Box>
               {type === 'monthly' && (
                 <Stack
-                  direction='row'
-                  alignItems='center'
                   spacing={3}
-                  sx={theme => ({ [theme.breakpoints.down('md')]: { minWidth: '100%' } })}
+                  sx={theme => ({
+                    [theme.breakpoints.down('md')]: { minWidth: '100%' },
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: { md: 3, xs: 3 }
+                  })}
                 >
                   <CustomTextField
                     select
                     fullWidth
                     value={monthly.year}
                     onChange={e => setMonthly({ ...monthly, year: e.target.value })}
-                    sx={theme => ({ [theme.breakpoints.down('md')]: { minWidth: '100%' } })}
+                    sx={theme => ({ [theme.breakpoints.down('md')]: { width: '100%' }, ...selectStyles })}
                   >
                     {YEARS.map((year, index) => (
                       <MenuItem key={index} value={year}>
@@ -121,7 +144,11 @@ const Home = () => {
                     fullWidth
                     value={monthly.month}
                     onChange={e => setMonthly({ ...monthly, month: e.target.value })}
-                    sx={theme => ({ [theme.breakpoints.down('md')]: { minWidth: '100%' } })}
+                    sx={theme => ({
+                      [theme.breakpoints.down('md')]: { width: '100%' },
+                      margin: { md: '0px !important', xs: '0 auto !important' },
+                      ...selectStyles
+                    })}
                   >
                     {MONTHS.map((month, index) => (
                       <MenuItem key={index} value={month}>
@@ -138,7 +165,13 @@ const Home = () => {
                   spacing={3}
                   sx={theme => ({ [theme.breakpoints.down('md')]: { minWidth: '100%' } })}
                 >
-                  <CustomTextField select fullWidth value={yearly} onChange={e => setYearly(e.target.value)}>
+                  <CustomTextField
+                    select
+                    fullWidth
+                    value={yearly}
+                    onChange={e => setYearly(e.target.value)}
+                    sx={selectStyles}
+                  >
                     {YEARS.map((year, index) => (
                       <MenuItem key={index} value={year}>
                         {year}
@@ -169,16 +202,10 @@ const Home = () => {
                         <CustomTextField
                           variant='filled'
                           sx={theme => ({
-                            backgroundColor: '#fff !important',
-                            borderRadius: '6px',
-                            boxShadow: '0px 1px 8px 0px #53505E14',
-                            '& .MuiInputBase-root': {
-                              border: 'none !important',
-                              borderRadius: 6
-                            },
                             [theme.breakpoints.down('md')]: {
                               width: '100%'
-                            }
+                            },
+                            ...selectStyles
                           })}
                         />
                       }
@@ -198,16 +225,10 @@ const Home = () => {
                       customInput={
                         <CustomTextField
                           sx={theme => ({
-                            backgroundColor: '#fff !important',
-                            borderRadius: '6px',
-                            boxShadow: '0px 1px 8px 0px #53505E14',
-                            '& .MuiInputBase-root': {
-                              border: 'none !important',
-                              borderRadius: 6
-                            },
                             [theme.breakpoints.down('md')]: {
                               width: '100%'
-                            }
+                            },
+                            ...selectStyles
                           })}
                         />
                       }

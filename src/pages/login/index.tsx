@@ -38,7 +38,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
-import { useTranslation } from 'next-i18next'
 import { Snackbar } from '@mui/material'
 import CustomSnackbar from 'src/@core/components/mui/snackbar'
 import { useLang } from 'src/providers/LanguageProvider'
@@ -253,7 +252,7 @@ const LoginPage = () => {
                 />
               </Box>
               <Button fullWidth type='submit' variant='contained' sx={{ mt: 6 }}>
-                Login
+                {t.login.submit}
               </Button>
             </form>
           </Box>
