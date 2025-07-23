@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
+import { useState, ReactNode } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -12,7 +12,6 @@ import Box, { BoxProps } from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -21,9 +20,7 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Imports
-import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -31,16 +28,17 @@ import useBgColor from 'src/@core/hooks/useBgColor'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Configs
-import themeConfig from 'src/configs/themeConfig'
 
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
-import { Snackbar } from '@mui/material'
-import CustomSnackbar from 'src/@core/components/mui/snackbar'
 import { useLang } from 'src/providers/LanguageProvider'
+import { api } from 'src/configs/api'
+import toast from 'react-hot-toast'
+import { STORAGE_KEYS } from 'src/@core/utils/constants'
+import { useRouter } from 'next/router'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -69,37 +67,21 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const LinkStyled = styled(Link)(({ theme }) => ({
-  textDecoration: 'none',
-  color: `${theme.palette.primary.main} !important`
-}))
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    color: theme.palette.text.secondary
-  }
-}))
-
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(5).required()
-})
-
 const defaultValues = {
-  password: 'admin',
-  email: 'admin@vuexy.com'
+  password: 'admin12345',
+  phone1: '901234567'
 }
 
 interface FormData {
-  email: string
+  phone1: string
   password: string
 }
 
 const LoginPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const { t } = useLang()
+  const router = useRouter()
 
   // ** Hooks
   const auth = useAuth()
@@ -118,18 +100,46 @@ const LoginPage = () => {
     formState: { errors }
   } = useForm({
     defaultValues,
-    mode: 'onBlur',
-    resolver: yupResolver(schema)
+    mode: 'onBlur'
   })
 
-  const onSubmit = (data: FormData) => {
-    const { email, password } = data
-    auth.login({ email, password, rememberMe }, () => {
-      setError('email', {
-        type: 'manual',
-        message: 'Email or Password is invalid'
+  const onSubmit = async (data: FormData) => {
+    const { phone1, password } = data
+
+    const res = await api('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        phone1: phone1,
+        password: password
       })
     })
+
+    if (!res.status && res.errors) {
+      if ('phone1' in res.errors) {
+        setError('phone1', {
+          type: 'manual',
+          message: res.errors.phone1[0]
+        })
+      }
+
+      if ('password' in res.errors) {
+        setError('password', {
+          type: 'manual',
+          message: res.errors.password[0]
+        })
+      }
+
+      if (Array.isArray(res.errors) && res.errors.includes('Unauthorized')) {
+        toast.error(res.errors[0])
+      }
+    } else {
+      auth.setUser(res.user)
+      auth.setPermissions(res.permissions)
+      localStorage.setItem(STORAGE_KEYS.token, res.token)
+      localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
+
+      router.push('/dashboard')
+    }
   }
 
   const imageSource = 'login-illustrator'
@@ -183,7 +193,7 @@ const LoginPage = () => {
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 6 }}>
                 <Controller
-                  name='email'
+                  name='phone1'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
@@ -195,8 +205,8 @@ const LoginPage = () => {
                       onBlur={onBlur}
                       onChange={onChange}
                       placeholder='admin@vuexy.com'
-                      error={Boolean(errors.email)}
-                      {...(errors.email && { helperText: errors.email.message })}
+                      error={Boolean(errors.phone1)}
+                      {...(errors.phone1 && { helperText: errors.phone1.message })}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position='start'>
@@ -258,14 +268,6 @@ const LoginPage = () => {
           </Box>
         </Box>
       </RightWrapper>
-
-      {/* <CustomSnackbar
-        message={t.login['no-phone']}
-        open={true}
-        autoHideDuration={2000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={() => console.log('2 seconds passed')}
-      /> */}
     </Box>
   )
 }

@@ -1,0 +1,114 @@
+export interface Permission {
+  action: string
+  subject: string
+}
+
+// Route to Permission Mapping
+export const routePermissions: Record<string, Permission> = {
+  '/dashboard': { action: 'index', subject: 'DashboardController' },
+  '/clients': { action: 'index', subject: 'ClientController' }
+  //   '/clients/create': { action: 'store', subject: 'ClientController' },
+  //   '/clients/[id]': { action: 'show', subject: 'ClientController' },
+  //   '/clients/[id]/edit': { action: 'update', subject: 'ClientController' },
+  //   '/users': { action: 'index', subject: 'UserController' },
+  //   '/users/create': { action: 'store', subject: 'UserController' },
+  //   '/users/[id]/edit': { action: 'update', subject: 'UserController' },
+  //   '/settings': { action: 'check_data', subject: 'SettingController' },
+  //   '/uploads': { action: 'file_upload', subject: 'FileController' }
+}
+
+// Permission checker class
+export class PermissionChecker {
+  private permissions: Permission[]
+
+  constructor(permissions: Permission[]) {
+    this.permissions = permissions
+  }
+
+  // Check if user has a specific permission
+  hasPermission(action: string, subject: string): boolean {
+    return this.permissions.some(permission => permission.action === action && permission.subject === subject)
+  }
+
+  // Check if user has any of the given permissions
+  hasAnyPermission(requiredPermissions: Permission[]): boolean {
+    return requiredPermissions.some(required => this.hasPermission(required.action, required.subject))
+  }
+
+  // Check if user has all of the given permissions
+  hasAllPermissions(requiredPermissions: Permission[]): boolean {
+    return requiredPermissions.every(required => this.hasPermission(required.action, required.subject))
+  }
+
+  // Get permission for a specific route
+  canAccessRoute(route: string): boolean {
+    const requiredPermission = this.getRoutePermission(route)
+    if (!requiredPermission) {
+      // OPTION 1: Allow access if no permission is defined (more permissive)
+      console.warn(`No permission defined for route: ${route}. Allowing access.`)
+      return true
+
+      // OPTION 2: Deny access if no permission is defined (more restrictive)
+      // console.warn(`No permission defined for route: ${route}. Denying access.`)
+      // return false
+    }
+    return this.hasPermission(requiredPermission.action, requiredPermission.subject)
+  }
+
+  // Helper to get route permission (handles dynamic routes)
+  private getRoutePermission(route: string): Permission | null {
+    // Direct match first
+    if (routePermissions[route]) {
+      return routePermissions[route]
+    }
+
+    // Handle dynamic routes
+    for (const [routePattern, permission] of Object.entries(routePermissions)) {
+      if (routePattern.includes('[id]')) {
+        // More flexible regex to handle both numeric and string IDs
+        const regex = new RegExp('^' + routePattern.replace(/\[id\]/g, '[^/]+') + '$')
+        if (regex.test(route)) {
+          return permission
+        }
+      }
+
+      // Handle other dynamic route patterns like [slug], [...params], etc.
+      if (routePattern.includes('[')) {
+        const regex = new RegExp(
+          '^' +
+            routePattern
+              .replace(/\[\.\.\..*?\]/g, '.*') // [...params] -> .*
+              .replace(/\[.*?\]/g, '[^/]+') + // [slug] -> [^/]+
+            '$'
+        )
+        if (regex.test(route)) {
+          return permission
+        }
+      }
+    }
+
+    return null
+  }
+
+  // Filter an array based on permissions
+  filterByPermission<T>(items: T[], getRequiredPermission: (item: T) => Permission): T[] {
+    return items.filter(item => {
+      const required = getRequiredPermission(item)
+      return this.hasPermission(required.action, required.subject)
+    })
+  }
+}
+
+// Utility functions for easy use
+export const createPermissionChecker = (permissions: Permission[]) => {
+  return new PermissionChecker(permissions)
+}
+
+export const hasPermission = (permissions: Permission[], action: string, subject: string): boolean => {
+  return permissions.some(p => p.action === action && p.subject === subject)
+}
+
+export const canAccessRoute = (permissions: Permission[], route: string): boolean => {
+  const checker = new PermissionChecker(permissions)
+  return checker.canAccessRoute(route)
+}

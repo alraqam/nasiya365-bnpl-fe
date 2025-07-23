@@ -1,17 +1,11 @@
 // ** React Imports
-import { createContext, useEffect, useState, ReactNode } from 'react'
-
-// ** Next Import
-import { useRouter } from 'next/router'
-
-// ** Axios
-import axios from 'axios'
-
-// ** Config
-import authConfig from 'src/configs/auth'
+import { createContext, useState, ReactNode, useEffect } from 'react'
 
 // ** Types
-import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, UserDataType } from './types'
+import { STORAGE_KEYS } from 'src/@core/utils/constants'
+import { api } from 'src/configs/api'
+import { Permission } from 'src/@core/utils/permission-checker'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -19,8 +13,8 @@ const defaultProvider: AuthValuesType = {
   loading: true,
   setUser: () => null,
   setLoading: () => Boolean,
-  login: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  permissions: [],
+  setPermissions: () => []
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -32,81 +26,41 @@ type Props = {
 const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
+  const [permissions, setPermissions] = useState<Permission[]>(defaultProvider.permissions)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const [token, setToken] = useState<string | null>(null)
 
-  // ** Hooks
-  const router = useRouter()
+  const fetchUser = async () => {
+    setLoading(true)
+    const res = (await api('/api/user')) as UserDataType
+    setUser(res)
+    setLoading(false)
+  }
 
   useEffect(() => {
-    const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken) {
-        setLoading(true)
-        await axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
-          .then(async response => {
-            setLoading(false)
-            setUser({ ...response.data.userData })
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
-          })
-      } else {
-        setLoading(false)
-      }
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem(STORAGE_KEYS.token)
+      setToken(storedToken)
     }
-
-    initAuth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setLoading(false)
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
-      .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
-        const returnUrl = router.query.returnUrl
+  useEffect(() => {
+    if (token && user === null) {
+      fetchUser()
+    }
 
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
-
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-
-        router.replace(redirectURL as string)
-      })
-
-      .catch(err => {
-        if (errorCallback) errorCallback(err)
-      })
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
-  }
+    const cachedPermissions = JSON.parse(localStorage.getItem(STORAGE_KEYS.permissions) || '[]') as Permission[]
+    setPermissions(cachedPermissions)
+  }, [token])
 
   const values = {
     user,
     loading,
     setUser,
     setLoading,
-    login: handleLogin,
-    logout: handleLogout
+    permissions,
+    setPermissions
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

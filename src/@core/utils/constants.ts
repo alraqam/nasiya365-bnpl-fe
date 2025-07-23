@@ -1,3 +1,9 @@
+export const STORAGE_KEYS = {
+  token: 'token',
+  lang: 'nasiya-lang',
+  permissions: 'nasiya-permissions'
+}
+
 export const MONTHS = [
   'january',
   'february',

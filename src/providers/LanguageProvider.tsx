@@ -1,4 +1,5 @@
 import { createContext, ReactNode, use, useContext, useEffect, useState } from 'react'
+import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import uz from 'src/locales/uz.json'
 // import ru from 'src/locales/ru.json'
 
@@ -22,12 +23,9 @@ const LanguageContext = createContext<LanguageProviderProps | null>(null)
 const translations = { uz }
 
 export const LanguageProvider = ({ children }: Props) => {
-  const [lang, setLang] = useState<AppLang>(() => {
-    const currentLang = (localStorage.getItem('nasiya-lang') as AppLang) || 'uz'
-    return currentLang
-  })
+  const [lang, setLang] = useState<AppLang>('uz')
   // const [t, setT] = useState<typeof uz | typeof ru>(() => {
-  //   const currentLang = (localStorage.getItem('nasiya-lang') as AppLang) || 'uz'
+  //   const currentLang = (localStorage.getItem(STORAGE_KEYS.lang) as AppLang) || 'uz'
   //   return translations[currentLang]
   // })
   const [t, setT] = useState<typeof uz>(uz)
@@ -35,17 +33,21 @@ export const LanguageProvider = ({ children }: Props) => {
   const changeLang = (newLang: AppLang) => {
     if (newLang !== lang) {
       setLang(newLang)
-      localStorage.setItem('nasiya-lang', newLang)
+      localStorage.setItem(STORAGE_KEYS.lang, newLang)
     }
   }
+
+  useEffect(() => {
+    setLang(localStorage.getItem(STORAGE_KEYS.lang) as AppLang)
+  }, [])
 
   // useEffect(() => {
   //   setT(translations[lang])
   // }, [lang])
 
   useEffect(() => {
-    if (!localStorage.getItem('nasiya-lang')) {
-      localStorage.setItem('nasiya-lang', lang)
+    if (!localStorage.getItem(STORAGE_KEYS.lang)) {
+      localStorage.setItem(STORAGE_KEYS.lang, lang)
     }
   }, [])
 

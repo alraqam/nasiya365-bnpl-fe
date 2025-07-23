@@ -9,32 +9,44 @@ const useNavigation = (): VerticalNavItemsType => {
     {
       title: t.pages.dashboard,
       path: '/dashboard',
-      icon: 'tabler:brand-speedtest'
+      icon: 'tabler:brand-speedtest',
+      action: 'index',
+      subject: 'DashboardController'
     },
     {
       title: t.pages.clients,
       path: '/clients',
-      icon: 'tabler:users-group'
+      icon: 'tabler:users-group',
+      action: 'index',
+      subject: 'ClientController'
     },
     {
       title: t.pages.products,
       path: '/products',
-      icon: 'tabler:cube'
+      icon: 'tabler:cube',
+      action: 'index',
+      subject: 'DeviceController' // CORRECTED: Changed from 'ProductController' to 'DeviceController'
     },
     {
       title: t.pages.orders,
       path: '/orders',
-      icon: 'tabler:shopping-cart'
+      icon: 'tabler:shopping-cart',
+      action: 'index',
+      subject: 'OrderController'
     },
     {
       title: t.pages.employees,
       path: '/employees',
-      icon: 'tabler:users'
+      icon: 'tabler:users',
+      action: 'index',
+      subject: 'Mirfozil' // CORRECTED: Changed from 'EmployeeController' to 'Mirfozil' (Please confirm this is the correct subject for employees)
     },
     {
       title: t.pages.expenses,
       path: '/expenses',
-      icon: 'tabler:exposure'
+      icon: 'tabler:exposure',
+      action: 'index',
+      subject: 'CostController' // CORRECTED: Changed from 'ExpenseController' to 'CostController'
     },
     {
       title: t.pages.investment.label,
@@ -42,11 +54,15 @@ const useNavigation = (): VerticalNavItemsType => {
       children: [
         {
           title: t.pages.investment.investors,
-          path: '/investment/investors'
+          path: '/investment/investors',
+          action: 'index',
+          subject: 'InvestorController'
         },
         {
           title: t.pages.investment.investments,
-          path: '/investment/investments'
+          path: '/investment/investments',
+          action: 'index',
+          subject: 'InvestmentController'
         }
       ]
     },
@@ -56,15 +72,21 @@ const useNavigation = (): VerticalNavItemsType => {
       children: [
         {
           title: t.pages.settings.roles,
-          path: '/settings/roles'
+          path: '/settings/roles',
+          action: 'index',
+          subject: 'RoleController' // KEEP AS IS, but verify backend provides this permission
         },
         {
           title: t.pages.settings.controllers,
-          path: '/settings/controllers'
+          path: '/settings/controllers',
+          action: 'index',
+          subject: 'ControllerController' // KEEP AS IS, but verify backend provides this permission
         },
         {
           title: t.pages.settings.actions,
-          path: '/settings/actions'
+          path: '/settings/actions',
+          action: 'index',
+          subject: 'ActionController' // KEEP AS IS, but verify backend provides this permission
         }
       ]
     }

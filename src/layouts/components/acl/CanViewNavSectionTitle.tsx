@@ -1,8 +1,8 @@
 // ** React Imports
-import { ReactNode, useContext } from 'react'
+import { ReactNode } from 'react'
 
-// ** Component Imports
-import { AbilityContext } from 'src/layouts/components/acl/Can'
+// ** Hook Imports
+import { usePermissions } from 'src/hooks/usePermissions' // Import your usePermissions hook
 
 // ** Types
 import { NavSectionTitle } from 'src/@core/layouts/types'
@@ -17,12 +17,17 @@ const CanViewNavSectionTitle = (props: Props) => {
   const { children, navTitle } = props
 
   // ** Hook
-  const ability = useContext(AbilityContext)
+  const { hasPermission } = usePermissions() // Use your custom hook
 
   if (navTitle && navTitle.auth === false) {
     return <>{children}</>
   } else {
-    return ability && ability.can(navTitle?.action, navTitle?.subject) ? <>{children}</> : null
+    // Only render if navTitle exists and the user has permission (if action/subject are defined)
+    // If action/subject are NOT defined, assume it's publicly visible (or adjust policy as needed)
+    return navTitle &&
+      (navTitle.action && navTitle.subject ? hasPermission(navTitle.action, navTitle.subject) : true) ? (
+      <>{children}</>
+    ) : null
   }
 }
 
