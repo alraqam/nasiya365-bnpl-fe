@@ -54,6 +54,13 @@ const AuthProvider = ({ children }: Props) => {
     setPermissions(cachedPermissions)
   }, [token])
 
+  // const getAllActions = (subject: string) => {
+  //   const filtered = permissions.filter(p => p.subject === subject)
+  //   return filtered
+  // }
+
+  // console.log(getAllActions('ProfileController'))
+
   const values = {
     user,
     loading,

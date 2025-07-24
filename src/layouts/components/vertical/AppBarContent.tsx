@@ -102,11 +102,7 @@ const AppBarContent = (props: Props) => {
           saveSettings={saveSettings}
           trigger={
             <Stack direction='row' spacing={2} alignItems='center'>
-              <StyledImg
-                src={lang === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'}
-                alt='uzb flag'
-                // sx={{ width: lang === 'ru' ? '18px' : '24px', height: lang === 'ru' ? '18px' : '24px' }}
-              />
+              <StyledImg src={lang === 'uz' ? '/flags/uz.svg' : '/flags/ru.svg'} alt='uzb flag' />
               <Box
                 display='flex'
                 alignItems='center'

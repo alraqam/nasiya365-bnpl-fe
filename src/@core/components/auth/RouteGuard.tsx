@@ -4,8 +4,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import NotAuthorized from 'src/pages/401'
 import Spinner from 'src/@core/components/spinner'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
-import getHomeRoute from 'src/layouts/components/acl/getHomeRoute'
 import { usePermissions } from 'src/hooks/usePermissions'
+import useHomeRoute from 'src/layouts/components/acl/useHomeRoute'
 
 interface RouteGuardProps {
   children: ReactNode
@@ -22,12 +22,12 @@ const RouteGuard = (props: RouteGuardProps) => {
 
   const { user, loading: authLoading } = useAuth()
   const { permissions, canAccessRoute, hasPermission } = usePermissions()
+  const homeRoute = useHomeRoute()
   const router = useRouter()
 
   // Redirect authenticated users from guest-only pages
   useEffect(() => {
     if (user && guestOnly) {
-      const homeRoute = getHomeRoute(user.role_id?.toString())
       router.replace(homeRoute)
     }
   }, [user, guestOnly, router])
@@ -35,7 +35,6 @@ const RouteGuard = (props: RouteGuardProps) => {
   // Redirect to home if user is on root and authenticated
   useEffect(() => {
     if (user && user.role_id && router.route === '/') {
-      const homeRoute = getHomeRoute(user?.role_id?.toString())
       router.replace(homeRoute)
     }
   }, [user, router])

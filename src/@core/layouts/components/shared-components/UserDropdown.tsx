@@ -17,12 +17,16 @@ import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Context
-import { useAuth } from 'src/hooks/useAuth'
-
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
-import { Stack } from '@mui/material'
+import { Button, Dialog, DialogContent, DialogTitle, Stack } from '@mui/material'
+import { STORAGE_KEYS } from 'src/@core/utils/constants'
+import { usePermissions } from 'src/hooks/usePermissions'
+import useModal from 'src/@core/store/modal'
+import { useLang } from 'src/providers/LanguageProvider'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import { api } from 'src/configs/api'
+import { useAuth } from 'src/hooks/useAuth'
 
 interface Props {
   settings: Settings
@@ -43,19 +47,63 @@ const MenuItemStyled = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
   }
 }))
 
+const Form = styled('form')(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+
+  [theme.breakpoints.up('sm')]: {
+    width: '480px'
+  }
+}))
+
+const styles = {
+  px: 4,
+  py: 1.75,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  color: 'text.primary',
+  textDecoration: 'none',
+  '& svg': {
+    mr: 2.5,
+    fontSize: '1.5rem',
+    color: 'text.secondary'
+  }
+}
+
 const UserDropdown = (props: Props) => {
   // ** Props
   const { settings } = props
+  const { direction } = settings
 
-  // ** States
+  const router = useRouter()
+  const { hasPermission } = usePermissions()
+  const { user } = useAuth()
+  const { setModal, modal, clearModal } = useModal()
+  const { t } = useLang()
+
+  const [oldPassword, setOldPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
-  // ** Hooks
-  const router = useRouter()
-  const { logout } = useAuth()
+  const handleClose = () => {
+    clearModal()
+    setOldPassword('')
+    setNewPassword('')
+  }
 
-  // ** Vars
-  const { direction } = settings
+  const handleChangeProfile = async () => {
+    const res = await api('/api/profile/update', {
+      method: 'PUT',
+      body: JSON.stringify({
+        current_password: oldPassword,
+        password: newPassword
+      })
+    })
+    console.log(res)
+  }
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -68,24 +116,11 @@ const UserDropdown = (props: Props) => {
     setAnchorEl(null)
   }
 
-  const styles = {
-    px: 4,
-    py: 1.75,
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    color: 'text.primary',
-    textDecoration: 'none',
-    '& svg': {
-      mr: 2.5,
-      fontSize: '1.5rem',
-      color: 'text.secondary'
-    }
-  }
-
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    localStorage.removeItem(STORAGE_KEYS.token)
+    localStorage.removeItem(STORAGE_KEYS.permissions)
     handleDropdownClose()
+    router.reload()
   }
 
   return (
@@ -112,7 +147,7 @@ const UserDropdown = (props: Props) => {
           sx={theme => ({ color: '#000', [theme.breakpoints.down('sm')]: { display: 'none' } })}
           variant='button'
         >
-          Sherzod Abdujalilov
+          {user?.name}
         </Typography>
       </Stack>
       <Menu
@@ -136,57 +171,79 @@ const UserDropdown = (props: Props) => {
               <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>John Doe</Typography>
-              <Typography variant='body2'>Admin</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
+              <Typography variant='body2'>{user?.role?.name || 'Admin'}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:user-check' />
-            My Profile
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:settings' />
-            Settings
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:credit-card' />
-            Billing
-          </Box>
-        </MenuItemStyled>
-        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:lifebuoy' />
-            Help
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:info-circle' />
-            FAQ
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:currency-dollar' />
-            Pricing
-          </Box>
-        </MenuItemStyled>
-        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
+
+        {hasPermission('put_update', 'ProfileController') && [
+          <MenuItemStyled
+            sx={{ p: 0 }}
+            onClick={() => {
+              setModal('edit-profile')
+            }}
+            key='profile'
+          >
+            <Box sx={styles}>
+              <Icon icon='tabler:user-check' />
+              {t['my-profile']}
+            </Box>
+          </MenuItemStyled>,
+          <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} key='divider' />
+        ]}
         <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
           <Box sx={styles}>
             <Icon icon='tabler:logout' />
-            Sign Out
+            {t.logout}
           </Box>
         </MenuItemStyled>
       </Menu>
+
+      <Dialog open={modal === 'edit-profile'} onClose={() => setModal('')}>
+        <DialogTitle>
+          <Typography variant='h4' align='center'>
+            {t.forms['profile-update'].dialog['search-title']}
+          </Typography>
+          <Typography variant='body2' align='center'>
+            {t.forms['profile-update'].dialog['search-desc']}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Form>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>{t.forms['profile-update'].password}</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder={t.forms['profile-update'].placeholder.password}
+                name='oldPassword'
+                value={oldPassword}
+                onChange={e => setOldPassword(e.target.value)}
+              />
+            </Box>
+            <Box display='flex' flexDirection='column' gap={1}>
+              <Typography>{t.forms['profile-update']['new-password']}</Typography>
+              <CustomTextField
+                fullWidth
+                placeholder={t.forms['profile-update'].placeholder['new-password']}
+                name='newPassword'
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+              />
+            </Box>
+
+            <Box display='flex' justifyContent='center' gap={4}>
+              <Button variant='outlined' type='button' onClick={handleClose}>
+                {t.close}
+              </Button>
+              <Button variant='contained' onClick={handleChangeProfile}>
+                {t.search}
+              </Button>
+            </Box>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </Fragment>
   )
 }

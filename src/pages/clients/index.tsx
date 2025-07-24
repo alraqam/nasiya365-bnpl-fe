@@ -11,7 +11,6 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
-import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
@@ -23,6 +22,8 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import useFetch from 'src/hooks/useFetch'
+import IClient from 'src/@core/types/client'
 
 const Form = styled('form')(({ theme }) => ({
   width: '100%',
@@ -35,81 +36,84 @@ const Form = styled('form')(({ theme }) => ({
   }
 }))
 
-const initialColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', minWidth: 100 },
-  { field: 'name', headerName: 'Ismi', minWidth: 250 },
-  { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
-  { field: 'address', headerName: 'Manzil', minWidth: 150 },
-  { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
-  {
-    field: 'state',
-    headerName: 'Holati',
-    minWidth: 300,
-    renderCell: params => {
-      const getStatusColor = (status: string) => {
-        switch (status.toLowerCase()) {
-          case 'active':
-            return 'success'
-          case 'inactive':
-            return 'error'
-          case 'pending':
-            return 'warning'
-          default:
-            return 'default'
+const Clients = () => {
+  const { modal, clearModal } = useModal()
+  const { t } = useLang()
+  const { data } = useFetch<{ data: IClient[] }>('/api/clients')
+
+  console.log(data)
+
+  const initialColumns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', minWidth: 100 },
+    { field: 'name', headerName: 'Ismi', minWidth: 250 },
+    { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
+    { field: 'address', headerName: 'Manzil', minWidth: 150 },
+    { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
+    {
+      field: 'state',
+      headerName: 'Holati',
+      minWidth: 300,
+      renderCell: params => {
+        const getStatusColor = (status: number) => {
+          switch (status) {
+            case 0:
+              return 'success'
+            case 1:
+              return 'error'
+            case 2:
+              return 'warning'
+            default:
+              return 'default'
+          }
         }
+
+        return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
       }
+    },
+    { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
+    { field: 'email', headerName: 'Email', minWidth: 300 },
+    {
+      field: 'actions',
+      headerName: 'Harakatlar',
+      minWidth: 200,
+      renderCell: params => {
+        const id = params.row.id
 
-      return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
-    }
-  },
-  { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
-  { field: 'email', headerName: 'Email', minWidth: 300 },
-  {
-    field: 'actions',
-    headerName: 'Harakatlar',
-    minWidth: 200,
-    renderCell: params => {
-      const id = params.row.id
-
-      return (
-        <Box sx={{ display: 'flex' }}>
-          <Link href={`/clients/edit?id=${id}`}>
+        return (
+          <Box sx={{ display: 'flex' }}>
+            <Link href={`/clients/edit?id=${id}`}>
+              <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+                <Icon
+                  svg='/icons/edit.svg'
+                  width={24}
+                  height={24}
+                  styles={theme => ({
+                    backgroundColor: theme.palette.text.primary,
+                    '&:hover': {
+                      backgroundColor: theme.palette.warning.main
+                    }
+                  })}
+                />
+              </Button>
+            </Link>
             <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
               <Icon
-                svg='/icons/edit.svg'
+                svg='/icons/trash.svg'
                 width={24}
                 height={24}
                 styles={theme => ({
                   backgroundColor: theme.palette.text.primary,
                   '&:hover': {
-                    backgroundColor: theme.palette.warning.main
+                    backgroundColor: theme.palette.error.main
                   }
                 })}
               />
             </Button>
-          </Link>
-          <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
-            <Icon
-              svg='/icons/trash.svg'
-              width={24}
-              height={24}
-              styles={theme => ({
-                backgroundColor: theme.palette.text.primary,
-                '&:hover': {
-                  backgroundColor: theme.palette.error.main
-                }
-              })}
-            />
-          </Button>
-        </Box>
-      )
+          </Box>
+        )
+      }
     }
-  }
-]
-
-const Clients = () => {
-  const { modal, clearModal } = useModal()
-  const { t } = useLang()
+  ]
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -216,7 +220,7 @@ const Clients = () => {
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
             columns={visibleColumns}
-            rows={clients}
+            rows={data?.data || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
@@ -225,7 +229,7 @@ const Clients = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  rowCount={clients.length}
+                  rowCount={data?.data.length || 0}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}

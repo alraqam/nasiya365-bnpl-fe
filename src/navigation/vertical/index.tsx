@@ -25,7 +25,7 @@ const useNavigation = (): VerticalNavItemsType => {
       path: '/products',
       icon: 'tabler:cube',
       action: 'index',
-      subject: 'DeviceController' // CORRECTED: Changed from 'ProductController' to 'DeviceController'
+      subject: 'DeviceController'
     },
     {
       title: t.pages.orders,
@@ -39,14 +39,14 @@ const useNavigation = (): VerticalNavItemsType => {
       path: '/employees',
       icon: 'tabler:users',
       action: 'index',
-      subject: 'Mirfozil' // CORRECTED: Changed from 'EmployeeController' to 'Mirfozil' (Please confirm this is the correct subject for employees)
+      subject: 'AdminController'
     },
     {
       title: t.pages.expenses,
       path: '/expenses',
       icon: 'tabler:exposure',
       action: 'index',
-      subject: 'CostController' // CORRECTED: Changed from 'ExpenseController' to 'CostController'
+      subject: 'CostController'
     },
     {
       title: t.pages.investment.label,
@@ -74,19 +74,19 @@ const useNavigation = (): VerticalNavItemsType => {
           title: t.pages.settings.roles,
           path: '/settings/roles',
           action: 'index',
-          subject: 'RoleController' // KEEP AS IS, but verify backend provides this permission
+          subject: 'AccessoryController'
         },
         {
           title: t.pages.settings.controllers,
           path: '/settings/controllers',
           action: 'index',
-          subject: 'ControllerController' // KEEP AS IS, but verify backend provides this permission
+          subject: 'AccessoryController'
         },
         {
           title: t.pages.settings.actions,
           path: '/settings/actions',
           action: 'index',
-          subject: 'ActionController' // KEEP AS IS, but verify backend provides this permission
+          subject: 'AccessoryController'
         }
       ]
     }

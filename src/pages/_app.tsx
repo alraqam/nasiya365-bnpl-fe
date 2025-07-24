@@ -108,9 +108,11 @@ const App = (props: ExtendedAppProps) => {
             {({ settings }) => {
               return (
                 <ThemeComponent settings={settings}>
-                  <RouteGuard requireAuth={authGuard} guestOnly={guestGuard}>
-                    <LanguageProvider>{getLayout(<Component {...pageProps} />)}</LanguageProvider>
-                  </RouteGuard>
+                  <LanguageProvider>
+                    <RouteGuard requireAuth={authGuard} guestOnly={guestGuard}>
+                      {getLayout(<Component {...pageProps} />)}
+                    </RouteGuard>
+                  </LanguageProvider>
                   <ReactHotToast>
                     <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
                   </ReactHotToast>

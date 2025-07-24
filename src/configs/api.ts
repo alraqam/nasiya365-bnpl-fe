@@ -20,9 +20,9 @@ export async function api<T = any>(endpoint: string, options: FetchOptions = {})
     headers
   })
 
-  // if (!response.ok) {
-  //   throw new Error(`HTTP error! status: ${response.status}`)
-  // }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
 
   return response.json() as Promise<T>
 }

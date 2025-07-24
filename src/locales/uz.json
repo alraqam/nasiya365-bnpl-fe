@@ -35,6 +35,8 @@
     "given": "Berilgan",
     "not-given": "Berilmagan",
     "other": "Boshqa",
+    "my-profile": "Profilim",
+    "logout": "Chiqish",
     "login": {
         "submit": "Login",
         "phone": "Telefon raqam",
@@ -69,6 +71,18 @@
             "or": "Yoki",
             "fileUpload": "Faylni yuklash",
             "alert": "Fayl hajmi 2 MB dan katta bo'lmasligi kerak va quyidagi formatlar qabul qilinadi: JPG, PNG"
+        },
+        "profile-update": {
+            "dialog": {
+                "search-title": "Profilni yangilash",
+                "search-desc": "Eski parolingizni qaytarib, yangisini kiriting"
+            },
+            "password": "Eski parol",
+            "new-password": "Yangi parol",
+            "placeholder": {
+                "password": "Eski parolingizni kiriting",
+                "new-password": "Yangi parolingizni kiriting"
+            }
         },
         "client": {
             "dialog": {

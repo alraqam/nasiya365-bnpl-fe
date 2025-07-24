@@ -1,0 +1,2 @@
+1. CORS error when changing profile password
+2. Clients GET method doesn't have "page" query param (nothing here actually).

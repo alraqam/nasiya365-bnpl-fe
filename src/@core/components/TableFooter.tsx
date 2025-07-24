@@ -59,6 +59,15 @@ const CustomFooter = ({ rowCount, page, pageSize, onPageChange }: Props) => {
             '&:hover': {
               backgroundColor: theme.palette.primary.dark
             }
+          },
+          // 👇 Add styling for ellipsis buttons
+          '& .MuiPaginationItem-ellipsis': {
+            backgroundColor: `#2F2B3D14 !important`,
+            borderRadius: '6px',
+            padding: '6px 10px',
+            fontSize: '1rem',
+            color: theme.palette.text.primary,
+            cursor: 'pointer'
           }
         })}
         renderItem={item => (
