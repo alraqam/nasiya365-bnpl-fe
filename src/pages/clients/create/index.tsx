@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker'
 import Dropzone from 'react-dropzone'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import { api } from 'src/configs/api'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -302,7 +303,32 @@ const CreateClient = () => {
   }
 
   const onSubmit = async () => {
-    console.log(form)
+    const res = await api('/api/clients', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: form.name,
+        middle_name: form.patronymic,
+        surname: form.surname,
+        passport: form.passportSeries,
+        passport_status: null,
+        place_of_issue: form.passportIssuer,
+        date_of_issue: form.passportIssueDate,
+        date_of_birth: form.birthDate,
+        gender: form.gender,
+        place_of_birth: form.birthPlace,
+        place_of_residence: form.address,
+        bail_name: form.guarantor,
+        bail_phone: form.guarantorPhones.join(','),
+        file_passport: form.passportFile,
+        phones: form.phones.join(','),
+        file: form.applicationFile,
+        email: form.email,
+        workplace: form.workplace,
+        specialization: form.profession
+      })
+    })
+
+    console.log(res)
   }
 
   return (

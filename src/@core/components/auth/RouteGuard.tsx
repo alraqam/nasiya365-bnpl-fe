@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import NotAuthorized from 'src/pages/401'
@@ -19,28 +19,36 @@ interface RouteGuardProps {
 
 const RouteGuard = (props: RouteGuardProps) => {
   const { children, requireAuth = true, guestOnly = false, requiredPermission } = props
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
 
   const { user, loading: authLoading } = useAuth()
   const { permissions, canAccessRoute, hasPermission } = usePermissions()
   const homeRoute = useHomeRoute()
   const router = useRouter()
 
+  // Mark initial load as complete when router is ready and auth is loaded
+  useEffect(() => {
+    if (router.isReady && !authLoading) {
+      setIsInitialLoad(false)
+    }
+  }, [router.isReady, authLoading])
+
   // Redirect authenticated users from guest-only pages
   useEffect(() => {
-    if (user && guestOnly) {
+    if (!isInitialLoad && user && guestOnly) {
       router.replace(homeRoute)
     }
-  }, [user, guestOnly, router])
+  }, [user, guestOnly, homeRoute, isInitialLoad])
 
   // Redirect to home if user is on root and authenticated
   useEffect(() => {
-    if (user && user.role_id && router.route === '/') {
+    if (!isInitialLoad && user && user.role_id && router.asPath === '/') {
       router.replace(homeRoute)
     }
-  }, [user, router])
+  }, [user, router.asPath, homeRoute, isInitialLoad])
 
-  // Show loading while auth or permissions are loading
-  if (authLoading) {
+  // Show loading during initial load or auth loading
+  if (isInitialLoad || authLoading) {
     return <Spinner />
   }
 

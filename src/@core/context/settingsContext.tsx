@@ -64,7 +64,7 @@ const initialSettings: Settings = {
   navHidden: themeConfig.navHidden,
   appBarBlur: themeConfig.appBarBlur,
   navCollapsed: themeConfig.navCollapsed,
-  contentWidth: themeConfig.contentWidth,
+  contentWidth: 'full',
   toastPosition: themeConfig.toastPosition,
   verticalNavToggleType: themeConfig.verticalNavToggleType,
   appBar: themeConfig.layout === 'horizontal' && themeConfig.appBar === 'hidden' ? 'fixed' : themeConfig.appBar

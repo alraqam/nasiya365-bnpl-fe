@@ -10,6 +10,9 @@ import DatePicker from 'react-datepicker'
 import Dropzone from 'react-dropzone'
 import { useRouter } from 'next/router'
 import { useLang } from 'src/providers/LanguageProvider'
+import { api } from 'src/configs/api'
+import useFetch from 'src/hooks/useFetch'
+import IClient from 'src/@core/types/client'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -81,10 +84,44 @@ const EditClient = () => {
     passportFile: null as File | null
   })
   const { id } = router.query
+  const { data: client } = useFetch<{ data: IClient; status: boolean }>(`/api/clients/${id}`)
 
   useEffect(() => {
-    // Api call goes here to update fields with existing values
-  }, [id])
+    const data = client?.data
+
+    if (!data) return
+
+    setForm({
+      surname: data.surname || '',
+      name: data.name || '',
+      patronymic: data.middle_name || '',
+      phones: data.phone || [''],
+      email: data.email || '',
+      gender: data.gender?.toString() || '',
+      workplace: data.workplace || '',
+      profession: data.specialization || '',
+      passportSeries: data.passport || '',
+      passportIssuer: data.place_of_issue || '',
+      passportIssueDate: data.date_of_issue ? new Date(data.date_of_issue) : null,
+      birthDate: data.date_of_birth ? new Date(data.date_of_birth) : null,
+      birthPlace: data.place_of_birth || '',
+      address: data.place_of_residence || '',
+      registeredAddress: data.place_of_registration || '',
+      guarantor: data.guarantor || data.bail_name || '',
+      guarantorPhones: data.bail_phone ? [data.bail_phone] : [''],
+      status: data.family_status || '',
+      applicationFile: null,
+      passportFile: null
+    })
+
+    setFilePreviews({
+      application: data.file,
+      passport: data.file_passport
+    })
+  }, [client])
+
+  console.log(client)
+  console.log(form)
 
   const [filePreviews, setFilePreviews] = useState({
     application: null as string | null,
@@ -308,7 +345,31 @@ const EditClient = () => {
   }
 
   const onSubmit = async () => {
-    console.log(form)
+    const res = await api(`/api/updateClient/${id}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: form.name,
+        middle_name: form.patronymic,
+        surname: form.surname,
+        passport: form.passportSeries,
+        passport_status: null,
+        place_of_issue: form.passportIssuer,
+        date_of_issue: form.passportIssueDate,
+        date_of_birth: form.birthDate,
+        gender: form.gender,
+        place_of_birth: form.birthPlace,
+        place_of_residence: form.address,
+        bail_name: form.guarantor,
+        bail_phone: form.guarantorPhones.join(','),
+        file_passport: form.passportFile,
+        phones: form.phones.join(','),
+        file: form.applicationFile,
+        email: form.email,
+        workplace: form.workplace,
+        specialization: form.profession
+      })
+    })
+    console.log(res)
   }
 
   return (

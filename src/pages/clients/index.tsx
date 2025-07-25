@@ -24,6 +24,10 @@ import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
 import useFetch from 'src/hooks/useFetch'
 import IClient from 'src/@core/types/client'
+import env from 'src/configs/env'
+import formatDate from 'src/@core/utils/format-date'
+import resolveStatus from 'src/@core/utils/table-utils'
+import { api } from 'src/configs/api'
 
 const Form = styled('form')(({ theme }) => ({
   width: '100%',
@@ -41,37 +45,140 @@ const Clients = () => {
   const { t } = useLang()
   const { data } = useFetch<{ data: IClient[] }>('/api/clients')
 
-  console.log(data)
+  const handleDelete = async (id: number) => {
+    const res = await api(`/api/clients/${id}`, {
+      method: 'DELETE'
+    })
+
+    console.log(res)
+  }
 
   const initialColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: 'Ismi', minWidth: 250 },
-    { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
-    { field: 'address', headerName: 'Manzil', minWidth: 150 },
-    { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
+    { field: 'id', headerName: 'ID', minWidth: 10 },
     {
-      field: 'state',
-      headerName: 'Holati',
-      minWidth: 300,
-      renderCell: params => {
-        const getStatusColor = (status: number) => {
-          switch (status) {
-            case 0:
-              return 'success'
-            case 1:
-              return 'error'
-            case 2:
-              return 'warning'
-            default:
-              return 'default'
-          }
+      field: 'name',
+      headerName: 'Ismi',
+      minWidth: 250,
+      renderCell: params => <p>{params.value + ' ' + params.row.surname + ' ' + params.row.middle_name}</p>
+    },
+    { field: 'passport', headerName: 'Pasport raqami', minWidth: 150 },
+    { field: 'place_of_issue', headerName: 'Pasport berilgan joyi', minWidth: 250 },
+    { field: 'date_of_issue', headerName: 'Pasport berilgan kuni', minWidth: 150 },
+    {
+      field: 'file_passport',
+      headerName: 'Pasport fayli',
+      minWidth: 150,
+      renderCell(params) {
+        if (params.value !== 'undefined') {
+          return (
+            <a href={`${env.baseUrl}/files/${params.value}`} target='_blank'>
+              {params.value}
+            </a>
+          )
+        } else {
+          return null
         }
-
-        return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
       }
     },
-    { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
-    { field: 'email', headerName: 'Email', minWidth: 300 },
+    { field: 'date_of_birth', headerName: "Tug'ilgan kuni", minWidth: 150 },
+    {
+      field: 'gender',
+      headerName: 'Jinsi',
+      minWidth: 50,
+      renderCell: params => {
+        switch (params.value) {
+          case 1:
+            return <Chip label='Erkak' color='success' variant='outlined' size='small' />
+          case 0:
+            return <Chip label='Ayol' color='error' variant='outlined' size='small' />
+        }
+      }
+    },
+    { field: 'place_of_birth', headerName: "Tug'ilgan joyi", minWidth: 200 },
+    { field: 'place_of_registration', headerName: "Ro'yxatdan o'tgan joyi", minWidth: 200 },
+    { field: 'place_of_residence', headerName: 'Prapiskadagi manzili', minWidth: 300 },
+    { field: 'workplace', headerName: 'Ish joyi', minWidth: 150 },
+    { field: 'specialization', headerName: 'Mutaxxasisligi', minWidth: 100 },
+    { field: 'family_status', headerName: 'Oilaviy holati', minWidth: 50 },
+    { field: 'number_of_children', headerName: 'Farzandlari soni', minWidth: 50 },
+    { field: 'phones', headerName: 'Telefon raqami', minWidth: 150 },
+    { field: 'email', headerName: 'Email', minWidth: 150 },
+    {
+      field: 'file',
+      headerName: 'Fayl',
+      minWidth: 200,
+      renderCell(params) {
+        if (params.value === 'undefined') {
+          return null
+        }
+      }
+    },
+    { field: 'bail_name', headerName: 'Kafil ismi', minWidth: 150 },
+    { field: 'bail_phone', headerName: 'Kafil telefon raqami', minWidth: 150 },
+    { field: 'guarantor', headerName: 'Kafil', minWidth: 200 },
+    { field: 'passport_status', headerName: 'Pasport holati', minWidth: 50 },
+    {
+      field: 'file_url',
+      headerName: 'Fayl url',
+      minWidth: 150,
+      renderCell(params) {
+        if (params.value && params.value.split('/files/')[1] === 'undefined') {
+          return null
+        } else {
+          return (
+            <a href={params.value} target='_blank'>
+              Ko'rish
+            </a>
+          )
+        }
+      }
+    },
+    {
+      field: 'file_passport_url',
+      headerName: 'Pasport url',
+      minWidth: 150,
+      renderCell(params) {
+        if (params.value && params.value.split('/files/')[1] === 'undefined') {
+          return null
+        } else {
+          return (
+            <a href={params.value} target='_blank'>
+              Ko'rish
+            </a>
+          )
+        }
+      }
+    },
+    {
+      field: 'created_at',
+      headerName: "Ro'yxatga olingan",
+      minWidth: 150,
+      renderCell: params => {
+        return formatDate(params.value)
+      }
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Yangilangan',
+      minWidth: 150,
+      renderCell: params => {
+        return formatDate(params.value)
+      }
+    },
+    { field: 'phone', headerName: 'Telefon raqami', minWidth: 150 },
+    {
+      field: 'status',
+      headerName: 'Holati',
+      minWidth: 50,
+      renderCell: params => {
+        const res = resolveStatus(params.value) as {
+          color: 'success' | 'error' | 'warning'
+          label: string
+        }
+
+        return <Chip label={res.label} color={res.color} variant='outlined' size='small' />
+      }
+    },
     {
       field: 'actions',
       headerName: 'Harakatlar',
@@ -96,7 +203,10 @@ const Clients = () => {
                 />
               </Button>
             </Link>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+            <Button
+              sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
+              onClick={() => handleDelete(id)}
+            >
               <Icon
                 svg='/icons/trash.svg'
                 width={24}
