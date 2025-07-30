@@ -3,15 +3,14 @@ import Icon from './icon/icon'
 import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
-  rowCount: number
+  total: number
+  totalPages: number
   page: number
   pageSize: number
   onPageChange: (page: number) => void
 }
 
-const CustomFooter = ({ rowCount, page, pageSize, onPageChange }: Props) => {
-  const totalPages = Math.ceil(rowCount / pageSize)
-
+const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props) => {
   const { lang } = useLang()
 
   return (
@@ -20,17 +19,17 @@ const CustomFooter = ({ rowCount, page, pageSize, onPageChange }: Props) => {
       justifyContent='space-between'
       alignItems='center'
       px={5}
-      py={6}
+      py={4}
       gap={4}
-      sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+      sx={{ flexDirection: { xs: 'column', md: 'row' }, borderTop: '1px solid #e6e5e7' }}
     >
       <Typography color='text.secondary' fontSize={14}>
         {lang === 'uz'
-          ? `${rowCount} ta ro'yxatdan ${page * pageSize + 1} dan ${Math.min(
+          ? `${total} ta ro'yxatdan ${page * pageSize + 1} dan ${Math.min(
               (page + 1) * pageSize,
-              rowCount
+              total
             )} gacha ko'rsatilmoqda`
-          : `${rowCount} записей из ${page * pageSize + 1} по ${Math.min((page + 1) * pageSize, rowCount)} показаны`}
+          : `${total} записей из ${page * pageSize + 1} по ${Math.min((page + 1) * pageSize, total)} показаны`}
       </Typography>
 
       <Pagination

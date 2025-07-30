@@ -113,9 +113,10 @@ const App = (props: ExtendedAppProps) => {
                       {getLayout(<Component {...pageProps} />)}
                     </RouteGuard>
                   </LanguageProvider>
-                  <ReactHotToast>
-                    <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                  </ReactHotToast>
+                  <Toaster
+                    position={settings.toastPosition}
+                    toastOptions={{ className: 'react-hot-toast', style: { zIndex: 9999 } }}
+                  />
                 </ThemeComponent>
               )
             }}

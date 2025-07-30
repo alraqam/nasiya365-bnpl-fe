@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { api } from 'src/configs/api'
 
-const useFetch = <T>(url: string) => {
+const useFetch = <T>(url: string, auto = true) => {
   const [data, setData] = useState<T>()
   const [loading, setLoading] = useState(false)
 
-  const fetchData = async () => {
+  const fetchData = async (newUrl: string = url) => {
     try {
       setLoading(true)
-      const response = await api<T>(url)
+      const response = await api<T>(newUrl)
       setData(response)
     } catch (err) {
       console.error(err)
@@ -18,8 +18,10 @@ const useFetch = <T>(url: string) => {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [url])
+    if (auto) {
+      fetchData()
+    }
+  }, [auto])
 
   return { data, loading, fetchData }
 }

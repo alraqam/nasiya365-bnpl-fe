@@ -13,6 +13,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import { api } from 'src/configs/api'
 import useFetch from 'src/hooks/useFetch'
 import IClient from 'src/@core/types/client'
+import env from 'src/configs/env'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -115,13 +116,10 @@ const EditClient = () => {
     })
 
     setFilePreviews({
-      application: data.file,
-      passport: data.file_passport
+      application: data.file !== 'undefined' ? data.file : null,
+      passport: data.file_passport ? env.baseUrl + '/files/' + data.file_passport : null
     })
   }, [client])
-
-  console.log(client)
-  console.log(form)
 
   const [filePreviews, setFilePreviews] = useState({
     application: null as string | null,

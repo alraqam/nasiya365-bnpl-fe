@@ -15,6 +15,9 @@
     "add-expense": "Xarajat qo'shish",
     "add-investor": "Investor qo'shish",
     "add-investment": "Investitsiya qo'shish",
+    "add-role": "Rol qo'shish",
+    "add-controller": "Kontroller qo'shish",
+    "add-action": "Action qo'shish",
     "edit-client": "Mijozni tahrirlash",
     "edit-product": "Mahsulotni tahrirlash",
     "edit-order": "Buyurtmani tahrirlash",
@@ -22,6 +25,9 @@
     "edit-expense": "Xarajatni tahrirlash",
     "edit-investor": "Investorni tahrirlash",
     "edit-investment": "Investitsiyani tahrirlash",
+    "edit-role": "Rolni tahrirlash",
+    "edit-controller": "Kontrollerni tahrirlash",
+    "edit-action": "Actionni tahrirlash",
     "client": "Mijoz",
     "product": "Mahsulot",
     "devices": "Qurilmalar",
@@ -37,6 +43,7 @@
     "other": "Boshqa",
     "my-profile": "Profilim",
     "logout": "Chiqish",
+    "actions": "Amallar",
     "login": {
         "submit": "Login",
         "phone": "Telefon raqam",
@@ -60,7 +67,7 @@
             "label": "Sozlamalar",
             "roles": "Rollar",
             "controllers": "Kontroller",
-            "actions": "Amallar"
+            "actions": "Actions"
         }
     },
     "forms": {
@@ -228,6 +235,15 @@
                 "investor": "Investor kiriting",
                 "amount": "Summani kiriting"
             }
+        },
+        "roles": {
+            "name": "Nomi",
+            "label": "Izoh"
+        },
+        "actions": {
+            "code": "Kod",
+            "controller": "Kontroller",
+            "name": "Nomi"
         }
     },
     "periods": {
