@@ -21,7 +21,7 @@ const useFetch = <T>(url: string, auto = true) => {
     if (auto) {
       fetchData()
     }
-  }, [auto])
+  }, [auto, url])
 
   return { data, loading, fetchData }
 }

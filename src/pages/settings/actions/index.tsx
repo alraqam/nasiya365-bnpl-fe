@@ -15,6 +15,7 @@ import { PostResponse, Response } from 'src/@core/types/base-response'
 import toast from 'react-hot-toast'
 import IAction from 'src/@core/types/action'
 import IController from 'src/@core/types/controller'
+import usePagination from 'src/hooks/usePagination'
 
 const initialState = {
   name: '',
@@ -26,14 +27,9 @@ const Actions = () => {
   const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
 
-  const [isPageSizeInitialized, setPageSizeInitialized] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState<null | number>(null)
   const [form, setForm] = useState(initialState)
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10
-  })
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
@@ -54,6 +50,11 @@ const Actions = () => {
               onClick={() => {
                 setEditingId(id)
                 setModal('edit-action')
+                setForm({
+                  name: params.row.name,
+                  code: params.row.code,
+                  controller: params.row.conts_id
+                })
               }}
             >
               <Icon
@@ -92,16 +93,8 @@ const Actions = () => {
 
   const { data: actions, fetchData: fetchActions } = useFetch<Response<IAction[]>>(`/api/action`)
   const { data: controllers } = useFetch<Response<IController[]>>('/api/controller')
-
-  useEffect(() => {
-    if (actions?.data && !isPageSizeInitialized && paginationModel.page === 0) {
-      setPaginationModel(prev => ({
-        ...prev,
-        pageSize: actions.data.per_page
-      }))
-      setPageSizeInitialized(true)
-    }
-  }, [actions, isPageSizeInitialized, paginationModel.page])
+  const { current_page, per_page } = actions?.data || {}
+  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
   useEffect(() => {
     fetchActions(`/api/action?page=${paginationModel.page + 1}`)
@@ -228,7 +221,6 @@ const Actions = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
             slots={{
               footer: () => (
                 <CustomFooter

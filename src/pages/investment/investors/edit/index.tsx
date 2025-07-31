@@ -6,19 +6,15 @@ import Title from 'src/@core/components/title'
 import { useLang } from 'src/providers/LanguageProvider'
 import InputMask from 'react-input-mask'
 import { useRouter } from 'next/router'
+import useFetch from 'src/hooks/useFetch'
+import IInvestor from 'src/@core/types/investor'
+import { api } from 'src/configs/api'
 
-interface FormState {
-  fio: string
-  passport: string
-  phone: string
-  percent: string
-}
-
-const initialFormState: FormState = {
-  fio: '',
+const initialFormState = {
+  name: '',
   passport: '',
   phone: '',
-  percent: ''
+  percentage: ''
 }
 
 const EditInvestor = () => {
@@ -26,13 +22,21 @@ const EditInvestor = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const [form, setForm] = useState<FormState>(initialFormState)
+  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState(initialFormState)
+
+  const { data } = useFetch<{ data: IInvestor }>(`/api/investors/${id}`)
 
   useEffect(() => {
-    // Api call goes here to update fields with existing values
-  }, [id])
+    setForm({
+      name: data?.data.name || '',
+      passport: data?.data.passport || '',
+      phone: data?.data.phone || '',
+      percentage: data?.data.percentage.toString() || ''
+    })
+  }, [data])
 
-  const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof typeof initialFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
   }
 
@@ -40,8 +44,19 @@ const EditInvestor = () => {
     setForm(initialFormState)
   }
 
-  const onSubmit = () => {
-    console.log(form)
+  const onSubmit = async () => {
+    try {
+      setLoading(true)
+      const res = await api(`/api/investors/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ ...form, phone: form.phone.replace(/\D/g, '') })
+      })
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -63,8 +78,8 @@ const EditInvestor = () => {
             <CustomTextField
               fullWidth
               placeholder={t.forms.investors.placeholder.fio}
-              value={form.fio}
-              onChange={handleChange('fio')}
+              value={form.name}
+              onChange={handleChange('name')}
             />
           </Grid>
 
@@ -105,18 +120,23 @@ const EditInvestor = () => {
             <CustomTextField
               fullWidth
               placeholder={t.forms.investors.placeholder.percent}
-              value={form.percent}
-              onChange={handleChange('percent')}
+              value={form.percentage}
+              onChange={handleChange('percentage')}
             />
           </Grid>
         </Grid>
       </Card>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button variant='outlined' onClick={onCancel} sx={{ width: { xs: '100%', md: 'max-content' } }}>
+        <Button
+          disabled={loading}
+          variant='outlined'
+          onClick={onCancel}
+          sx={{ width: { xs: '100%', md: 'max-content' } }}
+        >
           {t.forms.cancel}
         </Button>
-        <Button variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
+        <Button disabled={loading} variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
           {t.forms.submit}
         </Button>
       </Stack>

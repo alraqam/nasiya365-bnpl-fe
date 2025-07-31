@@ -186,7 +186,6 @@ const Employees = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
             slots={{
               footer: () => (
                 <CustomFooter

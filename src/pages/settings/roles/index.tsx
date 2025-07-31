@@ -14,6 +14,7 @@ import Form from 'src/@core/components/DialogForm'
 import { PostResponse, Response } from 'src/@core/types/base-response'
 import IRole from 'src/@core/types/role'
 import toast from 'react-hot-toast'
+import usePagination from 'src/hooks/usePagination'
 
 const initialState = {
   label: '',
@@ -21,6 +22,13 @@ const initialState = {
 } as const
 
 const Roles = () => {
+  const { modal, clearModal, setModal } = useModal()
+  const { t } = useLang()
+
+  const [loading, setLoading] = useState(false)
+  const [editingId, setEditingId] = useState<null | number>(null)
+  const [form, setForm] = useState(initialState)
+
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
     { field: 'name', headerName: 'Nomi', flex: 1 },
@@ -38,6 +46,10 @@ const Roles = () => {
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
               onClick={() => {
                 setEditingId(id)
+                setForm({
+                  label: params.row.label,
+                  name: params.row.name
+                })
                 setModal('edit-role')
               }}
             >
@@ -75,28 +87,13 @@ const Roles = () => {
     }
   ]
 
-  const { modal, clearModal, setModal } = useModal()
-  const { t } = useLang()
-
   const { data, fetchData } = useFetch<Response<IRole[]>>('/api/role')
-
-  const [paginationModel, setPaginationModel] = useState({
-    page: Number(data?.data.current_page) || 0,
-    pageSize: data?.data.per_page || 10
-  })
-
-  const [loading, setLoading] = useState(false)
-  const [editingId, setEditingId] = useState<null | number>(null)
-  const [form, setForm] = useState(initialState)
+  const { current_page, per_page } = data?.data || {}
+  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
   useEffect(() => {
-    if (data?.data) {
-      setPaginationModel({
-        page: Number(data.data.current_page) - 1,
-        pageSize: data.data.per_page
-      })
-    }
-  }, [data])
+    fetchData(`/api/role?page=${paginationModel.page + 1}`)
+  }, [paginationModel.page])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -211,7 +208,6 @@ const Roles = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
             slots={{
               footer: () => (
                 <CustomFooter
