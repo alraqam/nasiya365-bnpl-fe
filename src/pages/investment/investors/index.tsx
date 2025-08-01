@@ -47,13 +47,18 @@ const Investors = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'name', headerName: 'F.I.O', flex: 1 },
-    { field: 'phone', headerName: 'Telefon raqami', flex: 1 },
-    { field: 'percentage', headerName: 'Foiz', flex: 1, renderCell: params => `${params.row.percentage}%` },
-    { field: 'passport', headerName: 'Passport raqami', flex: 1 },
+    { field: 'name', headerName: t.forms.investors.fio, flex: 1 },
+    { field: 'phone', headerName: t.forms.investors.phone, flex: 1 },
+    {
+      field: 'percentage',
+      headerName: t.forms.investors.percent,
+      flex: 1,
+      renderCell: params => `${params.row.percentage}%`
+    },
+    { field: 'passport', headerName: t.forms.investors.passport, flex: 1 },
     {
       field: 'actions',
-      headerName: 'Harakatlar',
+      headerName: t.actions,
       minWidth: 200,
       renderCell: params => {
         const id = params.row.id
@@ -75,7 +80,7 @@ const Investors = () => {
                 />
               </Button>
             </Link>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+            {/* <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
               <Icon
                 svg='/icons/trash.svg'
                 width={24}
@@ -87,7 +92,7 @@ const Investors = () => {
                   }
                 })}
               />
-            </Button>
+            </Button> */}
           </Box>
         )
       }

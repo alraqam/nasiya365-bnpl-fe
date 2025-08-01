@@ -31,11 +31,11 @@ const Roles = () => {
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: 'Nomi', flex: 1 },
-    { field: 'label', headerName: 'Izoh', flex: 1 },
+    { field: 'name', headerName: t.forms.controllers.name, flex: 1 },
+    { field: 'label', headerName: t.forms.controllers.label, flex: 1 },
     {
       field: 'actions',
-      headerName: 'Harakatlar',
+      headerName: t.actions,
       minWidth: 200,
       renderCell: params => {
         const id = params.row.id as number

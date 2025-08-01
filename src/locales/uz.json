@@ -44,6 +44,7 @@
     "my-profile": "Profilim",
     "logout": "Chiqish",
     "actions": "Amallar",
+    "success-edit": "Muvaffaqiyatli o'zgartirildi",
     "login": {
         "submit": "Login",
         "phone": "Telefon raqam",
@@ -231,6 +232,7 @@
         "investments": {
             "investor": "Investor",
             "amount": "Summa",
+            "created_at": "Sana",
             "placeholder": {
                 "investor": "Investor kiriting",
                 "amount": "Summani kiriting"
@@ -244,6 +246,10 @@
             "code": "Kod",
             "controller": "Kontroller",
             "name": "Nomi"
+        },
+        "controllers": {
+            "name": "Nomi",
+            "label": "Izoh"
         }
     },
     "periods": {
