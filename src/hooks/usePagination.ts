@@ -12,7 +12,7 @@ const usePagination = (pageConfig: { current_page: string | undefined; per_page:
       page: Number(pageConfig.current_page) - 1 || 0,
       pageSize: pageConfig.per_page || 10
     })
-  }, [pageConfig])
+  }, [pageConfig.current_page, pageConfig.per_page])
 
   return { paginationModel, setPaginationModel }
 }

@@ -7,119 +7,118 @@ import {
   DialogTitle,
   Typography,
   InputAdornment,
-  styled
+  MenuItem
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from 'src/@core/components/title'
-import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import useFetch from 'src/hooks/useFetch'
+import IEmployee from 'src/@core/types/employee'
+import usePagination from 'src/hooks/usePagination'
+import Form from 'src/@core/components/DialogForm'
+import setParams from 'src/@core/utils/set-params'
+import dashToDotFormat from 'src/@core/utils/dash-to-dot-format'
+import maskFormat from 'src/@core/utils/mask-format'
 
-const Form = styled('form')(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '20px',
+interface Response {
+  current_page: string
+  per_page: number
+  total: number
+  last_page: number
+  data: IEmployee[]
+}
 
-  [theme.breakpoints.up('sm')]: {
-    width: '480px'
-  }
-}))
-
-const initialColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', minWidth: 100 },
-  { field: 'name', headerName: 'Ismi', minWidth: 250 },
-  { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
-  { field: 'address', headerName: 'Manzil', minWidth: 150 },
-  { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
-  {
-    field: 'state',
-    headerName: 'Holati',
-    minWidth: 300,
-    renderCell: params => {
-      const getStatusColor = (status: string) => {
-        switch (status.toLowerCase()) {
-          case 'active':
-            return 'success'
-          case 'inactive':
-            return 'error'
-          case 'pending':
-            return 'warning'
-          default:
-            return 'default'
-        }
-      }
-
-      return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
-    }
-  },
-  { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
-  { field: 'email', headerName: 'Email', minWidth: 300 },
-  {
-    field: 'actions',
-    headerName: 'Harakatlar',
-    minWidth: 200,
-    renderCell: params => {
-      const id = params.row.id
-
-      return (
-        <Box sx={{ display: 'flex' }}>
-          <Link href={`/employees/edit?id=${id}`}>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
-              <Icon
-                svg='/icons/edit.svg'
-                width={24}
-                height={24}
-                styles={theme => ({
-                  backgroundColor: theme.palette.text.primary,
-                  '&:hover': {
-                    backgroundColor: theme.palette.warning.main
-                  }
-                })}
-              />
-            </Button>
-          </Link>
-          <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
-            <Icon
-              svg='/icons/trash.svg'
-              width={24}
-              height={24}
-              styles={theme => ({
-                backgroundColor: theme.palette.text.primary,
-                '&:hover': {
-                  backgroundColor: theme.palette.error.main
-                }
-              })}
-            />
-          </Button>
-        </Box>
-      )
-    }
-  }
-]
+const initialFilters = {
+  id: '',
+  passport: '',
+  phone: ''
+}
 
 const Employees = () => {
   const { modal, clearModal } = useModal()
   const { t } = useLang()
 
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10
-  })
-  const { visibleColumns } = useManageColumns(initialColumns)
-  const [filters, setFilters] = useState({
-    name: '',
-    passport: '',
-    phone: ''
-  })
+  const [filters, setFilters] = useState(initialFilters)
+  const [url, setUrl] = useState('/api/admins')
+
+  const { data } = useFetch<Response>(url)
+  const { current_page, per_page } = data || {}
+  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
+
+  useEffect(() => {
+    setUrl(`/api/admins?page=${paginationModel.page + 1}`)
+  }, [paginationModel.page])
+
+  const initialColumns: GridColDef[] = [
+    { field: 'name', headerName: 'F.I.O', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    {
+      field: 'phone1',
+      headerName: 'Telefon',
+      flex: 1,
+      renderCell(params) {
+        return <p>+998 {maskFormat(params.row.phone1, '## ### ## ##')}</p>
+      }
+    },
+    {
+      field: 'date_of_birth',
+      headerName: "Tug'ilgan yili",
+      flex: 1,
+      renderCell(params) {
+        return <p>{dashToDotFormat(params.row.date_of_birth)}</p>
+      }
+    },
+    { field: 'passport', headerName: 'Pasport', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Harakatlar',
+      minWidth: 200,
+      renderCell: params => {
+        const id = params.row.id
+
+        return (
+          <Box sx={{ display: 'flex' }}>
+            <Link href={`/employees/edit?id=${id}`}>
+              <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+                <Icon
+                  svg='/icons/edit.svg'
+                  width={24}
+                  height={24}
+                  styles={theme => ({
+                    backgroundColor: theme.palette.text.primary,
+                    '&:hover': {
+                      backgroundColor: theme.palette.warning.main
+                    }
+                  })}
+                />
+              </Button>
+            </Link>
+            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+              <Icon
+                svg='/icons/trash.svg'
+                width={24}
+                height={24}
+                styles={theme => ({
+                  backgroundColor: theme.palette.text.primary,
+                  '&:hover': {
+                    backgroundColor: theme.palette.error.main
+                  }
+                })}
+              />
+            </Button>
+          </Box>
+        )
+      }
+    }
+  ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({
@@ -129,8 +128,22 @@ const Employees = () => {
   }
 
   const handleSearch = async () => {
-    console.log(filters)
-    // Backend interaction goes here
+    const params = setParams({ ...filters, phone: filters.phone.replace(/\D/g, '') })
+    setUrl(`/api/filter/admins?${params}`)
+    setPaginationModel({
+      page: 0,
+      pageSize: 10
+    })
+    clearModal()
+  }
+
+  const onCloseModal = () => {
+    clearModal()
+    setFilters(initialFilters)
+
+    if (Object.values(filters).some(value => value !== '')) {
+      setUrl(`/api/admins?page=${paginationModel.page + 1}`)
+    }
   }
 
   return (
@@ -180,8 +193,8 @@ const Employees = () => {
 
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
-            columns={visibleColumns}
-            rows={clients}
+            columns={initialColumns}
+            rows={data?.data || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
@@ -189,7 +202,8 @@ const Employees = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  rowCount={clients.length}
+                  total={data?.total || 0}
+                  totalPages={data?.last_page || 0}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
@@ -214,12 +228,17 @@ const Employees = () => {
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.employees.employee}</Typography>
               <CustomTextField
+                select
                 fullWidth
                 placeholder={t.forms.employees.placeholder.employee}
-                name='name'
-                value={filters.name}
+                name='id'
+                value={filters.id}
                 onChange={handleChange}
-              />
+              >
+                {data?.data.map(item => (
+                  <MenuItem value={item.id}>{item.name}</MenuItem>
+                ))}
+              </CustomTextField>
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.employees.passport}</Typography>
@@ -253,7 +272,7 @@ const Employees = () => {
               </InputMask>
             </Box>
             <Box display='flex' justifyContent='center' gap={4}>
-              <Button variant='outlined' type='button' onClick={clearModal}>
+              <Button variant='outlined' type='button' onClick={onCloseModal}>
                 {t.close}
               </Button>
               <Button variant='contained' onClick={handleSearch}>

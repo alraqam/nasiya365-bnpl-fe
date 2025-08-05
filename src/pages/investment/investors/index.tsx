@@ -58,7 +58,7 @@ const Investors = () => {
     { field: 'passport', headerName: t.forms.investors.passport, flex: 1 },
     {
       field: 'actions',
-      headerName: t.actions,
+      headerName: 'Harakatlar',
       minWidth: 200,
       renderCell: params => {
         const id = params.row.id

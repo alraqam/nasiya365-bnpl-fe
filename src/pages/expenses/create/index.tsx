@@ -7,38 +7,51 @@ import Title from 'src/@core/components/title'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { useLang } from 'src/providers/LanguageProvider'
 import DatePicker from 'react-datepicker'
+import { api } from 'src/configs/api'
+import { PostResponse } from 'src/@core/types/base-response'
+import dateToString from 'src/@core/utils/date-to-string'
 
-interface FormState {
-  name: string
-  amount: string
-  date: Date | null
-}
-
-const initialFormState: FormState = {
+const initialFormState = {
   name: '',
   amount: '',
-  date: null
+  created_at: null as Date | null
 }
 
 const CreateExpense = () => {
   const { t } = useLang()
 
-  const [form, setForm] = useState<FormState>(initialFormState)
+  const [form, setForm] = useState(initialFormState)
+  const [loading, setLoading] = useState(false)
 
-  const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof typeof initialFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
   }
 
   const handleDateChange = (date: Date | null) => {
-    setForm(prev => ({ ...prev, date }))
+    setForm(prev => ({ ...prev, created_at: date }))
   }
 
   const onCancel = () => {
     setForm(initialFormState)
   }
 
-  const onSubmit = () => {
-    console.log(form)
+  const onSubmit = async () => {
+    try {
+      setLoading(true)
+      const res = (await api('/api/costs', {
+        method: 'POST',
+        body: JSON.stringify({ ...form, created_at: dateToString(form.created_at!), type: 'Boshqa' })
+      })) as PostResponse<keyof typeof initialFormState>
+
+      if (res.status) {
+        setForm(initialFormState)
+      }
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -79,7 +92,7 @@ const CreateExpense = () => {
             <Typography>{t.forms.expenses.date}</Typography>
             <DatePickerWrapper>
               <DatePicker
-                selected={form.date}
+                selected={form.created_at}
                 onChange={handleDateChange}
                 dateFormat='dd.MM.yyyy'
                 customInput={
@@ -102,10 +115,20 @@ const CreateExpense = () => {
       </Card>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button variant='outlined' onClick={onCancel} sx={{ width: { md: 'max-content', xs: '100%' } }}>
+        <Button
+          disabled={loading || Object.values(form).some(item => !item)}
+          variant='outlined'
+          onClick={onCancel}
+          sx={{ width: { md: 'max-content', xs: '100%' } }}
+        >
           {t.forms.cancel}
         </Button>
-        <Button variant='tonal' onClick={onSubmit} sx={{ width: { md: 'max-content', xs: '100%' } }}>
+        <Button
+          disabled={loading || Object.values(form).some(item => !item)}
+          variant='tonal'
+          onClick={onSubmit}
+          sx={{ width: { md: 'max-content', xs: '100%' } }}
+        >
           {t.forms.submit}
         </Button>
       </Stack>

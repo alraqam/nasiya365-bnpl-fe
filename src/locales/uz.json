@@ -45,6 +45,9 @@
     "logout": "Chiqish",
     "actions": "Amallar",
     "success-edit": "Muvaffaqiyatli o'zgartirildi",
+    "currency": {
+        "uzs": "So'm"
+    },
     "login": {
         "submit": "Login",
         "phone": "Telefon raqam",
