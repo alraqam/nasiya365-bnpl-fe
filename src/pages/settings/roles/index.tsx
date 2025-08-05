@@ -93,7 +93,7 @@ const Roles = () => {
 
   useEffect(() => {
     fetchData(`/api/role?page=${paginationModel.page + 1}`)
-  }, [paginationModel.page])
+  }, [paginationModel.page, fetchData])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({

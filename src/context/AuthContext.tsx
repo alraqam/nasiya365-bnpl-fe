@@ -1,5 +1,5 @@
 // ** React Imports
-import { createContext, useState, ReactNode, useEffect } from 'react'
+import { createContext, useState, ReactNode, useEffect, useCallback } from 'react'
 
 // ** Types
 import { AuthValuesType, UserDataType } from './types'
@@ -30,12 +30,18 @@ const AuthProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const [token, setToken] = useState<string | null>(null)
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true)
-    const res = (await api('/api/user')) as UserDataType
-    setUser(res)
-    setLoading(false)
-  }
+    try {
+      const res = (await api('/api/user')) as UserDataType
+      setUser(res)
+    } catch (error) {
+      console.error('Failed to fetch user:', error)
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -50,9 +56,11 @@ const AuthProvider = ({ children }: Props) => {
       fetchUser()
     }
 
-    const cachedPermissions = JSON.parse(localStorage.getItem(STORAGE_KEYS.permissions) || '[]') as Permission[]
-    setPermissions(cachedPermissions)
-  }, [token])
+    if (typeof window !== 'undefined') {
+      const cachedPermissions = JSON.parse(localStorage.getItem(STORAGE_KEYS.permissions) || '[]') as Permission[]
+      setPermissions(cachedPermissions)
+    }
+  }, [token, user, fetchUser])
 
   // const getAllActions = (subject: string) => {
   //   const filtered = permissions.filter(p => p.subject === subject)

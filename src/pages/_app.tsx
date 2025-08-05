@@ -1,5 +1,4 @@
 // ** React Imports
-import { ReactNode } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
@@ -17,9 +16,6 @@ import type { EmotionCache } from '@emotion/cache'
 // ** Config Imports
 // import { defaultACLObj } from 'src/configs/acl' // No longer needed
 import themeConfig from 'src/configs/themeConfig'
-
-// ** Fake-DB Import
-import 'src/@fake-db'
 
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'

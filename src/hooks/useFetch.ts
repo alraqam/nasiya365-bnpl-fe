@@ -1,27 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { api } from 'src/configs/api'
 
 const useFetch = <T>(url: string, auto = true) => {
   const [data, setData] = useState<T>()
   const [loading, setLoading] = useState(false)
 
-  const fetchData = async (newUrl: string = url) => {
-    try {
-      setLoading(true)
-      const response = await api<T>(newUrl)
-      setData(response)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const fetchData = useCallback(
+    async (newUrl: string = url) => {
+      try {
+        setLoading(true)
+        const response = await api<T>(newUrl)
+        setData(response)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [url]
+  )
 
   useEffect(() => {
     if (auto) {
       fetchData()
     }
-  }, [auto, url])
+  }, [auto, fetchData])
 
   return { data, loading, fetchData }
 }

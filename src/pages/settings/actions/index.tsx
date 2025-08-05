@@ -98,7 +98,7 @@ const Actions = () => {
 
   useEffect(() => {
     fetchActions(`/api/action?page=${paginationModel.page + 1}`)
-  }, [paginationModel.page])
+  }, [paginationModel.page, fetchActions])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({

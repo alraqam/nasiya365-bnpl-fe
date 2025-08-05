@@ -338,7 +338,8 @@ const Clients = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  rowCount={data?.data.length || 0}
+                  total={10}
+                  totalPages={10}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}

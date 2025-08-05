@@ -137,7 +137,9 @@ const CreateEmployee = () => {
             <Typography>{t.forms.employees['family-status']}</Typography>
             <CustomTextField select fullWidth value={form.role_id} onChange={handleChange('role_id')}>
               {roles?.data.data.map(role => (
-                <MenuItem value={role.id}>{role.name}</MenuItem>
+                <MenuItem key={role.id} value={role.id}>
+                  {role.name}
+                </MenuItem>
               ))}
             </CustomTextField>
           </Grid>

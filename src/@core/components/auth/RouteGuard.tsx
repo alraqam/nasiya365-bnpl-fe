@@ -38,14 +38,14 @@ const RouteGuard = (props: RouteGuardProps) => {
     if (!isInitialLoad && user && guestOnly) {
       router.replace(homeRoute)
     }
-  }, [user, guestOnly, homeRoute, isInitialLoad])
+  }, [user, guestOnly, homeRoute, isInitialLoad, router])
 
   // Redirect to home if user is on root and authenticated
   useEffect(() => {
     if (!isInitialLoad && user && user.role_id && router.asPath === '/') {
       router.replace(homeRoute)
     }
-  }, [user, router.asPath, homeRoute, isInitialLoad])
+  }, [user, router.asPath, router, homeRoute, isInitialLoad])
 
   // Show loading during initial load or auth loading
   if (isInitialLoad || authLoading) {

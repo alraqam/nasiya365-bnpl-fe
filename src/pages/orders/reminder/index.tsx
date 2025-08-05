@@ -174,7 +174,8 @@ const OrdersReminder = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  rowCount={clients.length}
+                  total={10}
+                  totalPages={10}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}

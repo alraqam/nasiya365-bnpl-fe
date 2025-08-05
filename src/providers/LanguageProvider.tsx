@@ -39,7 +39,7 @@ export const LanguageProvider = ({ children }: Props) => {
 
   useEffect(() => {
     setLang(localStorage.getItem(STORAGE_KEYS.lang) as AppLang)
-  }, [])
+  }, [lang])
 
   // useEffect(() => {
   //   setT(translations[lang])
@@ -49,7 +49,7 @@ export const LanguageProvider = ({ children }: Props) => {
     if (!localStorage.getItem(STORAGE_KEYS.lang)) {
       localStorage.setItem(STORAGE_KEYS.lang, lang)
     }
-  }, [])
+  }, [lang])
 
   return <LanguageContext.Provider value={{ lang, changeLang, t }}>{children}</LanguageContext.Provider>
 }
