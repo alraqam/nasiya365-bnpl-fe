@@ -9,71 +9,84 @@ import { useLang } from 'src/providers/LanguageProvider'
 import DatePicker from 'react-datepicker'
 import InputMask from 'react-input-mask'
 import { useRouter } from 'next/router'
-
-interface FormState {
-  phone1: string
-  phone2: string
-  email: string
-  familyStatus: string
-  numberOfChildren: string
-  password: string
-  confirmPassword: string
-  surname: string
-  name: string
-  patronymic: string
-  passportSeries: string
-  passportIssuer: string
-  passportIssueDate: Date | null
-  birthday: Date | null
-  gender: string
-  birthPlace: string
-  address: string
-}
-
-const initialFormState: FormState = {
-  phone1: '',
-  phone2: '',
-  email: '',
-  familyStatus: '',
-  numberOfChildren: '',
-  password: '',
-  confirmPassword: '',
-  surname: '',
-  name: '',
-  patronymic: '',
-  passportSeries: '',
-  passportIssuer: '',
-  passportIssueDate: null,
-  birthday: null,
-  gender: '',
-  birthPlace: '',
-  address: ''
-}
+import { initialEmployeeForm, requiredEmployeeFormFields } from '../create'
+import { api } from 'src/configs/api'
+import dateToString from 'src/@core/utils/date-to-string'
+import { PostResponse, Response } from 'src/@core/types/base-response'
+import useFetch from 'src/hooks/useFetch'
+import IRole from 'src/@core/types/role'
+import IEmployee from 'src/@core/types/employee'
 
 const CreateEmployee = () => {
   const { t } = useLang()
   const router = useRouter()
   const { id } = router.query
-  const [form, setForm] = useState<FormState>(initialFormState)
+
+  const [form, setForm] = useState(initialEmployeeForm)
+  const [loading, setLoading] = useState(false)
+
+  const { data: roles } = useFetch<Response<IRole[]>>('/api/role')
+  const { data } = useFetch<{
+    status: boolean
+    data: IEmployee
+  }>(`/api/admins/${id}`)
 
   useEffect(() => {
-    // Api call goes here to update fields with existing values
-  }, [id])
+    setForm({
+      phone1: data?.data.phone1 || '',
+      phone2: data?.data.phone2 || '',
+      email: data?.data.email || '',
+      password: '',
+      confirm_password: '',
+      name: data?.data.name || '',
+      surname: data?.data.surname || '',
+      middle_name: data?.data.middle_name || '',
+      passport: data?.data.passport || '',
+      place_of_issue: data?.data.place_of_issue || '',
+      date_of_issue: data?.data.date_of_issue ? new Date(data?.data.date_of_issue) : null,
+      date_of_birth: data?.data.date_of_birth ? new Date(data?.data.date_of_birth) : null,
+      gender: data?.data.gender.toString()!,
+      place_of_birth: data?.data.place_of_birth || '',
+      place_of_residence: data?.data.place_of_residence || '',
+      role_id: data?.data.role_id || 0
+    })
+  }, [data])
 
-  const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
   }
 
-  const handleDateChange = (field: keyof FormState) => (date: Date | null) => {
+  const handleDateChange = (field: keyof typeof form) => (date: Date | null) => {
     setForm(prev => ({ ...prev, [field]: date }))
   }
 
   const onCancel = () => {
-    setForm(initialFormState)
+    setForm(initialEmployeeForm)
   }
 
-  const onSubmit = () => {
-    console.log(form)
+  const onSubmit = async () => {
+    try {
+      setLoading(true)
+      const res = (await api(`/api/admins/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...form,
+          phone1: form.phone1.replace(/\D/g, ''),
+          phone2: form.phone1.replace(/\D/g, ''),
+          date_of_issue: dateToString(form.date_of_issue),
+          date_of_birth: dateToString(form.date_of_birth)
+        })
+      })) as PostResponse<keyof typeof initialEmployeeForm>
+
+      if (res.status) {
+        setForm(initialEmployeeForm)
+      }
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -93,9 +106,12 @@ const CreateEmployee = () => {
           {t.forms.employees['personal-details']}
         </Typography>
 
+        {/* Personal Details */}
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <Typography>{t.forms.employees.phone}</Typography>
+            <Typography>
+              {t.forms.employees.phone} <span style={{ color: 'red' }}>*</span>
+            </Typography>
             <InputMask mask='99 999 99 99' value={form.phone1} onChange={handleChange('phone1')}>
               {(inputProps: any) => (
                 <CustomTextField
@@ -132,23 +148,29 @@ const CreateEmployee = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography>{t.forms.employees['family-status']}</Typography>
-            <CustomTextField fullWidth value={form.familyStatus} onChange={handleChange('familyStatus')} />
+            <Typography>{t.forms.employees['role']}</Typography>
+            <CustomTextField select fullWidth value={form.role_id} onChange={handleChange('role_id')}>
+              {roles?.data.data.map(role => (
+                <MenuItem key={role.id} value={role.id}>
+                  {role.label}
+                </MenuItem>
+              ))}
+            </CustomTextField>
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <Typography>{t.forms.employees['number-of-children']}</Typography>
-            <CustomTextField fullWidth value={form.numberOfChildren} onChange={handleChange('numberOfChildren')} />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees.password}</Typography>
-            <CustomTextField fullWidth value={form.password} onChange={handleChange('password')} />
+            <CustomTextField fullWidth value={form.password} onChange={handleChange('password')} type='password' />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees['confirm-password']}</Typography>
-            <CustomTextField fullWidth value={form.confirmPassword} onChange={handleChange('confirmPassword')} />
+            <CustomTextField
+              fullWidth
+              value={form.confirm_password}
+              onChange={handleChange('confirm_password')}
+              type='password'
+            />
           </Grid>
         </Grid>
 
@@ -156,38 +178,45 @@ const CreateEmployee = () => {
           {t.forms.employees['passport-details']}
         </Typography>
 
+        {/* Passport Details */}
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
-            <Typography>{t.forms.employees.surname}</Typography>
+            <Typography>
+              {t.forms.employees.surname} <span style={{ color: 'red' }}>*</span>
+            </Typography>
             <CustomTextField fullWidth value={form.surname} onChange={handleChange('surname')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Typography>{t.forms.employees.name}</Typography>
+            <Typography>
+              {t.forms.employees.name} <span style={{ color: 'red' }}>*</span>
+            </Typography>
             <CustomTextField fullWidth value={form.name} onChange={handleChange('name')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography>{t.forms.employees.patronymic}</Typography>
-            <CustomTextField fullWidth value={form.patronymic} onChange={handleChange('patronymic')} />
+            <CustomTextField fullWidth value={form.middle_name} onChange={handleChange('middle_name')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Typography>{t.forms.employees['passport-series']}</Typography>
-            <CustomTextField fullWidth value={form.passportSeries} onChange={handleChange('passportSeries')} />
+            <Typography>
+              {t.forms.employees['passport-series']} <span style={{ color: 'red' }}>*</span>
+            </Typography>
+            <CustomTextField fullWidth value={form.passport} onChange={handleChange('passport')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography>{t.forms.employees['passport-issuer']}</Typography>
-            <CustomTextField fullWidth value={form.passportIssuer} onChange={handleChange('passportIssuer')} />
+            <CustomTextField fullWidth value={form.place_of_issue} onChange={handleChange('place_of_issue')} />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Typography>{t.forms.employees['passport-issue-date']}</Typography>
             <DatePickerWrapper>
               <DatePicker
-                selected={form.passportIssueDate}
-                onChange={handleDateChange('passportIssueDate')}
+                selected={form.date_of_issue}
+                onChange={handleDateChange('date_of_issue')}
                 dateFormat='dd.MM.yyyy'
                 customInput={
                   <CustomTextField
@@ -206,11 +235,13 @@ const CreateEmployee = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography>{t.forms.employees.birthday}</Typography>
+            <Typography>
+              {t.forms.employees.birthday} <span style={{ color: 'red' }}>*</span>
+            </Typography>
             <DatePickerWrapper>
               <DatePicker
-                selected={form.birthday}
-                onChange={handleDateChange('birthday')}
+                selected={form.date_of_birth}
+                onChange={handleDateChange('date_of_birth')}
                 dateFormat='dd.MM.yyyy'
                 customInput={
                   <CustomTextField
@@ -229,30 +260,52 @@ const CreateEmployee = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography>{t.forms.employees.gender}</Typography>
+            <Typography>
+              {t.forms.employees.gender} <span style={{ color: 'red' }}>*</span>
+            </Typography>
             <CustomTextField select fullWidth value={form.gender} onChange={handleChange('gender')}>
-              <MenuItem value='male'>{t.man}</MenuItem>
-              <MenuItem value='female'>{t.woman}</MenuItem>
+              <MenuItem value='1'>{t.man}</MenuItem>
+              <MenuItem value='0'>{t.woman}</MenuItem>
             </CustomTextField>
           </Grid>
 
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees.birthPlace}</Typography>
-            <CustomTextField fullWidth value={form.birthPlace} onChange={handleChange('birthPlace')} />
+            <CustomTextField fullWidth value={form.place_of_birth} onChange={handleChange('place_of_birth')} />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees.address}</Typography>
-            <CustomTextField fullWidth value={form.address} onChange={handleChange('address')} />
+            <CustomTextField fullWidth value={form.place_of_residence} onChange={handleChange('place_of_residence')} />
           </Grid>
         </Grid>
       </Card>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button variant='outlined' onClick={onCancel} sx={{ width: { md: 'max-content', xs: '100%' } }}>
+        <Button
+          disabled={
+            loading ||
+            Object.entries(form).some(
+              ([key, value]) => requiredEmployeeFormFields.includes(key as keyof typeof initialEmployeeForm) && !value
+            )
+          }
+          variant='outlined'
+          onClick={onCancel}
+          sx={{ width: { md: 'max-content', xs: '100%' } }}
+        >
           {t.forms.cancel}
         </Button>
-        <Button variant='tonal' onClick={onSubmit} sx={{ width: { md: 'max-content', xs: '100%' } }}>
+        <Button
+          disabled={
+            loading ||
+            Object.entries(form).some(
+              ([key, value]) => requiredEmployeeFormFields.includes(key as keyof typeof initialEmployeeForm) && !value
+            )
+          }
+          variant='tonal'
+          onClick={onSubmit}
+          sx={{ width: { md: 'max-content', xs: '100%' } }}
+        >
           {t.forms.submit}
         </Button>
       </Stack>

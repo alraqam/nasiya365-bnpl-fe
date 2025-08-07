@@ -27,6 +27,7 @@ import Form from 'src/@core/components/DialogForm'
 import setParams from 'src/@core/utils/set-params'
 import dashToDotFormat from 'src/@core/utils/dash-to-dot-format'
 import maskFormat from 'src/@core/utils/mask-format'
+import { api } from 'src/configs/api'
 
 interface Response {
   current_page: string
@@ -49,7 +50,7 @@ const Employees = () => {
   const [filters, setFilters] = useState(initialFilters)
   const [url, setUrl] = useState('/api/admins')
 
-  const { data } = useFetch<Response>(url)
+  const { data, fetchData } = useFetch<Response>(url)
   const { current_page, per_page } = data || {}
   const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
@@ -101,7 +102,10 @@ const Employees = () => {
                 />
               </Button>
             </Link>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+            <Button
+              sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
+              onClick={() => handleDelete(id)}
+            >
               <Icon
                 svg='/icons/trash.svg'
                 width={24}
@@ -146,6 +150,18 @@ const Employees = () => {
     }
   }
 
+  const handleDelete = async (id: number) => {
+    try {
+      await api(`/api/admins/destroy/${id}`, {
+        method: 'DELETE'
+      })
+      await fetchData()
+      clearModal()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <Stack gap={4}>
@@ -177,6 +193,7 @@ const Employees = () => {
                 color: theme.palette.text.primary,
                 '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
               })}
+              onClick={() => fetchData()}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}

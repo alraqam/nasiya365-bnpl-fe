@@ -188,6 +188,7 @@
             "gender": "Jinsi",
             "birthPlace": "Tu'g'ilgan joyi",
             "address": "Yashash manzili",
+            "role": "Rol",
             "placeholder": {
                 "employee": "Xodim ism familyasi",
                 "pasport": "Pasport seriyasi",
