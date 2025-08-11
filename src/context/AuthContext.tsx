@@ -62,12 +62,12 @@ const AuthProvider = ({ children }: Props) => {
     }
   }, [token, user, fetchUser])
 
-  // const getAllActions = (subject: string) => {
-  //   const filtered = permissions.filter(p => p.subject === subject)
-  //   return filtered
-  // }
+  const getAllActions = (subject: string) => {
+    const filtered = permissions.filter(p => p.subject === subject)
+    return filtered
+  }
 
-  // console.log(getAllActions('ProfileController'))
+  console.log(getAllActions('InvestmentController'))
 
   const values = {
     user,

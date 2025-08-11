@@ -74,19 +74,19 @@ const useNavigation = (): VerticalNavItemsType => {
           title: t.pages.settings.roles,
           path: '/settings/roles',
           action: 'index',
-          subject: 'AccessoryController'
+          subject: 'Mirfozil'
         },
         {
           title: t.pages.settings.controllers,
           path: '/settings/controllers',
           action: 'index',
-          subject: 'AccessoryController'
+          subject: 'Mirfozil'
         },
         {
           title: t.pages.settings.actions,
           path: '/settings/actions',
           action: 'index',
-          subject: 'AccessoryController'
+          subject: 'Mirfozil'
         }
       ]
     }

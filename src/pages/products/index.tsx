@@ -14,9 +14,8 @@ import IDevice from 'src/@core/types/device'
 import IAccessory from 'src/@core/types/accessory'
 import Form from 'src/@core/components/DialogForm'
 import { useRouter } from 'next/router'
-import { api } from 'src/configs/api'
 import setParams from 'src/@core/utils/set-params'
-import { cleanupRootStyle } from '@iconify/tools'
+import { usePermissions } from 'src/hooks/usePermissions'
 
 interface Response {
   data: IDevice[] | IAccessory[]
@@ -38,6 +37,8 @@ const Products = () => {
   const [tab, setTab] = useState<'devices' | 'accessories'>('devices')
   const [filters, setFilters] = useState(initialFilters)
   const [url, setUrl] = useState('/api/devices')
+
+  const { hasPermission } = usePermissions()
 
   const { data, fetchData } = useFetch<Response>(url)
   // const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
@@ -226,7 +227,9 @@ const Products = () => {
               })}
             >
               <MenuItem value='devices'>{t.devices}</MenuItem>
-              <MenuItem value='accessories'>{t.accessories}</MenuItem>
+              {hasPermission('index', 'AccessoryController') && (
+                <MenuItem value='accessories'>{t.accessories}</MenuItem>
+              )}
             </CustomTextField>
 
             <Link href='/products/create'>

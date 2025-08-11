@@ -203,22 +203,6 @@ const Clients = () => {
                 />
               </Button>
             </Link>
-            <Button
-              sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
-              onClick={() => handleDelete(id)}
-            >
-              <Icon
-                svg='/icons/trash.svg'
-                width={24}
-                height={24}
-                styles={theme => ({
-                  backgroundColor: theme.palette.text.primary,
-                  '&:hover': {
-                    backgroundColor: theme.palette.error.main
-                  }
-                })}
-              />
-            </Button>
           </Box>
         )
       }

@@ -6,15 +6,41 @@ export interface Permission {
 // Route to Permission Mapping
 export const routePermissions: Record<string, Permission> = {
   '/dashboard': { action: 'index', subject: 'DashboardController' },
-  '/clients': { action: 'index', subject: 'ClientController' }
-  //   '/clients/create': { action: 'store', subject: 'ClientController' },
-  //   '/clients/[id]': { action: 'show', subject: 'ClientController' },
-  //   '/clients/[id]/edit': { action: 'update', subject: 'ClientController' },
-  //   '/users': { action: 'index', subject: 'UserController' },
-  //   '/users/create': { action: 'store', subject: 'UserController' },
-  //   '/users/[id]/edit': { action: 'update', subject: 'UserController' },
-  //   '/settings': { action: 'check_data', subject: 'SettingController' },
-  //   '/uploads': { action: 'file_upload', subject: 'FileController' }
+  // More on dashboard things
+
+  '/clients': { action: 'index', subject: 'ClientController' },
+  '/clients/create': { action: 'store', subject: 'ClientController' },
+  '/clients/edit': { action: 'updateClient', subject: 'ClientController' },
+  '/clients/[id]': { action: 'show', subject: 'ClientController' },
+
+  '/products': { action: 'index', subject: 'DeviceController' },
+  '/products/create': { action: 'store', subject: 'DeviceController' },
+  '/products/edit': { action: 'update', subject: 'DeviceController' },
+
+  '/orders': { action: 'index', subject: 'OrderController' },
+  '/orders/create': { action: 'post_createOrder', subject: 'OrderController' },
+  '/orders/edit': { action: 'putUpdateOrder', subject: 'OrderController' },
+  '/orders/reminder': { action: 'get_notes', subject: 'OrderController' },
+
+  '/employees': { action: 'index', subject: 'AdminController' },
+  '/employees/create': { action: 'store', subject: 'AdminController' },
+  '/employees/edit': { action: 'update', subject: 'AdminController' },
+
+  '/expenses': { action: 'index', subject: 'CostController' },
+  '/expenses/create': { action: 'store', subject: 'CostController' },
+  '/expenses/edit': { action: 'update', subject: 'CostController' },
+
+  '/investment/investors': { action: 'index', subject: 'InvestorController' },
+  '/investment/investors/create': { action: 'store', subject: 'InvestorController' },
+  '/investment/investors/edit': { action: 'update', subject: 'InvestorController' },
+
+  '/investment/investments': { action: 'index', subject: 'InvestmentController' },
+  '/investment/investments/create': { action: 'store', subject: 'InvestmentController' },
+  '/investment/investments/edit': { action: 'update', subject: 'InvestmentController' },
+
+  '/settings/roles': { action: 'index', subject: 'Mirfozil' },
+  '/settings/controllers': { action: 'index', subject: 'Mirfozil' },
+  '/settings/actions': { action: 'index', subject: 'Mirfozil' }
 }
 
 // Permission checker class
