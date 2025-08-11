@@ -1,0 +1,29 @@
+export default interface IOrder {
+  id: number
+  NumberOrder: number
+  client_id: number
+  device_id: number
+  user_id: number
+  pay_type: number
+  body_price: number
+  summa: number
+  initial_payment: number
+  rest_summa: number
+  discount: number
+  benefit: number
+  box: number
+  pay_day: number
+  status: number
+  startDate: string
+  created_at: string
+  updated_at: string
+  notes: string
+  type: string
+  is_cash: number
+  quantity: number
+  account: string
+  client_name: string
+  surname: string
+  model: string
+  admin_name: string
+}

@@ -1,116 +1,62 @@
-import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem, styled } from '@mui/material'
-import React, { useState } from 'react'
+import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import Title from 'src/@core/components/title'
-import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
-import useManageColumns from 'src/hooks/useManageColumns'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
+import Form from 'src/@core/components/DialogForm'
+import useFetch from 'src/hooks/useFetch'
+import usePagination from 'src/hooks/usePagination'
+import IOrder from 'src/@core/types/order'
 
-const Form = styled('form')(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '20px',
+interface Response {
+  current_page: string
+  per_page: number
+  total: number
+  last_page: number
+  data: IOrder[]
+}
 
-  [theme.breakpoints.up('sm')]: {
-    width: '480px'
-  }
-}))
-
-const initialColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', minWidth: 100 },
-  { field: 'name', headerName: 'Ismi', minWidth: 250 },
-  { field: 'passport', headerName: 'Passport raqami', minWidth: 300 },
-  { field: 'address', headerName: 'Manzil', minWidth: 150 },
-  { field: 'phone', headerName: 'Telefon raqami', minWidth: 300 },
-  {
-    field: 'state',
-    headerName: 'Holati',
-    minWidth: 300,
-    renderCell: params => {
-      const getStatusColor = (status: string) => {
-        switch (status.toLowerCase()) {
-          case 'active':
-            return 'success'
-          case 'inactive':
-            return 'error'
-          case 'pending':
-            return 'warning'
-          default:
-            return 'default'
-        }
-      }
-
-      return <Chip label={params.value} color={getStatusColor(params.value)} variant='outlined' size='small' />
-    }
-  },
-  { field: 'gender', headerName: 'Jinsi', minWidth: 300 },
-  { field: 'email', headerName: 'Email', minWidth: 300 },
-  {
-    field: 'actions',
-    headerName: 'Harakatlar',
-    minWidth: 200,
-    renderCell: params => {
-      const id = params.row.id
-
-      return (
-        <Box sx={{ display: 'flex' }}>
-          <Link href={`/orders/edit?id=${id}`}>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
-              <Icon
-                svg='/icons/edit.svg'
-                width={24}
-                height={24}
-                styles={theme => ({
-                  backgroundColor: theme.palette.text.primary,
-                  '&:hover': {
-                    backgroundColor: theme.palette.warning.main
-                  }
-                })}
-              />
-            </Button>
-          </Link>
-          <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
-            <Icon
-              svg='/icons/trash.svg'
-              width={24}
-              height={24}
-              styles={theme => ({
-                backgroundColor: theme.palette.text.primary,
-                '&:hover': {
-                  backgroundColor: theme.palette.error.main
-                }
-              })}
-            />
-          </Button>
-        </Box>
-      )
-    }
-  }
-]
+const initialFilters = {
+  status: '',
+  order: '',
+  client: '',
+  imei: '',
+  payment_deadline: ''
+}
 
 const Orders = () => {
   const { modal, clearModal } = useModal()
   const { t } = useLang()
 
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10
-  })
-  const { visibleColumns, open } = useManageColumns(initialColumns)
-  const [filters, setFilters] = useState({
-    status: '',
-    order: '',
-    client: '',
-    imei: '',
-    payment_deadline: ''
-  })
+  const [filters, setFilters] = useState(initialFilters)
+  const [url, setUrl] = useState('/api/orders/all-orders')
+
+  const { data, fetchData } = useFetch<Response>(url)
+  const { current_page, per_page } = data || {}
+  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
+
+  useEffect(() => {
+    setUrl(`/api/orders/all-orders?page=${paginationModel.page + 1}`)
+  }, [paginationModel.page])
+
+  const initialColumns: GridColDef[] = [
+    { field: 'status', headerName: 'Status', minWidth: 100 },
+    { field: 'NumberOrder', headerName: 'Buyurtma raqami', flex: 1 },
+    { field: 'client_name', headerName: 'Mijoz', flex: 1 },
+    { field: 'model', headerName: 'Qurilma', flex: 1 },
+    { field: 'pay_type', headerName: "To'lov muddati", flex: 1 },
+    { field: 'summa', headerName: 'umumiy summa', flex: 1 },
+    { field: 'rest_summa', headerName: 'Qolgan summa', flex: 1 },
+    { field: 'notes', headerName: 'Izoh', flex: 1 },
+    { field: 'pay_day', headerName: "To'lov sanasi", flex: 1 },
+    { field: 'created_at', headerName: 'Sana', flex: 1 }
+  ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({
@@ -170,6 +116,7 @@ const Orders = () => {
                 color: theme.palette.text.primary,
                 '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
               })}
+              onClick={() => fetchData(`/api/orders/all-orders?page=${paginationModel.page + 1}`)}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
@@ -186,8 +133,8 @@ const Orders = () => {
 
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
-            columns={visibleColumns}
-            rows={clients}
+            columns={initialColumns}
+            rows={data?.data || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
@@ -195,8 +142,8 @@ const Orders = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  total={10}
-                  totalPages={10}
+                  total={data?.total || 0}
+                  totalPages={data?.last_page || 0}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
