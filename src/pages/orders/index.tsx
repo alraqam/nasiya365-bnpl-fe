@@ -46,16 +46,16 @@ const Orders = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'status', headerName: 'Status', minWidth: 100 },
-    { field: 'NumberOrder', headerName: 'Buyurtma raqami', flex: 1 },
-    { field: 'client_name', headerName: 'Mijoz', flex: 1 },
-    { field: 'model', headerName: 'Qurilma', flex: 1 },
-    { field: 'pay_type', headerName: "To'lov muddati", flex: 1 },
-    { field: 'summa', headerName: 'umumiy summa', flex: 1 },
-    { field: 'rest_summa', headerName: 'Qolgan summa', flex: 1 },
-    { field: 'notes', headerName: 'Izoh', flex: 1 },
-    { field: 'pay_day', headerName: "To'lov sanasi", flex: 1 },
-    { field: 'created_at', headerName: 'Sana', flex: 1 }
+    { field: 'status', headerName: t.forms.orders.status, minWidth: 100 },
+    { field: 'NumberOrder', headerName: t.forms.orders.number, flex: 1 },
+    { field: 'client_name', headerName: t.forms.orders.client, flex: 1 },
+    { field: 'model', headerName: t.forms.orders.model, flex: 1 },
+    { field: 'pay_type', headerName: t.forms.orders.payment_deadline, flex: 1 },
+    { field: 'summa', headerName: t.forms.orders.total_price, flex: 1 },
+    { field: 'rest_summa', headerName: t.forms.orders.price, flex: 1 },
+    { field: 'notes', headerName: t.forms.orders.comment, flex: 1 },
+    { field: 'pay_day', headerName: t.forms.orders.payment_date, flex: 1 },
+    { field: 'created_at', headerName: t.forms.orders.created_at, flex: 1 }
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -31,6 +31,7 @@
     "client": "Mijoz",
     "product": "Mahsulot",
     "devices": "Qurilmalar",
+    "accessories": "Aksessuarlar",
     "reminder": "Eslatma",
     "man": "Erkak",
     "woman": "Ayol",
@@ -125,14 +126,23 @@
         },
         "products": {
             "dialog": {
-                "search-title": "Mahsulot izlash",
-                "search-desc": "Mahsulot ma'lumotlarini qidiring"
+                "search-title": "Qurilma izlash",
+                "search-desc": "Mahsulot ma'lumotlarini qidiring",
+                "search-accessory": "Aksessuar izlash"
             },
             "supplier": "Yetkazib beruvchi",
             "imei": "Imei",
             "model": "Model",
             "account": "Akkount (Gmail)",
-            "name": "Ism"
+            "name": "Ism",
+            "box-status": "Quti holati",
+            "seria_number": "Seriya nomer",
+            "price": "Kiruvchi narx",
+            "sale-type": {
+                "label": "Sotuv turi",
+                "monthly": "Muddatli to'lov",
+                "in-sale": "Sotuvda"
+            }
         },
         "orders": {
             "dialog": {
@@ -144,7 +154,9 @@
             "client": "Mijoz",
             "status": "Status",
             "order": "Buyurtma",
+            "number": "Buyurtma raqami",
             "comment": "Izoh",
+            "model": "Model",
             "device": "Qurilma",
             "device_doc": "Qurilma qutisi",
             "payment_due_monthly": "To'lov muddati (oy)",
@@ -155,7 +167,9 @@
             "initial_payment": "Boshlang'ich to'lov",
             "imei": "Imei",
             "payment_deadline": "To'lov muddati",
+            "pay-day": "To'lov kuni",
             "payment_date": "To'lov kunini belgilash",
+            "created_at": "Sana",
             "placeholder": {
                 "order": "Buyurtma raqamini kiriting",
                 "client": "Mijoz ism familyasi",

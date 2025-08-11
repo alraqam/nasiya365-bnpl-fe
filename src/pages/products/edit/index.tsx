@@ -5,12 +5,32 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import Title from 'src/@core/components/title'
 import { useRouter } from 'next/router'
 import { useLang } from 'src/providers/LanguageProvider'
+import { api } from 'src/configs/api'
+import { PostResponse } from 'src/@core/types/base-response'
+import toast from 'react-hot-toast'
+import useFetch from 'src/hooks/useFetch'
+
+interface Response {
+  status: boolean
+  data: {
+    id: number
+    imei: string
+    imei_2: null | string
+    model: string
+    provider: string
+    account: null | string
+    incoming_price: number
+    status: number
+    created_at: Date
+    updated_at: Date
+  }
+}
 
 const initialFormState = {
-  supplier: '',
+  provider: '',
   imei: '',
   model: '',
-  account: ''
+  incoming_price: ''
 }
 
 const CreateProduct = () => {
@@ -18,22 +38,50 @@ const CreateProduct = () => {
   const router = useRouter()
 
   const [form, setForm] = useState(initialFormState)
+  const [loading, setLoading] = useState(false)
   const { id } = router.query
 
+  const { data } = useFetch<Response>(`/api/devices/${id}`)
+
   useEffect(() => {
-    // Api call goes here to update fields with existing values
-  }, [id])
+    setForm({
+      provider: data?.data.provider || '',
+      imei: data?.data.imei || '',
+      model: data?.data.model || '',
+      incoming_price: data?.data.incoming_price.toString() || ''
+    })
+  }, [data])
 
   const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
   }
 
-  const onCancel = () => {
+  const onCancel = async () => {
     setForm(initialFormState)
   }
 
-  const onSubmit = () => {
-    console.log(form)
+  const onSubmit = async () => {
+    try {
+      setLoading(true)
+      const res = (await api(`/api/devices/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(form)
+      })) as PostResponse<keyof typeof initialFormState>
+
+      if (!res.status) {
+        for (const [field, messages] of Object.entries(res.errors)) {
+          for (const msg of messages) {
+            toast.error(msg)
+          }
+        }
+      } else {
+        setForm(initialFormState)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -54,7 +102,7 @@ const CreateProduct = () => {
             <Typography variant='body1'>
               {t.forms.products.supplier} <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <CustomTextField fullWidth value={form.supplier} onChange={handleChange('supplier')} />
+            <CustomTextField fullWidth value={form.provider} onChange={handleChange('provider')} />
           </Grid>
 
           <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -73,7 +121,7 @@ const CreateProduct = () => {
 
           <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <Typography variant='body1'>{t.forms.products.account}</Typography>
-            <CustomTextField fullWidth value={form.account} onChange={handleChange('account')} />
+            <CustomTextField fullWidth value={form.incoming_price} onChange={handleChange('incoming_price')} />
           </Grid>
         </Grid>
       </Card>

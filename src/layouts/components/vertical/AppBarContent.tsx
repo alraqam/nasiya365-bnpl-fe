@@ -54,9 +54,6 @@ const AppBarContent = (props: Props) => {
       case '/clients':
         setModal('search-clients')
         break
-      case '/products':
-        setModal('search-products')
-        break
       case '/orders':
         setModal('search-orders')
         break
@@ -68,6 +65,12 @@ const AppBarContent = (props: Props) => {
         break
       case '/investment/investors':
         setModal('search-investors')
+    }
+
+    if (pathname === '/products' && router.query.type === 'devices') {
+      setModal('search-devices')
+    } else if (pathname === '/products' && router.query.type === 'accessories') {
+      setModal('search-accessories')
     }
   }
 

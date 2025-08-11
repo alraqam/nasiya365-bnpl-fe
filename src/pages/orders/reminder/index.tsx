@@ -12,35 +12,29 @@ import useFetch from 'src/hooks/useFetch'
 import IReminder from 'src/@core/types/order-reminder'
 import Form from 'src/@core/components/DialogForm'
 import CustomFooter from 'src/@core/components/TableFooter'
+import { api } from 'src/configs/api'
 
 interface Response {
   status: boolean
   data: IReminder[]
 }
 
-const initialFilters = {
-  supplier: '',
-  imei: '',
-  model: '',
-  account: ''
-}
-
 const OrdersReminder = () => {
   const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
 
-  const [filters, setFilters] = useState(initialFilters)
+  const [editingId, setEditingId] = useState<null | number>(null)
   const [paymentDate, setPaymentDate] = useState('')
   const [url, setUrl] = useState('/api/orders/notes')
 
   const { data, fetchData } = useFetch<Response>(url)
 
   const initialColumns: GridColDef[] = [
-    { field: 'NumberOrder', headerName: 'Buyurtma raqami', flex: 1 },
-    { field: 'name', headerName: 'Mijoz F.I.O', flex: 1 },
-    { field: 'phone', headerName: 'Telefon', flex: 1 },
-    { field: 'model', headerName: 'Qurilma', flex: 1 },
-    { field: 'pay_day', headerName: "To'lov kuni", flex: 1 },
+    { field: 'NumberOrder', headerName: t.forms.orders.number, flex: 1 },
+    { field: 'name', headerName: t.forms.orders.client, flex: 1 },
+    { field: 'phone', headerName: t.forms.client.phone, flex: 1 },
+    { field: 'model', headerName: t.forms.orders.device, flex: 1 },
+    { field: 'pay_day', headerName: t.forms.orders['pay-day'], flex: 1 },
     {
       field: 'actions',
       headerName: t.actions,
@@ -52,7 +46,10 @@ const OrdersReminder = () => {
           <Box sx={{ display: 'flex' }}>
             <Button
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
-              onClick={() => setModal('edit-payment-date')}
+              onClick={() => {
+                setModal('edit-payment-date')
+                setEditingId(id)
+              }}
             >
               <Icon
                 svg='/icons/edit.svg'
@@ -72,21 +69,22 @@ const OrdersReminder = () => {
     }
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
-      ...filters,
-      [event.target.name]: event.target.value
-    })
-  }
+  const handleSavePaymentDate = async () => {
+    try {
+      const res = await api(`/api/orders/update-monthly/${editingId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          comment: paymentDate
+        })
+      })
 
-  const handleSearch = async () => {
-    console.log(filters)
-    // Backend interaction goes here
-  }
-
-  const handleSavePaymentDate = () => {
-    console.log(paymentDate)
-    // Backend interaction goes here
+      if (res.status) {
+        await fetchData()
+        clearModal()
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
