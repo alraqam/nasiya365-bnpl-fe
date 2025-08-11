@@ -45,7 +45,7 @@ const CreateEmployee = () => {
       place_of_issue: data?.data.place_of_issue || '',
       date_of_issue: data?.data.date_of_issue ? new Date(data?.data.date_of_issue) : null,
       date_of_birth: data?.data.date_of_birth ? new Date(data?.data.date_of_birth) : null,
-      gender: data?.data.gender.toString()!,
+      gender: data?.data.gender.toString() || '0',
       place_of_birth: data?.data.place_of_birth || '',
       place_of_residence: data?.data.place_of_residence || '',
       role_id: data?.data.role_id || 0

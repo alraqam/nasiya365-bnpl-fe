@@ -49,7 +49,7 @@ const Products = () => {
     const params = new URLSearchParams(window.location.search)
     params.set('type', tab)
     router.replace(`${window.location.pathname}?${params.toString()}`)
-  }, [tab])
+  }, [tab, router])
 
   // useEffect(() => {
   //   setUrl(`/api/orders/all-orders?page=${paginationModel.page + 1}`)
