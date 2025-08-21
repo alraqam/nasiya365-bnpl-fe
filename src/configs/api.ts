@@ -21,7 +21,11 @@ export async function api<T = any>(endpoint: string, options: FetchOptions = {})
   })
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    const errorBody = await response.json().catch(() => null) // in case body is not JSON
+    throw {
+      status: response.status,
+      ...errorBody
+    }
   }
 
   return response.json() as Promise<T>

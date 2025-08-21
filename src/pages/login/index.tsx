@@ -106,39 +106,43 @@ const LoginPage = () => {
   const onSubmit = async (data: FormData) => {
     const { phone1, password } = data
 
-    const res = await api('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        phone1: phone1,
-        password: password
+    try {
+      const res = await api('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          phone1: phone1,
+          password: password
+        })
       })
-    })
 
-    if (!res.status && res.errors) {
-      if ('phone1' in res.errors) {
-        setError('phone1', {
-          type: 'manual',
-          message: res.errors.phone1[0]
-        })
-      }
-
-      if ('password' in res.errors) {
-        setError('password', {
-          type: 'manual',
-          message: res.errors.password[0]
-        })
-      }
-
-      if (Array.isArray(res.errors) && res.errors.includes('Unauthorized')) {
-        toast.error(res.errors[0])
-      }
-    } else {
       auth.setUser(res.user)
       auth.setPermissions(res.permissions)
       localStorage.setItem(STORAGE_KEYS.token, res.token)
       localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
 
       router.push('/dashboard')
+    } catch (error: any) {
+      if (!error.status && error.errors) {
+        if ('phone1' in error.errors) {
+          setError('phone1', {
+            type: 'manual',
+            message: error.errors.phone1[0]
+          })
+        }
+
+        if ('password' in error.errors) {
+          setError('password', {
+            type: 'manual',
+            message: error.errors.password[0]
+          })
+        }
+
+        if (Array.isArray(error.errors) && error.errors.includes('Unauthorized')) {
+          toast.error(error.errors[0])
+        }
+      } else {
+        toast.error('Nimadir xato ketti')
+      }
     }
   }
 
