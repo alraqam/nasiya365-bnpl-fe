@@ -142,6 +142,7 @@ const LoginPage = () => {
         }
       } else {
         toast.error('Nimadir xato ketti')
+        console.log(error)
       }
     }
   }
@@ -181,10 +182,10 @@ const LoginPage = () => {
         <Box
           sx={{
             p: [6, 12],
-            height: '100%',
+            width:"100%",
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 400 }}>
