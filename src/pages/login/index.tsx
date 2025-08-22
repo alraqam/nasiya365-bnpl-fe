@@ -115,12 +115,36 @@ const LoginPage = () => {
         })
       })
 
-      auth.setUser(res.user)
-      auth.setPermissions(res.permissions)
-      localStorage.setItem(STORAGE_KEYS.token, res.token)
-      localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
+      if (!res.status) {
+        if (res.errors) {
+          Object.entries(data).forEach(([key, value]) => {
+            if (!value.length) {
+              setError(key as keyof FormData, {
+                type: 'manual',
+                message: 'Maydonlar majburiy'
+              })
+            }
+          })
 
-      router.push('/dashboard')
+          Object.entries(res.errors).forEach(([key, value]) => {
+            res.errors[key].forEach((msg: string) => {
+              setError(key as keyof FormData, {
+                type: 'manual',
+                message: msg
+              })
+            })
+          })
+        } else {
+          toast.error('Nimadir xato ketti')
+        }
+      } else {
+        auth.setUser(res.user)
+        auth.setPermissions(res.permissions)
+        localStorage.setItem(STORAGE_KEYS.token, res.token)
+        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
+
+        router.push('/dashboard')
+      }
     } catch (error: any) {
       if (!error.status && error.errors) {
         if ('phone1' in error.errors) {
@@ -142,7 +166,6 @@ const LoginPage = () => {
         }
       } else {
         toast.error('Nimadir xato ketti')
-        console.log(error)
       }
     }
   }

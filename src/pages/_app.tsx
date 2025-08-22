@@ -14,7 +14,6 @@ import { CacheProvider } from '@emotion/react'
 import type { EmotionCache } from '@emotion/cache'
 
 // ** Config Imports
-// import { defaultACLObj } from 'src/configs/acl' // No longer needed
 import themeConfig from 'src/configs/themeConfig'
 
 // ** Third Party Import
@@ -112,7 +111,7 @@ const App = (props: ExtendedAppProps) => {
                   </LanguageProvider>
                   <Toaster
                     position={settings.toastPosition}
-                    toastOptions={{ className: 'react-hot-toast', style: { zIndex: 9999 } }}
+                    toastOptions={{ className: 'react-hot-toast', style: { zIndex: 9999 , marginTop:"env(safe-area-inset-top)"} }}
                   />
                 </ThemeComponent>
               )

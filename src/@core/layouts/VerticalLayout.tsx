@@ -20,10 +20,11 @@ import AppBar from './components/vertical/appBar'
 import Customizer from 'src/@core/components/customizer'
 import Navigation from './components/vertical/navigation'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
+import { usePlatform } from 'src/hooks/usePlatform'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
-  display: 'flex'
+  display: 'flex',
 })
 
 const MainContentWrapper = styled(Box)<BoxProps>({
@@ -45,7 +46,21 @@ const ContentWrapper = styled('main')(({ theme }) => ({
   }
 }))
 
+const StatusBar = styled("div")(({theme}) => ({
+  height:"env(safe-area-inset-top)",
+  position:"fixed",
+  top:"0px",
+  left:"0px",
+  right:"0px",
+  width:"100%",
+  backgroundColor:"#fff",
+  zIndex:"99999"
+}))
+
 const VerticalLayout = (props: LayoutProps) => {
+
+const {platform} = usePlatform()
+
   // ** Props
   const { hidden, settings, children, scrollToTop, footerProps, contentHeightFixed, verticalLayoutProps } = props
 
@@ -64,7 +79,10 @@ const VerticalLayout = (props: LayoutProps) => {
 
   return (
     <>
-      <VerticalLayoutWrapper className='layout-wrapper'>
+    {
+      platform === "ios" && <StatusBar />
+    }
+      <VerticalLayoutWrapper className='layout-wrapper' sx={{marginTop:"20px"}}>
         {/* Navigation Menu */}
         {navHidden && !(navHidden && settings.lastLayout === 'horizontal') ? null : (
           <Navigation

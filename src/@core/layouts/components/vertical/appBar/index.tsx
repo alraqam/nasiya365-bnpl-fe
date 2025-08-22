@@ -85,7 +85,7 @@ const LayoutAppBar = (props: Props) => {
       elevation={0}
       color='default'
       className='layout-navbar'
-      sx={{ ...appBarBlurEffect, ...userAppBarStyle }}
+      sx={{ ...appBarBlurEffect, ...userAppBarStyle, ...{paddingTop:"env(safe-area-inset-top)"}}}
       position={appBar === 'fixed' ? 'sticky' : 'static'}
       {...userAppBarProps}
     >
