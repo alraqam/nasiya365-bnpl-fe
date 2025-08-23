@@ -6,6 +6,8 @@
     "total-expense": "Umumiy xarajat",
     "device-stats": "Qurilmalar statistikasi",
     "income-stats": "Kirim chiqim statistikasi",
+    "male": "Erkak",
+    "female": "Ayol",
     "reload": "Qayta yuklash",
     "manage-columns": "Ma'lumotlar tartibi",
     "add-client": "Mijoz qo'shish",
@@ -122,7 +124,11 @@
             "guarantor-phone": "Kafil telefon raqami",
             "status": "Statusni tanlang",
             "application": "Tilxat",
-            "passortCopy": "Pasport nusxasi / ID karta"
+            "passortCopy": "Pasport nusxasi / ID karta",
+            "file-url": "Fayl url",
+            "passport-url": "Pasport url",
+            "created-at": "Ro'yxatga olingan",
+            "updated-at": "Yangilangan vaqti"
         },
         "products": {
             "dialog": {

@@ -60,16 +60,16 @@ const Expenses = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'name', headerName: 'Xarajat', flex: 250 },
-    { field: 'type', headerName: 'Turi', flex: 300 },
-    { field: 'imei', headerName: 'IMEI', flex: 150 },
-    { field: 'model', headerName: 'Model', flex: 300 },
-    { field: 'amount', headerName: 'Summa', flex: 300 },
-    { field: 'created_at', headerName: 'Sana', flex: 300 },
+    { field: 'name', headerName: 'Xarajat', minWidth: 150 },
+    { field: 'type', headerName: 'Turi', minWidth: 150 },
+    { field: 'imei', headerName: 'IMEI', minWidth: 200 },
+    { field: 'model', headerName: 'Model', minWidth: 300 },
+    { field: 'amount', headerName: 'Summa', minWidth: 200 },
+    { field: 'created_at', headerName: 'Sana', minWidth: 150 },
     {
       field: 'actions',
       headerName: 'Harakatlar',
-      minWidth: 200,
+      minWidth: 50,
       renderCell: params => {
         const id = params.row.id
 

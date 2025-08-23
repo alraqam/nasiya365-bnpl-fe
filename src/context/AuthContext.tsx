@@ -67,7 +67,7 @@ const AuthProvider = ({ children }: Props) => {
     return filtered
   }
 
-  console.log(getAllActions('InvestmentController'))
+  // console.log(getAllActions('InvestmentController'))
 
   const values = {
     user,

@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Nasiya 365',
   webDir: 'out',
   server: {
-    "url": "http://localhost:3000"
+    url: 'http://localhost:3000'
   }
 }
 

@@ -115,7 +115,7 @@ const LoginPage = () => {
         })
       })
 
-      if (!res.status) {
+      if ('status' in res && !res.status) {
         if (res.errors) {
           Object.entries(data).forEach(([key, value]) => {
             if (!value.length) {
@@ -205,10 +205,10 @@ const LoginPage = () => {
         <Box
           sx={{
             p: [6, 12],
-            width:"100%",
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 400 }}>

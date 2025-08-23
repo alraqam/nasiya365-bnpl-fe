@@ -35,19 +35,19 @@ const Investments = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'investor', headerName: t.forms.investments.investor, flex: 1 },
+    { field: 'investor', headerName: t.forms.investments.investor, minWidth: 150 },
     {
       field: 'amount',
       headerName: t.forms.investments.amount,
-      flex: 1,
+      minWidth: 120,
       renderCell: params =>
         '$' + params.row.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     },
-    { field: 'created_at', headerName: t.forms.investments.created_at, flex: 1 },
+    { field: 'created_at', headerName: t.forms.investments.created_at, minWidth: 180 },
     {
       field: 'actions',
       headerName: t.actions,
-      minWidth: 200,
+      minWidth: 50,
       renderCell: params => {
         const id = params.row.id
 
