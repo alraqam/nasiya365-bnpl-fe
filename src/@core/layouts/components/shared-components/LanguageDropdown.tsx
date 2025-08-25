@@ -40,7 +40,12 @@ const LanguageDropdown = ({ settings, saveSettings, trigger }: Props) => {
       iconButtonProps={{ color: 'inherit' }}
       icon={<Icon fontSize='1.625rem' icon='tabler:language' />}
       customTrigger={trigger}
-      menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4.25, minWidth: 130 } } }}
+      menuProps={{
+        sx: {
+          '& .MuiMenu-paper': { mt: 4.25, minWidth: 130 },
+          '&:hover': { '& .MuiMenuItem-root': { backgroundColor: 'transparent' } }
+        }
+      }}
       options={[
         {
           text: "O'zbekcha",

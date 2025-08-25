@@ -125,11 +125,22 @@ const UserDropdown = (props: Props) => {
 
   return (
     <Fragment>
-      <Stack direction='row' alignItems='center' gap={3} onClick={handleDropdownOpen}>
+      <Button
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          padding: '0px',
+          borderRadius: '999px',
+          width: 38,
+          height: 38
+        }}
+        onClick={handleDropdownOpen}
+      >
         <Badge
           overlap='circular'
           onClick={handleDropdownOpen}
-          sx={{ ml: 2, cursor: 'pointer' }}
+          sx={{ cursor: 'pointer' }}
           badgeContent={<BadgeContentSpan />}
           anchorOrigin={{
             vertical: 'bottom',
@@ -143,13 +154,13 @@ const UserDropdown = (props: Props) => {
             sx={{ width: 38, height: 38 }}
           />
         </Badge>
-        <Typography
+        {/* <Typography
           sx={theme => ({ color: '#000', [theme.breakpoints.down('sm')]: { display: 'none' } })}
           variant='button'
         >
           {user?.name}
-        </Typography>
-      </Stack>
+        </Typography> */}
+      </Button>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

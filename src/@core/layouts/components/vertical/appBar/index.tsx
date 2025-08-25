@@ -39,7 +39,8 @@ const Toolbar = styled(MuiToolbar)<ToolbarProps>(({ theme }) => ({
   width: '100%',
   marginTop: theme.spacing(4),
   borderRadius: theme.shape.borderRadius,
-  padding: `${theme.spacing(0, 6)} !important`
+  padding: `${theme.spacing(0, 6)} !important`,
+  boxShadow: '0px 2px 8px 0px #2F2B3D1F'
 }))
 
 const LayoutAppBar = (props: Props) => {
@@ -85,7 +86,7 @@ const LayoutAppBar = (props: Props) => {
       elevation={0}
       color='default'
       className='layout-navbar'
-      sx={{ ...appBarBlurEffect, ...userAppBarStyle, ...{paddingTop:"env(safe-area-inset-top)"}}}
+      sx={{ ...appBarBlurEffect, ...userAppBarStyle, ...{ paddingTop: 'env(safe-area-inset-top)' } }}
       position={appBar === 'fixed' ? 'sticky' : 'static'}
       {...userAppBarProps}
     >
