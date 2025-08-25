@@ -38,8 +38,13 @@ const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props
         onChange={(_, newPage) => onPageChange(newPage - 1)}
         siblingCount={1}
         boundaryCount={1}
-        showFirstButton
-        showLastButton
+        renderItem={item => {
+          // Skip rendering previous and next buttons
+          if (item.type === 'previous' || item.type === 'next') {
+            return null
+          }
+          return <PaginationItem {...item} />
+        }}
         color='primary'
         shape='rounded'
         variant='outlined'
@@ -69,15 +74,6 @@ const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props
             cursor: 'pointer'
           }
         })}
-        renderItem={item => (
-          <PaginationItem
-            components={{
-              first: () => <Icon svg='/icons/first-page.svg' color='#000' />,
-              last: () => <Icon svg='/icons/last-page.svg' color='#000' />
-            }}
-            {...item}
-          />
-        )}
       />
     </Box>
   )

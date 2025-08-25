@@ -49,23 +49,23 @@ const Products = () => {
     const params = new URLSearchParams(window.location.search)
     params.set('type', tab)
     router.replace(`${window.location.pathname}?${params.toString()}`)
-  }, [tab, router])
+  }, [tab])
 
   // useEffect(() => {
   //   setUrl(`/api/orders/all-orders?page=${paginationModel.page + 1}`)
   // }, [paginationModel.page])
 
   const accessoriesColumns: GridColDef[] = [
-    { field: 'provider', headerName: 'Yetkazib beruvchi', flex: 1 },
-    { field: 'model', headerName: 'Model', flex: 1 },
-    { field: 'seria_number', headerName: 'Seriya nomeri', flex: 1 },
-    { field: 'account', headerName: 'Akkaunt (GMAIL)', flex: 1 },
-    { field: 'quantity', headerName: 'Soni', flex: 1 },
-    { field: 'incoming_price', headerName: 'Tannarxi', flex: 1 },
+    { field: 'provider', headerName: 'Yetkazib beruvchi', minWidth: 200 },
+    { field: 'model', headerName: 'Model', minWidth: 300 },
+    { field: 'seria_number', headerName: 'Seriya nomeri', minWidth: 200 },
+    { field: 'account', headerName: 'Akkaunt (GMAIL)', minWidth: 200 },
+    { field: 'quantity', headerName: 'Soni', minWidth: 100 },
+    { field: 'incoming_price', headerName: 'Tannarxi', minWidth: 150 },
     {
       field: 'actions',
       headerName: t.actions,
-      minWidth: 200,
+      minWidth: 50,
       renderCell: params => {
         const id = params.row.id
 
@@ -93,14 +93,14 @@ const Products = () => {
   ]
 
   const devicesColumns: GridColDef[] = [
-    { field: 'provider', headerName: t.forms.products.supplier, flex: 1 },
-    { field: 'model', headerName: t.forms.products.model, flex: 1 },
-    { field: 'imei', headerName: t.forms.products.imei, flex: 1 },
-    { field: 'account', headerName: t.forms.products.account, flex: 1 },
+    { field: 'provider', headerName: t.forms.products.supplier, minWidth: 200 },
+    { field: 'model', headerName: t.forms.products.model, minWidth: 300 },
+    { field: 'imei', headerName: t.forms.products.imei, minWidth: 200 },
+    { field: 'account', headerName: t.forms.products.account, minWidth: 250 },
     {
       field: 'id',
       headerName: t.forms.products['box-status'],
-      flex: 1,
+      minWidth: 200,
       renderCell(params) {
         const withBox = Number(params.row?.order?.box)
         return <Chip color={withBox ? 'success' : 'error'} label={withBox ? t.given : t['not-given']} />
@@ -109,7 +109,7 @@ const Products = () => {
     {
       field: 'status',
       headerName: t.forms.products['sale-type'].label,
-      flex: 1,
+      minWidth: 200,
       renderCell(params) {
         const isInSale = params.row.order === null
         return (
@@ -123,7 +123,7 @@ const Products = () => {
     {
       field: 'actions',
       headerName: t.actions,
-      minWidth: 200,
+      minWidth: 100,
       renderCell: params => {
         const id = params.row.id
 

@@ -33,9 +33,9 @@ const Actions = () => {
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: t.forms.actions.name, flex: 1 },
-    { field: 'code', headerName: t.forms.actions.code, flex: 1 },
-    { field: 'controller', headerName: t.forms.actions.controller, flex: 1 },
+    { field: 'name', headerName: t.forms.actions.name, minWidth: 200 },
+    { field: 'code', headerName: t.forms.actions.code, minWidth: 200 },
+    { field: 'controller', headerName: t.forms.actions.controller, minWidth: 220 },
     {
       field: 'actions',
       headerName: t.actions,

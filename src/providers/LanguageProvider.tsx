@@ -1,7 +1,7 @@
-import { createContext, ReactNode, use, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import uz from 'src/locales/uz.json'
-// import ru from 'src/locales/ru.json'
+import ru from 'src/locales/ru.json'
 
 export const LANGS = ['uz', 'ru'] as const
 
@@ -10,8 +10,8 @@ export type AppLang = (typeof LANGS)[number]
 interface LanguageProviderProps {
   lang: AppLang
   changeLang: (lang: AppLang) => void
-  // t: typeof uz | typeof ru
-  t: typeof uz
+  t: typeof uz | typeof ru
+  // t: typeof uz
 }
 interface Props {
   children: ReactNode
@@ -19,16 +19,13 @@ interface Props {
 
 const LanguageContext = createContext<LanguageProviderProps | null>(null)
 
-// const translations = { uz, ru }
-const translations = { uz }
+const translations = { uz, ru }
+// const translations = { uz }
 
 export const LanguageProvider = ({ children }: Props) => {
   const [lang, setLang] = useState<AppLang>('uz')
-  // const [t, setT] = useState<typeof uz | typeof ru>(() => {
-  //   const currentLang = (localStorage.getItem(STORAGE_KEYS.lang) as AppLang) || 'uz'
-  //   return translations[currentLang]
-  // })
-  const [t, setT] = useState<typeof uz>(uz)
+  const [t, setT] = useState<typeof uz | typeof ru>(translations[lang])
+  // const [t, setT] = useState<typeof uz>(uz)
 
   const changeLang = (newLang: AppLang) => {
     if (newLang !== lang) {
@@ -41,9 +38,9 @@ export const LanguageProvider = ({ children }: Props) => {
     setLang(localStorage.getItem(STORAGE_KEYS.lang) as AppLang)
   }, [lang])
 
-  // useEffect(() => {
-  //   setT(translations[lang])
-  // }, [lang])
+  useEffect(() => {
+    setT(translations[lang])
+  }, [lang])
 
   useEffect(() => {
     if (!localStorage.getItem(STORAGE_KEYS.lang)) {

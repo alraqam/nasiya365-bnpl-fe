@@ -2,7 +2,7 @@
 
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
@@ -52,6 +52,9 @@ import 'src/iconify-bundle/icons-bundle-react'
 import '../../styles/globals.css'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
 import RouteGuard from 'src/@core/components/auth/RouteGuard'
+import { useEffect } from 'react'
+import { App as CapApp } from '@capacitor/app'
+import { PluginListenerHandle } from '@capacitor/core'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -76,6 +79,31 @@ if (themeConfig.routingLoader) {
 
 // ** Configure JSS & ClassName
 const App = (props: ExtendedAppProps) => {
+  const router = useRouter()
+
+  useEffect(() => {
+    let listener: PluginListenerHandle
+
+    const setupBackButtonListener = async () => {
+      listener = await CapApp.addListener('backButton', () => {
+        if (router.pathname !== '/') {
+          router.back() // Navigate back
+        } else {
+          CapApp.exitApp() // Exit app on root
+        }
+      })
+    }
+
+    setupBackButtonListener()
+
+    return () => {
+      // Only try to remove if the listener is initialized
+      if (listener) {
+        listener.remove()
+      }
+    }
+  }, [router])
+
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   // Variables
@@ -95,7 +123,10 @@ const App = (props: ExtendedAppProps) => {
         <meta name='description' content={`${themeConfig.templateName} Nasiya`} />
         <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1, viewport-fit=cover" />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1, viewport-fit=cover'
+        />
       </Head>
 
       <AuthProvider>
@@ -111,7 +142,10 @@ const App = (props: ExtendedAppProps) => {
                   </LanguageProvider>
                   <Toaster
                     position={settings.toastPosition}
-                    toastOptions={{ className: 'react-hot-toast', style: { zIndex: 9999 , marginTop:"env(safe-area-inset-top)"} }}
+                    toastOptions={{
+                      className: 'react-hot-toast',
+                      style: { zIndex: 9999, marginTop: 'env(safe-area-inset-top)' }
+                    }}
                   />
                 </ThemeComponent>
               )

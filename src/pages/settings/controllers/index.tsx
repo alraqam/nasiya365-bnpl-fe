@@ -31,8 +31,8 @@ const Permissions = () => {
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: t.forms.controllers.name, flex: 1 },
-    { field: 'label', headerName: t.forms.controllers.label, flex: 1 },
+    { field: 'name', headerName: t.forms.controllers.name, minWidth: 200 },
+    { field: 'label', headerName: t.forms.controllers.label, minWidth: 220 },
     {
       field: 'actions',
       headerName: t.actions,

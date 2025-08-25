@@ -47,15 +47,15 @@ const Orders = () => {
 
   const initialColumns: GridColDef[] = [
     { field: 'status', headerName: t.forms.orders.status, minWidth: 100 },
-    { field: 'NumberOrder', headerName: t.forms.orders.number, flex: 1 },
-    { field: 'client_name', headerName: t.forms.orders.client, flex: 1 },
-    { field: 'model', headerName: t.forms.orders.model, flex: 1 },
-    { field: 'pay_type', headerName: t.forms.orders.payment_deadline, flex: 1 },
-    { field: 'summa', headerName: t.forms.orders.total_price, flex: 1 },
-    { field: 'rest_summa', headerName: t.forms.orders.price, flex: 1 },
-    { field: 'notes', headerName: t.forms.orders.comment, flex: 1 },
-    { field: 'pay_day', headerName: t.forms.orders.payment_date, flex: 1 },
-    { field: 'created_at', headerName: t.forms.orders.created_at, flex: 1 }
+    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 100 },
+    { field: 'client_name', headerName: t.forms.orders.client, minWidth: 200 },
+    { field: 'model', headerName: t.forms.orders.model, minWidth: 300 },
+    { field: 'pay_type', headerName: t.forms.orders.payment_deadline, minWidth: 100 },
+    { field: 'summa', headerName: t.forms.orders.total_price, minWidth: 100 },
+    { field: 'rest_summa', headerName: t.forms.orders.price, minWidth: 100 },
+    { field: 'notes', headerName: t.forms.orders.comment, minWidth: 300 },
+    { field: 'pay_day', headerName: t.forms.orders.payment_date, minWidth: 100 },
+    { field: 'created_at', headerName: t.forms.orders.created_at, minWidth: 200 }
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
