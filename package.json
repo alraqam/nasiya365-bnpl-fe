@@ -14,7 +14,8 @@
     "presync": "npm run build",
     "sync": "npx cap sync",
     "android": "npx cap run android",
-    "ios": "npx cap run ios"
+    "ios": "npx cap run ios",
+    "server": "npx json-server --watch db.json --port 4000"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",

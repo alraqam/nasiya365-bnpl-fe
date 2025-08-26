@@ -6,9 +6,25 @@ import CurrentContracts from 'src/@core/components/pages/dashboard/CurrentContra
 import DelayedContracts from 'src/@core/components/pages/dashboard/DelayedContracts'
 import Stats from 'src/@core/components/pages/dashboard/Stats'
 import GeneralChart from 'src/@core/components/pages/dashboard/GeneralChart'
+import useFetch from 'src/hooks/useFetch'
+
+interface Response {
+  contracts: {
+    this_month: number
+    last_month: number
+    last_month_2: number
+    change: number
+    expired: number
+  }
+  branches: number
+  expected_income: number
+  employees: number
+}
 
 const Home = () => {
   const { t } = useLang()
+
+  const { data } = useFetch<Response>('http://localhost:4000/dashboard', true, false)
 
   return (
     <Stack flexDirection='column' spacing={12}>
@@ -17,11 +33,11 @@ const Home = () => {
         <Grid item xs={12} lg={6}>
           <Grid container spacing={7}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CurrentContracts />
+              <CurrentContracts contracts={data?.contracts} />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <DelayedContracts
-                stats='26'
+                stats={data?.contracts.expired || 0}
                 chartColor='error'
                 title='Revenue Generated'
                 avatarIcon='tabler:credit-card'
@@ -35,16 +51,16 @@ const Home = () => {
         <Grid item xs={12} lg={6}>
           <Grid container spacing={7}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats='26' name={'Filiallar soni'} iconColor='primary' />
+              <Stats stats={data?.branches} name={'Filiallar soni'} iconColor='primary' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats='20 000 000' name={'Kutilayotgan foyda'} iconColor='info' />
+              <Stats stats={data?.expected_income} name={'Kutilayotgan foyda'} iconColor='info' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats='26' name={'Xodimlar soni'} iconColor='warning' />
+              <Stats stats={data?.employees} name={'Xodimlar soni'} iconColor='warning' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats='53 350 000' name={'Kutilayotgan foyda'} iconColor='primary' />
+              <Stats stats={data?.expected_income} name={'Kutilayotgan foyda'} iconColor='primary' />
             </Grid>
           </Grid>
         </Grid>

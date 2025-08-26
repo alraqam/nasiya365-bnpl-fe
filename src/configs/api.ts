@@ -1,12 +1,12 @@
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://nasiya365.al-raqam.com"
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://nasiya365.al-raqam.com'
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>
 }
 
-export async function api<T = any>(endpoint: string, options: FetchOptions = {}): Promise<T> {
+export async function api<T = any>(endpoint: string, options: FetchOptions = {}, withBaseURL = true): Promise<T> {
   const token = localStorage.getItem(STORAGE_KEYS.token)
 
   const headers: Record<string, string> = {
@@ -15,7 +15,7 @@ export async function api<T = any>(endpoint: string, options: FetchOptions = {})
     ...(options.headers || {})
   }
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(`${withBaseURL ? BASE_URL : ''}${endpoint}`, {
     ...options,
     headers
   })

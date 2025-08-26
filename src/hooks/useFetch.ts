@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { api } from 'src/configs/api'
 
-const useFetch = <T>(url: string, auto = true) => {
+const useFetch = <T>(url: string, auto = true, withBaseURL = true) => {
   const [data, setData] = useState<T>()
   const [loading, setLoading] = useState(false)
 
@@ -9,7 +9,7 @@ const useFetch = <T>(url: string, auto = true) => {
     async (newUrl: string = url) => {
       try {
         setLoading(true)
-        const response = await api<T>(newUrl)
+        const response = await api<T>(newUrl, {}, withBaseURL || false)
         setData(response)
       } catch (err) {
         console.error(err)

@@ -1,9 +1,29 @@
 import { Icon } from '@iconify/react'
-import { Box, Button, Card, Menu, MenuItem, Stack, Typography } from '@mui/material'
+import { Box, Card, Menu, MenuItem, Stack, Typography, useTheme } from '@mui/material'
 import { styled } from '@mui/system'
 import { useState } from 'react'
 import { MONTHS } from 'src/@core/utils/constants'
 import { useLang } from 'src/providers/LanguageProvider'
+import { Line } from 'react-chartjs-2'
+import { ChartData, ChartOptions } from 'chart.js'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import useFetch from 'src/hooks/useFetch'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+
+interface Response {
+  straight: Record<string, Record<string, number>>
+  bnpl: Record<string, Record<string, number>>
+}
 
 const Circle = styled(Box)(({ theme }) => ({
   width: '10px',
@@ -11,12 +31,20 @@ const Circle = styled(Box)(({ theme }) => ({
   borderRadius: '9999px'
 }))
 
+const primary = '#836af9'
+const success = '#28c76f'
+const borderColor = ''
+const labelColor = ''
+
 const GeneralChart = () => {
   const { t } = useLang()
 
   const [month, setMonth] = useState(0)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const currentMonth = new Date().getMonth()
+
+  const availableMonths = MONTHS.slice(0, currentMonth + 1)
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -24,6 +52,63 @@ const GeneralChart = () => {
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const { data: sales } = useFetch<Response>('http://localhost:4000/sales', true, false)
+
+  if (!sales) return null
+
+  const selectedMonth = MONTHS[month]
+
+  const labels = Object.keys(sales.straight[selectedMonth])
+  const straightValues = Object.values(sales.straight[selectedMonth])
+  const bnplValues = Object.values(sales.bnpl[selectedMonth])
+
+  const options: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: { color: labelColor },
+        grid: { color: borderColor }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: labelColor },
+        grid: { color: borderColor }
+      },
+      y1: {
+        beginAtZero: true,
+        position: 'right',
+        ticks: { color: labelColor },
+        grid: { drawOnChartArea: false }
+      }
+    },
+    plugins: {
+      legend: { display: false }
+    }
+  }
+
+  const data: ChartData<'line'> = {
+    labels,
+    datasets: [
+      {
+        label: 'Naqd', // "Naqd sotuv"
+        data: straightValues,
+        borderColor: primary,
+        backgroundColor: primary,
+        tension: 0.4,
+        pointRadius: 0
+      },
+      {
+        label: 'Nasiya', // "Nasiya sotuv"
+        data: bnplValues,
+        borderColor: success,
+        backgroundColor: success,
+        tension: 0.4,
+        pointRadius: 0
+      }
+    ]
   }
 
   return (
@@ -36,6 +121,7 @@ const GeneralChart = () => {
         boxShadow: '0px 3px 12px 0px #2F2B3D24'
       }}
     >
+      {/* Top */}
       <Stack flexDirection='row' justifyContent='space-between'>
         <Box>
           <Typography variant='h5' sx={{ mb: 1 }}>
@@ -52,7 +138,7 @@ const GeneralChart = () => {
               25 000 000 so'm
             </Typography>
             <Stack flexDirection='row' alignItems='center' gap={1}>
-              <Circle sx={{ backgroundColor: '#666EE8' }} />
+              <Circle sx={{ backgroundColor: primary }} />
               <Typography color='#2F2B3DB2'>Naqd sotuv</Typography>
             </Stack>
           </Box>
@@ -61,7 +147,7 @@ const GeneralChart = () => {
               25 000 000 so'm
             </Typography>
             <Stack flexDirection='row' alignItems='center' gap={1}>
-              <Circle sx={{ backgroundColor: '#28C76F' }} />
+              <Circle sx={{ backgroundColor: success }} />
               <Typography color='#2F2B3DB2'>Nasiya sotuv</Typography>
             </Stack>
           </Box>
@@ -109,7 +195,7 @@ const GeneralChart = () => {
               'aria-labelledby': 'basic-button'
             }}
           >
-            {MONTHS.map((item, index) => (
+            {availableMonths.map((item, index) => (
               <MenuItem
                 key={index}
                 onClick={() => {
@@ -123,6 +209,11 @@ const GeneralChart = () => {
           </Menu>
         </div>
       </Stack>
+
+      {/* Bottom */}
+      <Box sx={{ height: 400 }}>
+        <Line data={data} height={400} options={options} />
+      </Box>
     </Card>
   )
 }

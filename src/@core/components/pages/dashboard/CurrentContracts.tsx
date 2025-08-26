@@ -2,7 +2,21 @@ import { Box, Card, Divider, LinearProgress, Stack, Typography } from '@mui/mate
 import React from 'react'
 import CustomAvatar from '../../mui/avatar/custom'
 
-const CurrentContracts = () => {
+interface Props {
+  contracts:
+    | {
+        this_month: number
+        last_month: number
+        last_month_2: number
+        change: number
+        expired: number
+      }
+    | undefined
+}
+
+const CurrentContracts = (props: Props) => {
+  const { contracts } = props
+
   return (
     <Card
       sx={{
@@ -20,9 +34,9 @@ const CurrentContracts = () => {
           <Typography variant='body2' sx={{ color: 'text.disabled' }}>
             Joriy shartnomalar
           </Typography>
-          <Typography variant='h3'>214</Typography>
+          <Typography variant='h3'>{contracts?.this_month || 0}</Typography>
         </div>
-        <Typography sx={{ fontWeight: 500, color: 'success.main' }}>+18.2%</Typography>
+        <Typography sx={{ fontWeight: 500, color: 'success.main' }}>{contracts?.change || 0}%</Typography>
       </Box>
 
       <Stack
@@ -39,7 +53,7 @@ const CurrentContracts = () => {
           <Typography variant='body1' color={'#2F2B3DB2'}>
             1 oy oldingi
           </Typography>
-          <Typography variant='h4'>136</Typography>
+          <Typography variant='h4'>{contracts?.last_month || 0}</Typography>
         </Box>
 
         <Divider flexItem sx={{ m: 0 }} orientation='vertical'>
@@ -56,7 +70,7 @@ const CurrentContracts = () => {
           <Typography variant='body1' color={'#2F2B3DB2'}>
             2 oy oldingi
           </Typography>
-          <Typography variant='h4'>179</Typography>
+          <Typography variant='h4'>{contracts?.last_month_2 || 0}</Typography>
         </Box>
       </Stack>
 

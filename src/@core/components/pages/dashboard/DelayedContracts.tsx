@@ -1,14 +1,9 @@
-// ** MUI Imports
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-
-// ** Type Imports
 import { ApexOptions } from 'apexcharts'
 import { CardStatsWithAreaChartProps } from 'src/@core/components/card-statistics/types'
-
-// ** Custom Component Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 const DelayedContracts = (props: CardStatsWithAreaChartProps) => {

@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { ThemeColor } from 'src/@core/layouts/types'
 
 interface Props {
-  stats: string
+  stats: number | undefined
   name: string
   iconColor: ThemeColor
 }

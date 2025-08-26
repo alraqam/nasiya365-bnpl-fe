@@ -25,7 +25,7 @@ export type CardStatsHorizontalProps = {
 }
 
 export type CardStatsWithAreaChartProps = {
-  stats: string
+  stats: number | undefined
   title: string
   avatarIcon: string
   sx?: SxProps<Theme>
