@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Stack, styled, Typography, useTheme } from '@mui/material'
+import { Card, Stack, styled, Typography, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import { ReactNode, useState } from 'react'
@@ -20,6 +20,7 @@ import { useRouter } from 'next/router'
 import { useLang } from 'src/providers/LanguageProvider'
 import NotificationDropdown from './Notification'
 import { ThemeColor } from 'src/@core/layouts/types'
+import Calculator from './Calculator'
 
 interface Props {
   hidden: boolean
@@ -95,17 +96,6 @@ const notifications: NotificationsType[] = [
   }
 ]
 
-const StyledImg = styled('img')(({ theme }) => ({
-  width: 24,
-  height: 24,
-  borderRadius: 999,
-  [theme.breakpoints.down('sm')]: {
-    width: 28,
-    height: 28,
-    marginTop: '5px'
-  }
-}))
-
 const AppBarContent = (props: Props) => {
   const [search, setSearch] = useState('')
 
@@ -177,6 +167,18 @@ const AppBarContent = (props: Props) => {
         {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
+        <Card
+          sx={{
+            background: '#80839029',
+            paddingY: '6px',
+            paddingX: '12px',
+            color: '#808390',
+            marginRight: '20px'
+          }}
+        >
+          $ 12500
+        </Card>
+        <Calculator />
         <LanguageDropdown
           settings={settings}
           saveSettings={saveSettings}

@@ -56,13 +56,11 @@ const GeneralChart = () => {
 
   const { data: sales } = useFetch<Response>('http://localhost:4000/sales', true, false)
 
-  if (!sales) return null
-
   const selectedMonth = MONTHS[month]
 
-  const labels = Object.keys(sales.straight[selectedMonth])
-  const straightValues = Object.values(sales.straight[selectedMonth])
-  const bnplValues = Object.values(sales.bnpl[selectedMonth])
+  const labels = Object.keys(sales?.straight[selectedMonth] || [])
+  const straightValues = Object.values(sales?.straight[selectedMonth] || [])
+  const bnplValues = Object.values(sales?.bnpl[selectedMonth] || [])
 
   const options: ChartOptions<'line'> = {
     responsive: true,

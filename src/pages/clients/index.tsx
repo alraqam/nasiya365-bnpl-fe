@@ -28,17 +28,7 @@ import env from 'src/configs/env'
 import formatDate from 'src/@core/utils/format-date'
 import resolveStatus from 'src/@core/utils/table-utils'
 import { api } from 'src/configs/api'
-
-const Form = styled('form')(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '20px',
-
-  [theme.breakpoints.up('sm')]: {
-    width: '480px'
-  }
-}))
+import Form from 'src/@core/components/DialogForm'
 
 const Clients = () => {
   const { modal, clearModal } = useModal()
