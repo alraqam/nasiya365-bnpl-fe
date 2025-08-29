@@ -160,7 +160,6 @@ const Calculator = () => {
           <Stack
             sx={theme => ({
               display: 'flex',
-              alignItems: 'center',
               flexDirection: 'row',
               gap: '64px',
               paddingY: '28px',
@@ -348,7 +347,6 @@ const Calculator = () => {
                 gap: '20px',
                 maxWidth: '470px',
                 minWidth: '470px',
-                height: '520px',
                 width: '100%',
                 [theme.breakpoints.down('lg')]: {
                   maxWidth: '450px',
@@ -370,8 +368,7 @@ const Calculator = () => {
                   background: '#7367F03D',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '10px',
-                  flex: 1
+                  gap: '10px'
                 })}
               >
                 <Typography variant='h6' color={'#7367F0'}>
