@@ -1,6 +1,7 @@
 import { Box, Card, Divider, LinearProgress, Stack, Typography } from '@mui/material'
 import React from 'react'
 import CustomAvatar from '../../mui/avatar/custom'
+import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
   contracts:
@@ -17,6 +18,8 @@ interface Props {
 const CurrentContracts = (props: Props) => {
   const { contracts } = props
 
+  const { t } = useLang()
+
   return (
     <Card
       sx={{
@@ -32,7 +35,7 @@ const CurrentContracts = (props: Props) => {
       <Box sx={{ gap: 2, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-            Joriy shartnomalar
+            {t.forms.dashboard.blocks.current_contracts}
           </Typography>
           <Typography variant='h3'>{contracts?.this_month || 0}</Typography>
         </div>
@@ -51,7 +54,7 @@ const CurrentContracts = (props: Props) => {
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <Typography variant='body1' color={'#2F2B3DB2'}>
-            1 oy oldingi
+            {t.forms.dashboard.blocks.last_month}
           </Typography>
           <Typography variant='h4'>{contracts?.last_month || 0}</Typography>
         </Box>
@@ -68,7 +71,7 @@ const CurrentContracts = (props: Props) => {
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <Typography variant='body1' color={'#2F2B3DB2'}>
-            2 oy oldingi
+            {t.forms.dashboard.blocks.last_month_2}
           </Typography>
           <Typography variant='h4'>{contracts?.last_month_2 || 0}</Typography>
         </Box>

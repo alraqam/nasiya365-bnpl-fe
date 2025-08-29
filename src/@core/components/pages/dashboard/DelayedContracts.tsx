@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent'
 import { ApexOptions } from 'apexcharts'
 import { CardStatsWithAreaChartProps } from 'src/@core/components/card-statistics/types'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
+import { useLang } from 'src/providers/LanguageProvider'
 
 const DelayedContracts = (props: CardStatsWithAreaChartProps) => {
   // ** Props
@@ -12,6 +13,7 @@ const DelayedContracts = (props: CardStatsWithAreaChartProps) => {
 
   // ** Hook
   const theme = useTheme()
+  const { t } = useLang()
 
   const options: ApexOptions = {
     chart: {
@@ -74,9 +76,9 @@ const DelayedContracts = (props: CardStatsWithAreaChartProps) => {
   return (
     <Card sx={{ ...sx, height: '236px', boxShadow: '0px 3px 12px 0px #2F2B3D24' }}>
       <CardContent sx={{ pb: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <Typography variant='h5'>Kechikkan shartnomalar</Typography>
+        <Typography variant='h5'>{t.forms.dashboard.blocks.delayed_contracts}</Typography>
         <Typography variant='h6' sx={{ marginTop: '12px', marginBottom: '4px', color: '#2F2B3DB2' }}>
-          Jami shartnomalar
+          {t.forms.dashboard.blocks.all_contracts}
         </Typography>
         <Typography variant='h3'>{stats}</Typography>
       </CardContent>

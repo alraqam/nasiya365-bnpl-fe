@@ -51,16 +51,20 @@ const Home = () => {
         <Grid item xs={12} lg={6}>
           <Grid container spacing={7}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats={data?.branches} name={'Filiallar soni'} iconColor='primary' />
+              <Stats stats={data?.branches} name={t.forms.dashboard.blocks.branches} iconColor='primary' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats={data?.expected_income} name={'Kutilayotgan foyda'} iconColor='info' />
+              <Stats stats={data?.expected_income} name={t.forms.dashboard.blocks.expected_income} iconColor='info' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats={data?.employees} name={'Xodimlar soni'} iconColor='warning' />
+              <Stats stats={data?.employees} name={t.forms.dashboard.blocks.employees} iconColor='warning' />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Stats stats={data?.expected_income} name={'Kutilayotgan foyda'} iconColor='primary' />
+              <Stats
+                stats={data?.expected_income}
+                name={t.forms.dashboard.blocks.expected_income}
+                iconColor='primary'
+              />
             </Grid>
           </Grid>
         </Grid>

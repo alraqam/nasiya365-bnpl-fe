@@ -123,30 +123,30 @@ const GeneralChart = () => {
       <Stack flexDirection='row' justifyContent='space-between'>
         <Box>
           <Typography variant='h5' sx={{ mb: 1 }}>
-            Umumiy statistika
+            {t.forms.dashboard.graph.general_stats}
           </Typography>
           <Typography variant='h6' color='#2F2B3D8C'>
-            Sotuv grafigi
+            {t.forms.dashboard.graph.sale_graph}
           </Typography>
         </Box>
 
         <Stack direction='row' gap={5}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography variant='body1' color='#2F2B3D66'>
-              25 000 000 so'm
+              25 000 000 {t.currency.uzs}
             </Typography>
             <Stack flexDirection='row' alignItems='center' gap={1}>
               <Circle sx={{ backgroundColor: primary }} />
-              <Typography color='#2F2B3DB2'>Naqd sotuv</Typography>
+              <Typography color='#2F2B3DB2'>{t.forms.dashboard.graph.fixed_sale}</Typography>
             </Stack>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography variant='body1' color='#2F2B3D66'>
-              25 000 000 so'm
+              25 000 000 {t.currency.uzs}
             </Typography>
             <Stack flexDirection='row' alignItems='center' gap={1}>
               <Circle sx={{ backgroundColor: success }} />
-              <Typography color='#2F2B3DB2'>Nasiya sotuv</Typography>
+              <Typography color='#2F2B3DB2'>{t.forms.dashboard.graph.bnpl_sale}</Typography>
             </Stack>
           </Box>
         </Stack>

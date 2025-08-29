@@ -58,7 +58,6 @@ const initialForm = {
 }
 
 const requiredFields = ['price', 'months', 'percentage']
-
 const currencies = ['USD', 'UZS'] as const
 
 const Calculator = () => {
@@ -144,10 +143,10 @@ const Calculator = () => {
       >
         <DialogTitle sx={{ position: 'relative' }}>
           <Typography variant='h4' align='center'>
-            Kalkulyator
+            {t.forms.dashboard.calculator.dialog.title}
           </Typography>
           <Typography variant='body2' align='center'>
-            Mahsulot ma’lumotlarini kiriting
+            {t.forms.dashboard.calculator.dialog.description}
           </Typography>
           <CustomCloseButton aria-label='close' onClick={clearModal}>
             <Icon icon='tabler:x' fontSize='1.25rem' />
@@ -184,7 +183,7 @@ const Calculator = () => {
               })}
             >
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Mahsulot nomi</Typography>
+                <Typography>{t.forms.dashboard.calculator.model}</Typography>
                 <CustomAutocomplete
                   placeholder='Iphone 14 pro max'
                   freeSolo
@@ -208,7 +207,7 @@ const Calculator = () => {
                 />
               </Box>
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Tannarx</Typography>
+                <Typography>{t.forms.dashboard.calculator.price}</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
@@ -220,7 +219,6 @@ const Calculator = () => {
                       <InputAdornment position='start' sx={{ marginRight: '4px' }}>
                         <CustomTextField
                           select
-                          placeholder='Hello'
                           sx={{
                             minWidth: '50px',
                             '& .MuiInputBase-root': {
@@ -254,7 +252,7 @@ const Calculator = () => {
                 />
               </Box>
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Boshlang'ich to'lov</Typography>
+                <Typography>{t.forms.dashboard.calculator.deposit}</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
@@ -300,20 +298,22 @@ const Calculator = () => {
                 />
               </Box>
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Qancha muddatga</Typography>
+                <Typography>{t.forms.dashboard.calculator.months}</Typography>
                 <CustomTextField
-                  placeholder='0 oy'
+                  placeholder={`0 ${t.forms.dashboard.calculator.month}`}
                   fullWidth
                   name='months'
                   value={form.months || null}
                   onChange={handleChange}
                   InputProps={{
-                    startAdornment: <InputAdornment position='start'>oy</InputAdornment>
+                    startAdornment: (
+                      <InputAdornment position='start'>{t.forms.dashboard.calculator.month}</InputAdornment>
+                    )
                   }}
                 />
               </Box>
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Foiz to'lov</Typography>
+                <Typography>{t.forms.dashboard.calculator.percentage}</Typography>
                 <CustomTextField
                   placeholder='0 %'
                   fullWidth
@@ -326,7 +326,7 @@ const Calculator = () => {
                 />
               </Box>
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>Oylik to'lov</Typography>
+                <Typography>{t.forms.dashboard.calculator.monthly_payment}</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
@@ -370,12 +370,11 @@ const Calculator = () => {
                   background: '#7367F03D',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '10px',
-                  flex: 1
+                  gap: '10px'
                 })}
               >
                 <Typography variant='h6' color={'#7367F0'}>
-                  Umumiy to'lov
+                  {t.forms.dashboard.calculator.total_payment}
                 </Typography>
                 <Typography variant='h3' color={'#7367F0'}>
                   {total === 0 ? 0 : total.toFixed(2)} {currency}
@@ -383,7 +382,7 @@ const Calculator = () => {
               </Card>
 
               <CustomTextField
-                placeholder='Mahsulot nomi'
+                placeholder={t.forms.dashboard.calculator.model}
                 disabled
                 sx={disabledInput}
                 fullWidth
@@ -392,7 +391,7 @@ const Calculator = () => {
                 }}
               />
               <CustomTextField
-                placeholder='Tannarxi'
+                placeholder={t.forms.dashboard.calculator.price}
                 disabled
                 sx={disabledInput}
                 fullWidth
@@ -401,7 +400,7 @@ const Calculator = () => {
                 }}
               />
               <CustomTextField
-                placeholder="Bosh to'lov"
+                placeholder={t.forms.dashboard.calculator.deposit}
                 disabled
                 sx={disabledInput}
                 fullWidth
@@ -410,7 +409,7 @@ const Calculator = () => {
                 }}
               />
               <CustomTextField
-                placeholder='Qancha muddatga'
+                placeholder={t.forms.dashboard.calculator.months}
                 disabled
                 sx={disabledInput}
                 fullWidth
@@ -419,7 +418,7 @@ const Calculator = () => {
                 }}
               />
               <CustomTextField
-                placeholder='Oylik foiz'
+                placeholder={t.forms.dashboard.calculator.percentage}
                 disabled
                 sx={disabledInput}
                 fullWidth
@@ -436,7 +435,7 @@ const Calculator = () => {
               justifyContent: 'end'
             }}
           >
-            <Button variant='contained'>Rasmiylashtirish</Button>
+            <Button variant='contained'>{t.forms.dashboard.calculator.cta}</Button>
           </Stack>
         </DialogContent>
       </Dialog>

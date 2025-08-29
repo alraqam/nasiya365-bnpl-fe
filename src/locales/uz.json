@@ -274,6 +274,39 @@
         "controllers": {
             "name": "Nomi",
             "label": "Izoh"
+        },
+        "dashboard": {
+            "calculator": {
+                "dialog": {
+                    "title": "Kalkulyator",
+                    "description": "Mahsulot ma’lumotlarini kiriting"
+                },
+                "model": "Mahsulot nomi",
+                "price": "Tannarx",
+                "deposit": "Boshlang'ich to'lov",
+                "months": "Qancha muddatga",
+                "percentage": "Foiz to'lov",
+                "monthly_payment": "Oylik to'lov",
+                "total_payment": "Umumiy to'lov",
+                "month": "oy",
+                "cta": "Rasmiylashtirish"
+            },
+            "blocks": {
+                "current_contracts": "Joriy shartnomalar",
+                "delayed_contracts": "Kechikkan shartnomalar",
+                "all_contracts": "Jami shartnomalar",
+                "branches": "Filiallar soni",
+                "employees": "Xodimlar soni",
+                "expected_income": "Kutilayotgan foyda",
+                "last_month": "1 oy oldingi",
+                "last_month_2": "2 oy oldingi"
+            },
+            "graph": {
+                "general_stats": "Umumiy statistika",
+                "sale_graph": "Sotuv grafigi",
+                "fixed_sale": "Naqd sotuv",
+                "bnpl_sale": "Nasiya sotuv"
+            }
         }
     },
     "periods": {

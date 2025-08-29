@@ -274,6 +274,39 @@
         "controllers": {
             "name": "Название",
             "label": "Описание"
+        },
+        "dashboard": {
+            "calculator": {
+                "dialog": {
+                    "title": "Калькулятор",
+                    "description": "Введите данные о товаре"
+                },
+                "model": "Название товара",
+                "price": "Стоимость",
+                "deposit": "Первоначальный взнос",
+                "months": "На какой срок",
+                "percentage": "Процентная ставка",
+                "monthly_payment": "Ежемесячный платеж",
+                "total_payment": "Общая сумма к оплате",
+                "month": "mесяц",
+                "cta": "Оформить"
+            },
+            "blocks": {
+                "current_contracts": "Текущие договоры",
+                "delayed_contracts": "Просроченные договоры",
+                "all_contracts": "Все договоры",
+                "branches": "Количество филиалов",
+                "employees": "Количество сотрудников",
+                "expected_income": "Ожидаемая прибыль",
+                "last_month": "1 месяц назад",
+                "last_month_2": "2 месяца назад"
+            },
+            "graph": {
+                "general_stats": "Общая статистика",
+                "sale_graph": "График продаж",
+                "fixed_sale": "Продажи за наличные",
+                "bnpl_sale": "Продажи в кредит"
+            }
         }
     },
     "periods": {
