@@ -30,9 +30,9 @@ const Permissions = () => {
   const [form, setForm] = useState(initialState)
 
   const initialColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: t.forms.controllers.name, minWidth: 200 },
-    { field: 'label', headerName: t.forms.controllers.label, minWidth: 220 },
+    { field: 'id', headerName: 'ID', minWidth: 100, flex: 1 },
+    { field: 'name', headerName: t.forms.controllers.name, minWidth: 200, flex: 1 },
+    { field: 'label', headerName: t.forms.controllers.label, minWidth: 220, flex: 1 },
     {
       field: 'actions',
       headerName: t.actions,

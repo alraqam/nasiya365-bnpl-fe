@@ -56,12 +56,12 @@ const Products = () => {
   // }, [paginationModel.page])
 
   const accessoriesColumns: GridColDef[] = [
-    { field: 'provider', headerName: 'Yetkazib beruvchi', minWidth: 200 },
-    { field: 'model', headerName: 'Model', minWidth: 300 },
-    { field: 'seria_number', headerName: 'Seriya nomeri', minWidth: 200 },
-    { field: 'account', headerName: 'Akkaunt (GMAIL)', minWidth: 200 },
-    { field: 'quantity', headerName: 'Soni', minWidth: 100 },
-    { field: 'incoming_price', headerName: 'Tannarxi', minWidth: 150 },
+    { field: 'provider', headerName: t.forms.products.supplier, minWidth: 200, flex: 1 },
+    { field: 'model', headerName: t.forms.products.model, minWidth: 300, flex: 1 },
+    { field: 'seria_number', headerName: t.forms.products.seria_number, minWidth: 200, flex: 1 },
+    { field: 'account', headerName: t.forms.products.account, minWidth: 200, flex: 1 },
+    { field: 'quantity', headerName: t.forms.products.quantity, minWidth: 100, flex: 1 },
+    { field: 'incoming_price', headerName: t.forms.products.price, minWidth: 150, flex: 1 },
     {
       field: 'actions',
       headerName: t.actions,
@@ -93,14 +93,15 @@ const Products = () => {
   ]
 
   const devicesColumns: GridColDef[] = [
-    { field: 'provider', headerName: t.forms.products.supplier, minWidth: 200 },
-    { field: 'model', headerName: t.forms.products.model, minWidth: 300 },
-    { field: 'imei', headerName: t.forms.products.imei, minWidth: 200 },
-    { field: 'account', headerName: t.forms.products.account, minWidth: 250 },
+    { field: 'provider', headerName: t.forms.products.supplier, minWidth: 200, flex: 1 },
+    { field: 'model', headerName: t.forms.products.model, minWidth: 300, flex: 1 },
+    { field: 'imei', headerName: t.forms.products.imei, minWidth: 200, flex: 1 },
+    { field: 'account', headerName: t.forms.products.account, minWidth: 250, flex: 1 },
     {
       field: 'id',
       headerName: t.forms.products['box-status'],
       minWidth: 200,
+      flex: 1,
       renderCell(params) {
         const withBox = Number(params.row?.order?.box)
         return <Chip color={withBox ? 'success' : 'error'} label={withBox ? t.given : t['not-given']} />
@@ -110,6 +111,7 @@ const Products = () => {
       field: 'status',
       headerName: t.forms.products['sale-type'].label,
       minWidth: 200,
+      flex: 1,
       renderCell(params) {
         const isInSale = params.row.order === null
         return (

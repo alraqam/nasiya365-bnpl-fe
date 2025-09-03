@@ -30,11 +30,11 @@ const OrdersReminder = () => {
   const { data, fetchData } = useFetch<Response>(url)
 
   const initialColumns: GridColDef[] = [
-    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 120 },
-    { field: 'name', headerName: t.forms.orders.client, minWidth: 200 },
-    { field: 'phone', headerName: t.forms.client.phone, minWidth: 150 },
-    { field: 'model', headerName: t.forms.orders.device, minWidth: 300 },
-    { field: 'pay_day', headerName: t.forms.orders['pay-day'], minWidth: 120 },
+    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 120, flex: 1 },
+    { field: 'name', headerName: t.forms.orders.client, minWidth: 200, flex: 1 },
+    { field: 'phone', headerName: t.forms.client.phone, minWidth: 150, flex: 1 },
+    { field: 'model', headerName: t.forms.orders.device, minWidth: 300, flex: 1 },
+    { field: 'pay_day', headerName: t.forms.orders['pay-day'], minWidth: 120, flex: 1 },
     {
       field: 'actions',
       headerName: t.actions,

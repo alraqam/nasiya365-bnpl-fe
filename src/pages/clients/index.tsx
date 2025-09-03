@@ -44,19 +44,21 @@ const Clients = () => {
   }
 
   const initialColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', minWidth: 10 },
+    { field: 'id', headerName: 'ID', flex: 1, minWidth: 10 },
     {
       field: 'name',
       headerName: t.forms.client.name,
+      flex: 1,
       minWidth: 250,
       renderCell: params => <p>{params.value + ' ' + params.row.surname + ' ' + params.row.middle_name}</p>
     },
-    { field: 'passport', headerName: t.forms.client.passport, minWidth: 150 },
-    { field: 'place_of_issue', headerName: t.forms.client.passportIssuer, minWidth: 250 },
-    { field: 'date_of_issue', headerName: t.forms.client.passportIssueDate, minWidth: 150 },
+    { field: 'passport', headerName: t.forms.client.passport, flex: 1, minWidth: 150 },
+    { field: 'place_of_issue', headerName: t.forms.client.passportIssuer, flex: 1, minWidth: 250 },
+    { field: 'date_of_issue', headerName: t.forms.client.passportIssueDate, flex: 1, minWidth: 150 },
     {
       field: 'file_passport',
       headerName: t.forms.client.passortCopy,
+      flex: 1,
       minWidth: 150,
       renderCell(params) {
         if (params.value !== 'undefined') {
@@ -70,11 +72,12 @@ const Clients = () => {
         }
       }
     },
-    { field: 'date_of_birth', headerName: t.forms.client.birthday, minWidth: 150 },
+    { field: 'date_of_birth', headerName: t.forms.client.birthday, flex: 1, minWidth: 150 },
     {
       field: 'gender',
       headerName: t.forms.client.gender,
-      minWidth: 50,
+      flex: 1,
+      minWidth: 200,
       renderCell: params => {
         switch (params.value) {
           case 1:
@@ -84,16 +87,17 @@ const Clients = () => {
         }
       }
     },
-    { field: 'place_of_birth', headerName: t.forms.client.birthPlace, minWidth: 200 },
-    { field: 'place_of_registration', headerName: t.forms.client.registeredAddress, minWidth: 200 },
-    { field: 'place_of_residence', headerName: t.forms.client.address, minWidth: 300 },
-    { field: 'workplace', headerName: t.forms.client.workplace, minWidth: 150 },
-    { field: 'specialization', headerName: t.forms.client.profession, minWidth: 100 },
-    { field: 'phones', headerName: t.forms.client.phone, minWidth: 150 },
-    { field: 'email', headerName: t.forms.client.email, minWidth: 150 },
+    { field: 'place_of_birth', headerName: t.forms.client.birthPlace, flex: 1, minWidth: 200 },
+    { field: 'place_of_registration', headerName: t.forms.client.registeredAddress, flex: 1, minWidth: 200 },
+    { field: 'place_of_residence', headerName: t.forms.client.address, flex: 1, minWidth: 300 },
+    { field: 'workplace', headerName: t.forms.client.workplace, flex: 1, minWidth: 150 },
+    { field: 'specialization', headerName: t.forms.client.profession, flex: 1, minWidth: 100 },
+    { field: 'phones', headerName: t.forms.client.phone, flex: 1, minWidth: 150 },
+    { field: 'email', headerName: t.forms.client.email, flex: 1, minWidth: 150 },
     {
       field: 'file',
       headerName: t.forms.client.application,
+      flex: 1,
       minWidth: 200,
       renderCell(params) {
         if (params.value === 'undefined') {
@@ -101,13 +105,14 @@ const Clients = () => {
         }
       }
     },
-    { field: 'bail_name', headerName: t.forms.client.guarantor, minWidth: 150 },
-    { field: 'bail_phone', headerName: t.forms.client['guarantor-phone'], minWidth: 150 },
-    { field: 'guarantor', headerName: t.forms.client.guarantor, minWidth: 200 },
-    { field: 'passport_status', headerName: t.forms.client.status, minWidth: 50 },
+    { field: 'bail_name', headerName: t.forms.client.guarantor, flex: 1, minWidth: 150 },
+    { field: 'bail_phone', headerName: t.forms.client['guarantor-phone'], flex: 1, minWidth: 150 },
+    { field: 'guarantor', headerName: t.forms.client.guarantor, flex: 1, minWidth: 200 },
+    { field: 'passport_status', headerName: t.forms.client.status, flex: 1, minWidth: 50 },
     {
       field: 'file_url',
       headerName: t.forms.client['file-url'],
+      flex: 1,
       minWidth: 150,
       renderCell(params) {
         if (params.value && params.value.split('/files/')[1] === 'undefined') {
@@ -124,6 +129,7 @@ const Clients = () => {
     {
       field: 'file_passport_url',
       headerName: t.forms.client['passport-url'],
+      flex: 1,
       minWidth: 150,
       renderCell(params) {
         if (params.value && params.value.split('/files/')[1] === 'undefined') {
@@ -140,6 +146,7 @@ const Clients = () => {
     {
       field: 'created_at',
       headerName: t.forms.client['created-at'],
+      flex: 1,
       minWidth: 150,
       renderCell: params => {
         return formatDate(params.value)
@@ -148,16 +155,17 @@ const Clients = () => {
     {
       field: 'updated_at',
       headerName: t.forms.client['updated-at'],
+      flex: 1,
       minWidth: 150,
       renderCell: params => {
         return formatDate(params.value)
       }
     },
-    { field: 'phone', headerName: t.forms.client.phone, minWidth: 150 },
+    { field: 'phone', headerName: t.forms.client.phone, flex: 1, minWidth: 150 },
     {
       field: 'status',
       headerName: t.forms.client.status,
-      minWidth: 50,
+      minWidth: 200,
       renderCell: params => {
         const res = resolveStatus(params.value) as {
           color: 'success' | 'error' | 'warning'

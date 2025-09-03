@@ -148,6 +148,7 @@
             "box-status": "Quti holati",
             "seria_number": "Seriya nomer",
             "price": "Kiruvchi narx",
+            "quantity": "Miqdori",
             "sale-type": {
                 "label": "Sotuv turi",
                 "monthly": "Muddatli to'lov",

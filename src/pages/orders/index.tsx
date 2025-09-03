@@ -46,16 +46,16 @@ const Orders = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'status', headerName: t.forms.orders.status, minWidth: 100 },
-    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 100 },
-    { field: 'client_name', headerName: t.forms.orders.client, minWidth: 200 },
-    { field: 'model', headerName: t.forms.orders.model, minWidth: 300 },
-    { field: 'pay_type', headerName: t.forms.orders.payment_deadline, minWidth: 100 },
-    { field: 'summa', headerName: t.forms.orders.total_price, minWidth: 100 },
-    { field: 'rest_summa', headerName: t.forms.orders.price, minWidth: 100 },
-    { field: 'notes', headerName: t.forms.orders.comment, minWidth: 300 },
-    { field: 'pay_day', headerName: t.forms.orders.payment_date, minWidth: 100 },
-    { field: 'created_at', headerName: t.forms.orders.created_at, minWidth: 200 }
+    { field: 'status', headerName: t.forms.orders.status, minWidth: 100, flex: 1 },
+    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 100, flex: 1 },
+    { field: 'client_name', headerName: t.forms.orders.client, minWidth: 200, flex: 1 },
+    { field: 'model', headerName: t.forms.orders.model, minWidth: 300, flex: 1 },
+    { field: 'pay_type', headerName: t.forms.orders.payment_deadline, minWidth: 100, flex: 1 },
+    { field: 'summa', headerName: t.forms.orders.total_price, minWidth: 100, flex: 1 },
+    { field: 'rest_summa', headerName: t.forms.orders.price, minWidth: 100, flex: 1 },
+    { field: 'notes', headerName: t.forms.orders.comment, minWidth: 300, flex: 1 },
+    { field: 'pay_day', headerName: t.forms.orders.payment_date, minWidth: 100, flex: 1 },
+    { field: 'created_at', headerName: t.forms.orders.created_at, minWidth: 200, flex: 1 }
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

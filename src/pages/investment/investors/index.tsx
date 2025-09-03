@@ -47,15 +47,16 @@ const Investors = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'name', headerName: t.forms.investors.fio, minWidth: 200 },
-    { field: 'phone', headerName: t.forms.investors.phone, minWidth: 150 },
+    { field: 'name', headerName: t.forms.investors.fio, minWidth: 200, flex: 1 },
+    { field: 'phone', headerName: t.forms.investors.phone, minWidth: 150, flex: 1 },
     {
       field: 'percentage',
       headerName: t.forms.investors.percent,
       minWidth: 100,
+      flex: 1,
       renderCell: params => `${params.row.percentage}%`
     },
-    { field: 'passport', headerName: t.forms.investors.passport, minWidth: 150 },
+    { field: 'passport', headerName: t.forms.investors.passport, minWidth: 150, flex: 1 },
     {
       field: 'actions',
       headerName: 'Harakatlar',

@@ -32,10 +32,10 @@ const Actions = () => {
   const [form, setForm] = useState(initialState)
 
   const initialColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', minWidth: 100 },
-    { field: 'name', headerName: t.forms.actions.name, minWidth: 200 },
-    { field: 'code', headerName: t.forms.actions.code, minWidth: 200 },
-    { field: 'controller', headerName: t.forms.actions.controller, minWidth: 220 },
+    { field: 'id', headerName: 'ID', minWidth: 100, flex: 1 },
+    { field: 'name', headerName: t.forms.actions.name, minWidth: 200, flex: 1 },
+    { field: 'code', headerName: t.forms.actions.code, minWidth: 200, flex: 1 },
+    { field: 'controller', headerName: t.forms.actions.controller, minWidth: 220, flex: 1 },
     {
       field: 'actions',
       headerName: t.actions,

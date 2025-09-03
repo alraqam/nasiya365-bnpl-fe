@@ -59,12 +59,13 @@ const Employees = () => {
   }, [paginationModel.page])
 
   const initialColumns: GridColDef[] = [
-    { field: 'name', headerName: 'F.I.O', minWidth: 200 },
-    { field: 'email', headerName: 'Email', minWidth: 200 },
+    { field: 'name', headerName: 'F.I.O', minWidth: 200, flex: 1 },
+    { field: 'email', headerName: 'Email', minWidth: 200, flex: 1 },
     {
       field: 'phone1',
       headerName: 'Telefon',
       minWidth: 200,
+      flex: 1,
       renderCell(params) {
         return <p>+998 {maskFormat(params.row.phone1, '## ### ## ##')}</p>
       }
@@ -73,6 +74,7 @@ const Employees = () => {
       field: 'date_of_birth',
       headerName: "Tug'ilgan yili",
       minWidth: 200,
+      flex: 1,
       renderCell(params) {
         return <p>{dashToDotFormat(params.row.date_of_birth)}</p>
       }
