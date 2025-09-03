@@ -14,6 +14,9 @@ const useNavigation = (): VerticalNavItemsType => {
       subject: 'DashboardController'
     },
     {
+      sectionTitle: t['nav-blocks'].main
+    },
+    {
       title: t.pages.clients,
       path: '/clients',
       icon: 'tabler:users-group',
@@ -35,18 +38,21 @@ const useNavigation = (): VerticalNavItemsType => {
       subject: 'OrderController'
     },
     {
-      title: t.pages.employees,
-      path: '/employees',
-      icon: 'tabler:users',
-      action: 'index',
-      subject: 'AdminController'
-    },
-    {
       title: t.pages.expenses,
       path: '/expenses',
       icon: 'tabler:exposure',
       action: 'index',
       subject: 'CostController'
+    },
+    {
+      sectionTitle: t['nav-blocks'].control
+    },
+    {
+      title: t.pages.employees,
+      path: '/employees',
+      icon: 'tabler:users',
+      action: 'index',
+      subject: 'AdminController'
     },
     {
       title: t.pages.investment.label,

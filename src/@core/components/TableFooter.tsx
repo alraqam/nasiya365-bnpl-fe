@@ -8,9 +8,10 @@ interface Props {
   page: number
   pageSize: number
   onPageChange: (page: number) => void
+  info?: boolean
 }
 
-const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props) => {
+const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange, info = true }: Props) => {
   const { lang } = useLang()
 
   return (
@@ -23,14 +24,16 @@ const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props
       gap={4}
       sx={{ flexDirection: { xs: 'column', md: 'row' }, borderTop: '1px solid #e6e5e7' }}
     >
-      <Typography color='text.secondary' fontSize={14}>
-        {lang === 'uz'
-          ? `${total} ta ro'yxatdan ${page * pageSize + 1} dan ${Math.min(
-              (page + 1) * pageSize,
-              total
-            )} gacha ko'rsatilmoqda`
-          : `${total} записей из ${page * pageSize + 1} по ${Math.min((page + 1) * pageSize, total)} показаны`}
-      </Typography>
+      {info && (
+        <Typography color='text.secondary' fontSize={14}>
+          {lang === 'uz'
+            ? `${total} ta ro'yxatdan ${page * pageSize + 1} dan ${Math.min(
+                (page + 1) * pageSize,
+                total
+              )} gacha ko'rsatilmoqda`
+            : `${total} записей из ${page * pageSize + 1} по ${Math.min((page + 1) * pageSize, total)} показаны`}
+        </Typography>
+      )}
 
       <Pagination
         count={totalPages}
@@ -72,7 +75,8 @@ const CustomFooter = ({ total, totalPages, page, pageSize, onPageChange }: Props
             fontSize: '1rem',
             color: theme.palette.text.primary,
             cursor: 'pointer'
-          }
+          },
+          marginLeft: info ? 'unset' : 'auto'
         })}
       />
     </Box>

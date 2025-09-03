@@ -48,6 +48,10 @@
     "logout": "Chiqish",
     "actions": "Amallar",
     "success-edit": "Muvaffaqiyatli o'zgartirildi",
+    "nav-blocks": {
+        "main": "Asosiy",
+        "control": "Boshqaruv"
+    },
     "currency": {
         "uzs": "So'm"
     },
@@ -306,6 +310,17 @@
                 "sale_graph": "Sotuv grafigi",
                 "fixed_sale": "Naqd sotuv",
                 "bnpl_sale": "Nasiya sotuv"
+            },
+            "currency": {
+                "dialog": {
+                    "title": "Valyuta kursi",
+                    "desc": "Valyuta kursi va tarixi"
+                },
+                "form": {
+                    "label": "Bugungi kurs",
+                    "created_at": "Kiritilgan",
+                    "currency": "Kurs"
+                }
             }
         }
     },

@@ -21,6 +21,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import NotificationDropdown from './Notification'
 import { ThemeColor } from 'src/@core/layouts/types'
 import Calculator from './Calculator'
+import Currency from './Currency'
 
 interface Props {
   hidden: boolean
@@ -167,17 +168,7 @@ const AppBarContent = (props: Props) => {
         {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        <Card
-          sx={{
-            background: '#80839029',
-            paddingY: '6px',
-            paddingX: '12px',
-            color: '#808390',
-            marginRight: '20px'
-          }}
-        >
-          $ 12500
-        </Card>
+        <Currency />
         <Calculator />
         <LanguageDropdown
           settings={settings}
