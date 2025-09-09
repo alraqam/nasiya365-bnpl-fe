@@ -24,11 +24,34 @@ const useNavigation = (): VerticalNavItemsType => {
       subject: 'ClientController'
     },
     {
-      title: t.pages.products,
-      path: '/products',
-      icon: 'tabler:cube',
-      action: 'index',
-      subject: 'DeviceController'
+      title: 'Ombor',
+      icon: 'tabler:building-cottage',
+      children: [
+        {
+          title: 'List',
+          path: '/products',
+          action: 'index',
+          subject: 'InvestorController'
+        },
+        {
+          title: 'Kategoriyalar',
+          icon: 'tabler:category',
+          children: [
+            {
+              title: 'Maishiy texnika',
+              path: '/warehouse/category/household',
+              action: 'index',
+              subject: 'InvestorController'
+            },
+            {
+              title: 'Transport',
+              path: '/warehouse/category/transport',
+              action: 'index',
+              subject: 'InvestorController'
+            }
+          ]
+        }
+      ]
     },
     {
       title: t.pages.orders,
@@ -46,6 +69,13 @@ const useNavigation = (): VerticalNavItemsType => {
     },
     {
       sectionTitle: t['nav-blocks'].control
+    },
+    {
+      title: 'Filiallar',
+      path: '/branches',
+      icon: 'tabler:hierarchy',
+      action: 'index',
+      subject: 'AdminController'
     },
     {
       title: t.pages.employees,

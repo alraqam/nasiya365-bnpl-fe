@@ -1,5 +1,5 @@
 // ** React Import
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 // ** MUI Imports
 import List from '@mui/material/List'
@@ -25,6 +25,8 @@ import themeOptions from 'src/@core/theme/ThemeOptions'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import { Button, MenuItem, Typography } from '@mui/material'
 
 interface Props {
   navWidth: number
@@ -83,6 +85,10 @@ const Navigation = (props: Props) => {
   const [navHover, setNavHover] = useState<boolean>(false)
   const [groupActive, setGroupActive] = useState<string[]>([])
   const [currentActiveGroup, setCurrentActiveGroup] = useState<string[]>([])
+
+  const [branch, setBranch] = useState('Yunusobod')
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setBranch(e.target.value)
 
   // ** Ref
   const shadowRef = useRef(null)
@@ -151,7 +157,7 @@ const Navigation = (props: Props) => {
         {(beforeVerticalNavMenuContentPosition === 'static' || !beforeNavMenuContent) && (
           <StyledBoxForShadow ref={shadowRef} />
         )}
-        <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+        <Box sx={{ position: 'relative', overflow: 'hidden', flex: 1 }}>
           {/* @ts-ignore */}
           <ScrollWrapper
             {...(hidden
@@ -190,6 +196,16 @@ const Navigation = (props: Props) => {
         {afterNavMenuContent && afterVerticalNavMenuContentPosition === 'fixed'
           ? afterNavMenuContent(navMenuContentProps)
           : null}
+
+        <Box>
+          <Typography sx={{ mb: 2, ml: 2 }}>Filialni tanlang</Typography>
+          <CustomTextField select fullWidth value={branch} onChange={handleChange} sx={{ px: 2 }}>
+            <MenuItem value={'Bodomzor'}>Bodomzor</MenuItem>
+            <MenuItem value={'Yunusobod'}>Yunusobod</MenuItem>
+            <MenuItem value={'Yakkasaroy'}>Yakkasaroy</MenuItem>
+          </CustomTextField>
+          <Typography sx={{ m: 2, textAlign: 'center' }}>Version 1.0.0</Typography>
+        </Box>
       </Drawer>
     </ThemeProvider>
   )

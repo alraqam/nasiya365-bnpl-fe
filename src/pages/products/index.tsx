@@ -31,7 +31,7 @@ const initialFilters = {
 
 const Products = () => {
   const router = useRouter()
-  const { modal, clearModal } = useModal()
+  const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
 
   const [tab, setTab] = useState<'devices' | 'accessories'>('devices')
@@ -152,6 +152,14 @@ const Products = () => {
     }
   ]
 
+  const handleOpenFilter = () => {
+    if (tab === 'devices') {
+      setModal('search-devices')
+    } else if (tab === 'accessories') {
+      setModal('search-accessories')
+    }
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({
       ...filters,
@@ -233,7 +241,19 @@ const Products = () => {
                 <MenuItem value='accessories'>{t.accessories}</MenuItem>
               )}
             </CustomTextField>
-
+            <Button
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+              onClick={handleOpenFilter}
+            >
+              <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t.filter}
+            </Button>
             <Link href='/products/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />

@@ -1,6 +1,7 @@
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
+import env from './env'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://nasiya365.al-raqam.com'
+const BASE_URL = env.baseUrl
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>

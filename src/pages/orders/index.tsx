@@ -13,6 +13,7 @@ import Form from 'src/@core/components/DialogForm'
 import useFetch from 'src/hooks/useFetch'
 import usePagination from 'src/hooks/usePagination'
 import IOrder from 'src/@core/types/order'
+import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
 
 interface Response {
   current_page: string
@@ -31,7 +32,7 @@ const initialFilters = {
 }
 
 const Orders = () => {
-  const { modal, clearModal } = useModal()
+  const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
@@ -121,7 +122,19 @@ const Orders = () => {
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
             </Button>
-
+            <Button
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+              onClick={() => setModal('search-orders')}
+            >
+              <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t.filter}
+            </Button>
             <Link href='/orders/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
@@ -184,22 +197,26 @@ const Orders = () => {
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.orders.client}</Typography>
-              <CustomTextField
-                fullWidth
-                placeholder={t.forms.orders.placeholder.client}
-                name='client'
-                value={filters.client}
-                onChange={handleChange}
-              />
-            </Box>
-            <Box display='flex' flexDirection='column' gap={1}>
-              <Typography>{t.forms.orders.imei}</Typography>
-              <CustomTextField
-                fullWidth
-                placeholder={t.forms.orders.placeholder.imei}
-                name='imei'
-                value={filters.imei}
-                onChange={handleChange}
+              <CustomAutocomplete
+                placeholder={t.forms.client.name}
+                freeSolo
+                options={data?.data ?? []}
+                getOptionLabel={option => (typeof option === 'string' ? option : option.client_name ?? '')}
+                renderInput={params => <CustomTextField {...params} />}
+                isOptionEqualToValue={(option, value) =>
+                  typeof option !== 'string' && typeof value !== 'string' && option.id === value.id
+                }
+                renderOption={(props, option) => (
+                  <li {...props} key={typeof option === 'string' ? option : option.id}>
+                    {typeof option === 'string' ? option : option.client_name}
+                  </li>
+                )}
+                onChange={(event, value) => {
+                  setFilters({
+                    ...filters,
+                    client: typeof value === 'string' ? value : value?.client_name ?? ''
+                  })
+                }}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>

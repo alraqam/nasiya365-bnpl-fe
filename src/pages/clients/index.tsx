@@ -29,9 +29,10 @@ import formatDate from 'src/@core/utils/format-date'
 import resolveStatus from 'src/@core/utils/table-utils'
 import { api } from 'src/configs/api'
 import Form from 'src/@core/components/DialogForm'
+import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
 
 const Clients = () => {
-  const { modal, clearModal } = useModal()
+  const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
   const { data } = useFetch<{ data: IClient[] }>('/api/clients')
 
@@ -44,7 +45,7 @@ const Clients = () => {
   }
 
   const initialColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', flex: 1, minWidth: 10 },
+    // { field: 'id', headerName: 'ID', flex: 1, minWidth: 10 },
     {
       field: 'name',
       headerName: t.forms.client.name,
@@ -248,7 +249,10 @@ const Clients = () => {
             gap: 2
           })}
         >
+          {/* Left side */}
           <Title title={t.pages.clients} />
+
+          {/* Right side */}
           <Stack
             sx={{
               flexDirection: 'row',
@@ -271,8 +275,6 @@ const Clients = () => {
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
             </Button>
-
-            {/* Column Management Button */}
             <Button
               variant='tonal'
               sx={theme => ({
@@ -297,7 +299,19 @@ const Clients = () => {
               handleCloseAnchorEl={handleCloseAnchorEl}
               initialColumns={initialColumns}
             />
-
+            <Button
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+              onClick={() => setModal('search-clients')}
+            >
+              <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t.filter}
+            </Button>
             <Link href='/clients/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
@@ -343,19 +357,33 @@ const Clients = () => {
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.client.client}</Typography>
-              <CustomTextField
-                fullWidth
-                placeholder='Mijoz ism familyasi'
-                name='name'
-                value={filters.name}
-                onChange={handleChange}
+              <CustomAutocomplete
+                placeholder={t.forms.client.name}
+                freeSolo
+                options={data?.data ?? []}
+                getOptionLabel={option => (typeof option === 'string' ? option : option.name ?? '')}
+                renderInput={params => <CustomTextField {...params} />}
+                isOptionEqualToValue={(option, value) =>
+                  typeof option !== 'string' && typeof value !== 'string' && option.id === value.id
+                }
+                renderOption={(props, option) => (
+                  <li {...props} key={typeof option === 'string' ? option : option.id}>
+                    {typeof option === 'string' ? option : option.name}
+                  </li>
+                )}
+                onChange={(event, value) => {
+                  setFilters({
+                    ...filters,
+                    name: typeof value === 'string' ? value : value?.name ?? ''
+                  })
+                }}
               />
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.client.passport}</Typography>
               <CustomTextField
                 fullWidth
-                placeholder='Pasport seriyasi'
+                placeholder={t.forms.client.passportSeries}
                 name='passport'
                 value={filters.passport}
                 onChange={handleChange}

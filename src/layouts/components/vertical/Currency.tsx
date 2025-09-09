@@ -51,7 +51,6 @@ const Currency = () => {
   const [hasSent, setHasSent] = useState(false)
 
   const { data } = useFetch<Response>('http://localhost:4000/currency', true, false)
-  console.log(data)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
