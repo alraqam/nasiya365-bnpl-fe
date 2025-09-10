@@ -168,8 +168,8 @@ const AppBarContent = (props: Props) => {
         {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        <Currency />
         <Calculator />
+        <Currency />
         <LanguageDropdown
           settings={settings}
           saveSettings={saveSettings}

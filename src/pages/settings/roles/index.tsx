@@ -15,6 +15,7 @@ import { PostResponse, Response } from 'src/@core/types/base-response'
 import IRole from 'src/@core/types/role'
 import toast from 'react-hot-toast'
 import usePagination from 'src/hooks/usePagination'
+import Link from 'next/link'
 
 const initialState = {
   label: '',
@@ -42,6 +43,21 @@ const Roles = () => {
 
         return (
           <Box sx={{ display: 'flex' }}>
+            <Link href={`/settings/roles/view?id=${id}`}>
+              <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+                <Icon
+                  svg='/icons/view.svg'
+                  width={24}
+                  height={24}
+                  styles={theme => ({
+                    backgroundColor: theme.palette.text.primary,
+                    '&:hover': {
+                      backgroundColor: theme.palette.warning.main
+                    }
+                  })}
+                />
+              </Button>
+            </Link>
             <Button
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
               onClick={() => {

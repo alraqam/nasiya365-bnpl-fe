@@ -130,7 +130,7 @@ const Calculator = () => {
   }
   return (
     <>
-      <IconButton onClick={() => setModal('open-calculator')}>
+      <IconButton sx={{ mr: 5 }} onClick={() => setModal('open-calculator')}>
         <Icon fontSize='1.5rem' icon='tabler:calculator' color='#2F2B3DE5' />
       </IconButton>
 

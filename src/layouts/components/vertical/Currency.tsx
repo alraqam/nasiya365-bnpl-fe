@@ -85,7 +85,6 @@ const Currency = () => {
           paddingY: '6px',
           paddingX: '12px',
           color: '#808390',
-          marginRight: '20px',
           cursor: 'pointer'
         }}
         onClick={() => setModal('set-currency-modal')}

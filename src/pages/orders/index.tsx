@@ -48,7 +48,15 @@ const Orders = () => {
 
   const initialColumns: GridColDef[] = [
     { field: 'status', headerName: t.forms.orders.status, minWidth: 100, flex: 1 },
-    { field: 'NumberOrder', headerName: t.forms.orders.number, minWidth: 100, flex: 1 },
+    {
+      field: 'NumberOrder',
+      headerName: t.forms.orders.number,
+      minWidth: 100,
+      flex: 1,
+      renderCell(params) {
+        return <Link href={`/orders/order-detail?number=${params.row.id}`}>{params.value}</Link>
+      }
+    },
     { field: 'client_name', headerName: t.forms.orders.client, minWidth: 200, flex: 1 },
     { field: 'model', headerName: t.forms.orders.model, minWidth: 300, flex: 1 },
     { field: 'pay_type', headerName: t.forms.orders.payment_deadline, minWidth: 100, flex: 1 },
