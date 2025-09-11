@@ -27,6 +27,7 @@ import themeOptions from 'src/@core/theme/ThemeOptions'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { Button, MenuItem, Typography } from '@mui/material'
+import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
   navWidth: number
@@ -85,6 +86,7 @@ const Navigation = (props: Props) => {
   const [navHover, setNavHover] = useState<boolean>(false)
   const [groupActive, setGroupActive] = useState<string[]>([])
   const [currentActiveGroup, setCurrentActiveGroup] = useState<string[]>([])
+  const { t } = useLang()
 
   const [branch, setBranch] = useState('Yunusobod')
 
@@ -197,14 +199,14 @@ const Navigation = (props: Props) => {
           ? afterNavMenuContent(navMenuContentProps)
           : null}
 
-        <Box>
-          <Typography sx={{ mb: 2, ml: 2 }}>Filialni tanlang</Typography>
+        <Box sx={{ pt: 4, pb: 2, borderTop: '1px solid rgba(47, 43, 61, 0.2)' }}>
+          <Typography sx={{ mb: 2, ml: 2 }}>{t['choose-branch']}</Typography>
           <CustomTextField select fullWidth value={branch} onChange={handleChange} sx={{ px: 2 }}>
             <MenuItem value={'Bodomzor'}>Bodomzor</MenuItem>
             <MenuItem value={'Yunusobod'}>Yunusobod</MenuItem>
             <MenuItem value={'Yakkasaroy'}>Yakkasaroy</MenuItem>
           </CustomTextField>
-          <Typography sx={{ m: 2, textAlign: 'center' }}>Version 1.0.0</Typography>
+          <Typography sx={{ m: 2, textAlign: 'center' }}>{t.version} 1.0.0</Typography>
         </Box>
       </Drawer>
     </ThemeProvider>

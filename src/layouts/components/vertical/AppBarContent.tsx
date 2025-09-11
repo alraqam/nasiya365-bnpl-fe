@@ -150,7 +150,7 @@ const AppBarContent = (props: Props) => {
             <Icon fontSize='1.5rem' icon='tabler:menu-2' />
           </IconButton>
         ) : null}
-        <Stack display='flex' direction='row' onClick={handleSearchClick}>
+        {/* <Stack display='flex' direction='row' onClick={handleSearchClick}>
           <Icon2 svg='/icons/search.svg' width={44} height={44}></Icon2>
           <CustomTextField
             sx={{
@@ -164,7 +164,7 @@ const AppBarContent = (props: Props) => {
             placeholder={t.search}
             onChange={e => setSearch(e.target.value)}
           />
-        </Stack>
+        </Stack> */}
         {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>

@@ -9,7 +9,6 @@ import { Payment, Response } from './types'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import dateToString from 'src/@core/utils/date-to-string'
-import { formatDate } from 'src/@core/utils/format'
 import formatPhoneNumber from 'src/@core/utils/formatPhone'
 
 const ButtonStyle = {
@@ -47,7 +46,7 @@ const OrderDetail = () => {
   }, [data])
 
   const columns: GridColDef[] = [
-    { field: 'payment_month', sortable: false, headerName: '#', maxWidth: 60, flex: 1 },
+    { field: 'payment_month', sortable: false, headerName: '#', minWidth: 50, maxWidth: 100, flex: 1 },
     {
       field: 'payments',
       sortable: false,
@@ -112,15 +111,15 @@ const OrderDetail = () => {
           <Title title={t.order} />
         </Box>
 
-        <Card sx={{ px: 12, py: 6, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Card sx={{ px: { md: 12, xs: 4 }, py: { md: 6, xs: 4 }, display: 'flex', flexDirection: 'column', gap: 8 }}>
           {/* Header */}
           <Stack gap={3}>
             <BlockHeader variant='h5' fontWeight={600}>
               {t.order}
             </BlockHeader>
-            <Stack sx={{ flexDirection: 'row' }}>
+            <Stack sx={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
               {/* left */}
-              <Box sx={{ display: 'flex', justifyContent: 'start', gap: 4, flex: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: { md: 'start', xs: 'space-between' }, gap: 4, flex: 1 }}>
                 <Box sx={{ width: 'max-content', display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <HeaderItemTitle>Buyurtma sanasi</HeaderItemTitle>
                   <HeaderItemTitle>Buyurtma raqami</HeaderItemTitle>
@@ -128,7 +127,9 @@ const OrderDetail = () => {
                   <HeaderItemTitle>To'lov summasi</HeaderItemTitle>
                   <HeaderItemTitle>Izoh</HeaderItemTitle>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
+                >
                   <Typography>
                     {dateToString(data?.data.order.startDate || new Date(), 'day-month-year', '.')}
                   </Typography>
@@ -139,13 +140,15 @@ const OrderDetail = () => {
                 </Box>
               </Box>
               {/* middle */}
-              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, flex: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: { md: 'center', xs: 'space-between' }, gap: 4, flex: 1 }}>
                 <Box sx={{ width: 'max-content', display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <HeaderItemTitle>Qurilma</HeaderItemTitle>
                   <HeaderItemTitle>IMEI</HeaderItemTitle>
                   <HeaderItemTitle>Mijoz</HeaderItemTitle>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
+                >
                   <Typography>{data?.data.device.model}</Typography>
                   <Typography>{data?.data.device.imei}</Typography>
                   <Typography>
@@ -154,14 +157,16 @@ const OrderDetail = () => {
                 </Box>
               </Box>
               {/* right */}
-              <Box sx={{ display: 'flex', justifyContent: 'end', gap: 4, flex: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: { md: 'end', xs: 'space-between' }, gap: 4, flex: 1 }}>
                 <Box sx={{ width: 'max-content', display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <HeaderItemTitle>Tannarx</HeaderItemTitle>
                   <HeaderItemTitle>Kafil</HeaderItemTitle>
                   <HeaderItemTitle>Qurilma qutisi</HeaderItemTitle>
                   <HeaderItemTitle>Telefon</HeaderItemTitle>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
+                >
                   <Typography>${data?.data.order.body_price.toLocaleString()}</Typography>
                   <Typography>{data?.data.client.bail_name}</Typography>
                   <Typography>{data?.data.order.box ? t.given : t['not-given']}</Typography>
@@ -174,22 +179,52 @@ const OrderDetail = () => {
           </Stack>
 
           {/* Statistics */}
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Stack
+            sx={{
+              flexDirection: { xs: 'column', md: 'row' },
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 3
+            }}
+          >
             <BlockHeader variant='h5' fontWeight={600}>
               Kirim chiqim statistikasi
             </BlockHeader>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-              <Button variant='contained' color='inherit' sx={ButtonStyle} startIcon={<Icon icon='tabler:edit' />}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 3,
+                flexWrap: { xs: 'wrap', md: 'nowrap' },
+                '& > *': {
+                  flex: {
+                    xs: '1 1 calc(50% - 12px)',
+                    sm: '0 0 max-content'
+                  }
+                }
+              }}
+            >
+              <Button
+                variant='contained'
+                color='inherit'
+                sx={{ ...ButtonStyle }}
+                startIcon={<Icon icon='tabler:edit' />}
+              >
                 Tahrirlash
               </Button>
-              <Button variant='contained' color='inherit' sx={ButtonStyle} startIcon={<Icon icon='tabler:cash' />}>
+              <Button
+                variant='contained'
+                color='inherit'
+                sx={{ ...ButtonStyle }}
+                startIcon={<Icon icon='tabler:cash' />}
+              >
                 To'lov
               </Button>
               <Button
                 variant='contained'
                 color='inherit'
-                sx={ButtonStyle}
+                sx={{ ...ButtonStyle }}
                 startIcon={<Icon icon='tabler:file-description' />}
               >
                 Yuklash PDF
@@ -201,7 +236,10 @@ const OrderDetail = () => {
                   ...ButtonStyle,
                   backgroundColor: '#FF4C513D',
                   color: '#FF4C51',
-                  '&:hover': { backgroundColor: '#ff4c5218', boxShadow: 'none' }
+                  '&:hover': {
+                    backgroundColor: '#ff4c5218',
+                    boxShadow: 'none'
+                  }
                 }}
                 startIcon={<Icon icon='tabler:circle-x' />}
               >
@@ -235,16 +273,43 @@ const OrderDetail = () => {
           />
 
           {/* bottom part */}
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', gap: 2, flex: 1 }}>
+          <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', gap: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: { xs: 'space-between', md: 'start' },
+                gap: 2,
+                flex: 1,
+                width: { xs: '100%', md: 'max-content' }
+              }}
+            >
               <HeaderItemTitle>Boshlang'ich to'lov:</HeaderItemTitle>
               <Typography>${data?.data.order.initial_payment.toLocaleString()}</Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: { xs: 'space-between', md: 'center' },
+                gap: 2,
+                flex: 1,
+                width: { xs: '100%', md: 'max-content' }
+              }}
+            >
               <HeaderItemTitle>Qolgan summa:</HeaderItemTitle>
               <Typography>${data?.data.order.rest_summa.toLocaleString()}</Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', gap: 2, flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: { xs: 'space-between', md: 'end' },
+                gap: 2,
+                flex: 1,
+                width: { xs: '100%', md: 'max-content' }
+              }}
+            >
               <HeaderItemTitle>Jami summa:</HeaderItemTitle>
               <Typography>${data?.data.order.summa.toLocaleString()}</Typography>
             </Box>

@@ -24,17 +24,17 @@ const useNavigation = (): VerticalNavItemsType => {
       subject: 'ClientController'
     },
     {
-      title: 'Ombor',
+      title: t.pages.warehouse,
       icon: 'tabler:building-cottage',
       children: [
         {
-          title: 'List',
+          title: t.pages.list,
           path: '/products',
           action: 'index',
           subject: 'InvestorController'
         },
         {
-          title: 'Kategoriyalar',
+          title: t.pages.categories,
           icon: 'tabler:category',
           children: [
             {
@@ -71,7 +71,7 @@ const useNavigation = (): VerticalNavItemsType => {
       sectionTitle: t['nav-blocks'].control
     },
     {
-      title: 'Filiallar',
+      title: t.pages.branches,
       path: '/branches',
       icon: 'tabler:hierarchy',
       action: 'index',

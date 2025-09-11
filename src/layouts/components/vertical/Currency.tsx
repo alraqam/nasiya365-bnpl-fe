@@ -130,7 +130,7 @@ const Currency = () => {
                 justifyContent: 'end',
                 alignItems: 'end',
                 gap: '12px',
-                minWidth: '472px'
+                minWidth: { xs: '100%', sm: '472px' }
               }}
             >
               <Box display='flex' flexDirection='column' gap={1} sx={{ flex: 1 }}>
@@ -177,7 +177,7 @@ const Currency = () => {
               autoHeight
               sx={{
                 '& .MuiDataGrid-columnHeaders': { backgroundColor: '#2F2B3D14' },
-                width: '472px',
+                width: { xs: '100%', sm: '472px' },
                 borderRadius: '10px !important',
                 border: 'none !important'
               }}
