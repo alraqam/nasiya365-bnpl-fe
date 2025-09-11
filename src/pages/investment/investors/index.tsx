@@ -32,7 +32,7 @@ const initialFilters = {
 } as const
 
 const Investors = () => {
-  const { modal, clearModal } = useModal()
+  const { modal, clearModal,setModal} = useModal()
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
@@ -162,6 +162,19 @@ const Investors = () => {
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
             </Button>
+            <Button
+                                        variant='tonal'
+                                        sx={theme => ({
+                                          gap: 2,
+                                          backgroundColor: '#2F2B3D0F',
+                                          color: theme.palette.text.primary,
+                                          '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+                                        })}
+                                        onClick={() => setModal('search-investors')}
+                                      >
+                                        <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+                                        {t.filter}
+                                      </Button>
 
             <Link href='/investment/investors/create'>
               <Button variant='contained' sx={{ gap: 2 }}>

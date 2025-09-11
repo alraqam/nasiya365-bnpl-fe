@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react'
 import Title from 'src/@core/components/title'
 import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Box } from '@mui/system'
+import { Box,alpha } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
@@ -45,7 +45,7 @@ const initialFilters = {
 } as const
 
 const Expenses = () => {
-  const { modal, clearModal } = useModal()
+  const { modal, clearModal,setModal } = useModal()
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
@@ -172,6 +172,19 @@ const Expenses = () => {
               {data?.allSumma?.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) || 0}{' '}
               {t.currency.uzs}
             </Card>
+            <Button
+                            variant='tonal'
+                            sx={theme => ({
+                              gap: 2,
+                              backgroundColor: '#2F2B3D0F',
+                              color: theme.palette.text.primary,
+                              '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+                            })}
+                            onClick={() => setModal('search-orders')}
+                          >
+                            <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+                            {t.filter}
+                          </Button>
 
             <Link href='/expenses/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
@@ -204,8 +217,9 @@ const Expenses = () => {
           />
         </Box>
       </Stack>
+      
 
-      <Dialog open={modal === 'search-expenses'} onClose={clearModal}>
+      <Dialog open={modal === 'search-orders'} onClose={clearModal}>
         <DialogTitle>
           <Typography variant='h4' align='center'>
             {t.forms.expenses.dialog['search-title']}
