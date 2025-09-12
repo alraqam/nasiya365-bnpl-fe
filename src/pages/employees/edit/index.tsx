@@ -16,6 +16,7 @@ import { PostResponse, Response } from 'src/@core/types/base-response'
 import useFetch from 'src/hooks/useFetch'
 import IRole from 'src/@core/types/role'
 import IEmployee from 'src/@core/types/employee'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 
 const CreateEmployee = () => {
   const { t } = useLang()
@@ -60,10 +61,6 @@ const CreateEmployee = () => {
     setForm(prev => ({ ...prev, [field]: date }))
   }
 
-  const onCancel = () => {
-    setForm(initialEmployeeForm)
-  }
-
   const onSubmit = async () => {
     try {
       setLoading(true)
@@ -101,12 +98,8 @@ const CreateEmployee = () => {
         <Title title={t['edit-employee']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
-        <Typography variant='h5' sx={{ fontWeight: 700, mb: 4 }}>
-          {t.forms.employees['personal-details']}
-        </Typography>
-
-        {/* Personal Details */}
+      {/* Personal Details */}
+      <CollapsibleSection title={t.forms.employees['personal-details']} defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Typography>
@@ -173,12 +166,10 @@ const CreateEmployee = () => {
             />
           </Grid>
         </Grid>
+      </CollapsibleSection>
 
-        <Typography variant='h5' sx={{ fontWeight: 700, mb: 4, mt: 6 }}>
-          {t.forms.employees['passport-details']}
-        </Typography>
-
-        {/* Passport Details */}
+      {/* Passport Details */}
+      <CollapsibleSection title={t.forms.employees['passport-details']}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Typography>
@@ -279,22 +270,9 @@ const CreateEmployee = () => {
             <CustomTextField fullWidth value={form.place_of_residence} onChange={handleChange('place_of_residence')} />
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button
-          disabled={
-            loading ||
-            Object.entries(form).some(
-              ([key, value]) => requiredEmployeeFormFields.includes(key as keyof typeof initialEmployeeForm) && !value
-            )
-          }
-          variant='outlined'
-          onClick={onCancel}
-          sx={{ width: { md: 'max-content', xs: '100%' } }}
-        >
-          {t.forms.cancel}
-        </Button>
         <Button
           disabled={
             loading ||

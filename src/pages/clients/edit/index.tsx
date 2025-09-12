@@ -14,6 +14,8 @@ import { api } from 'src/configs/api'
 import useFetch from 'src/hooks/useFetch'
 import IClient from 'src/@core/types/client'
 import env from 'src/configs/env'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const DropzoneSection = styled('section')(({ theme }) => ({
   borderRadius: '6px',
@@ -58,32 +60,38 @@ const HoverOverlay = styled('div')({
   transition: 'opacity 0.3s ease'
 })
 
+const initialFormState = {
+  surname: '',
+  name: '',
+  patronymic: '',
+  phones: [''],
+  email: '',
+  gender: '',
+  workplace: '',
+  profession: '',
+  passportSeries: '',
+  passportIssuer: '',
+  passportIssueDate: null as Date | null,
+  birthDate: null as Date | null,
+  birthPlace: '',
+  address: '',
+  registeredAddress: '',
+  guarantor: '',
+  guarantorPhones: [''],
+  status: '',
+  applicationFile: null as File | null,
+  passportFile: null as File | null
+}
+
+const requiredFields: (keyof typeof initialFormState)[] = ['name', 'surname']
+
 const EditClient = () => {
   const { t } = useLang()
   const router = useRouter()
 
-  const [form, setForm] = useState({
-    surname: '',
-    name: '',
-    patronymic: '',
-    phones: [''],
-    email: '',
-    gender: '',
-    workplace: '',
-    profession: '',
-    passportSeries: '',
-    passportIssuer: '',
-    passportIssueDate: null as Date | null,
-    birthDate: null as Date | null,
-    birthPlace: '',
-    address: '',
-    registeredAddress: '',
-    guarantor: '',
-    guarantorPhones: [''],
-    status: '',
-    applicationFile: null as File | null,
-    passportFile: null as File | null
-  })
+  const [form, setForm] = useState(initialFormState)
+  const [loading, setLoading] = useState(false)
+
   const { id } = router.query
   const { data: client } = useFetch<{ data: IClient; status: boolean }>(`/api/clients/${id}`)
 
@@ -316,58 +324,37 @@ const EditClient = () => {
     )
   }
 
-  const onCancel = () => {
-    setForm({
-      surname: '',
-      name: '',
-      patronymic: '',
-      phones: [''],
-      email: '',
-      gender: '',
-      workplace: '',
-      profession: '',
-      passportSeries: '',
-      passportIssuer: '',
-      passportIssueDate: null,
-      birthDate: null,
-      birthPlace: '',
-      address: '',
-      registeredAddress: '',
-      guarantor: '',
-      guarantorPhones: [''],
-      status: '',
-      applicationFile: null,
-      passportFile: null
-    })
-    setFilePreviews({ application: null, passport: null })
-  }
-
   const onSubmit = async () => {
-    const res = await api(`/api/updateClient/${id}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        name: form.name,
-        middle_name: form.patronymic,
-        surname: form.surname,
-        passport: form.passportSeries,
-        passport_status: null,
-        place_of_issue: form.passportIssuer,
-        date_of_issue: form.passportIssueDate,
-        date_of_birth: form.birthDate,
-        gender: form.gender,
-        place_of_birth: form.birthPlace,
-        place_of_residence: form.address,
-        bail_name: form.guarantor,
-        bail_phone: form.guarantorPhones.join(','),
-        file_passport: form.passportFile,
-        phones: form.phones.join(','),
-        file: form.applicationFile,
-        email: form.email,
-        workplace: form.workplace,
-        specialization: form.profession
+    try {
+      const res = await api(`/api/updateClient/${id}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          name: form.name,
+          middle_name: form.patronymic,
+          surname: form.surname,
+          passport: form.passportSeries,
+          passport_status: null,
+          place_of_issue: form.passportIssuer,
+          date_of_issue: form.passportIssueDate,
+          date_of_birth: form.birthDate,
+          gender: form.gender,
+          place_of_birth: form.birthPlace,
+          place_of_residence: form.address,
+          bail_name: form.guarantor,
+          bail_phone: form.guarantorPhones.join(','),
+          file_passport: form.passportFile,
+          phones: form.phones.join(','),
+          file: form.applicationFile,
+          email: form.email,
+          workplace: form.workplace,
+          specialization: form.profession
+        })
       })
-    })
-    console.log(res)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -391,306 +378,312 @@ const EditClient = () => {
         <Grid container flex={1} spacing={4}>
           {/* Left side */}
           <Grid item xs={12} md={8}>
-            <Card sx={{ padding: '20px', backgroundColor: '#fff' }}>
-              <Grid container spacing={4}>
-                {/* Surname */}
-                <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>
-                    {t.forms.client.surname} <span style={{ color: 'red' }}>*</span>
-                  </Typography>
-                  <CustomTextField fullWidth name='surname' value={form.surname} onChange={handleChange} />
-                </Grid>
+            <Stack gap={4}>
+              <CollapsibleSection title='Asosiy' defaultOpen>
+                <Grid container spacing={4}>
+                  {/* Surname */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.surname} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField fullWidth name='surname' value={form.surname} onChange={handleChange} />
+                  </Grid>
 
-                {/* Name */}
-                <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>
-                    {t.forms.client.name} <span style={{ color: 'red' }}>*</span>
-                  </Typography>
-                  <CustomTextField fullWidth name='name' value={form.name} onChange={handleChange} />
+                  {/* Name */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.name} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField fullWidth name='name' value={form.name} onChange={handleChange} />
+                  </Grid>
                 </Grid>
+              </CollapsibleSection>
+              <CollapsibleSection title="Qo'shimcha">
+                <Grid container spacing={4}>
+                  {/* Patronymic */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.patronymic}</Typography>
+                    <CustomTextField fullWidth name='patronymic' value={form.patronymic} onChange={handleChange} />
+                  </Grid>
 
-                {/* Patronymic */}
-                <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.patronymic}</Typography>
-                  <CustomTextField fullWidth name='patronymic' value={form.patronymic} onChange={handleChange} />
-                </Grid>
-
-                {/* Phone */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.phone}</Typography>
-                  {form.phones.map((phone, index) => (
-                    <InputMask
-                      key={index}
-                      mask='99 999 99 99'
-                      value={phone}
-                      onChange={e => handleChangePhone(e, index)}
-                    >
-                      {(inputProps: any) => (
-                        <CustomTextField
-                          {...inputProps}
-                          fullWidth
-                          placeholder='00 000 00 00'
-                          sx={{ '& .MuiInputBase-root': { paddingRight: '1px' } }}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment
-                                position='start'
-                                sx={{
-                                  marginRight: '4px',
-                                  '& .MuiTypography-root': {
-                                    fontSize: '15px',
-                                    lineHeight: '21px'
-                                  }
-                                }}
-                              >
-                                +998
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position='end' sx={{ margin: '2px' }}>
-                                <Button
-                                  variant='text'
+                  {/* Phone */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.phone}</Typography>
+                    {form.phones.map((phone, index) => (
+                      <InputMask
+                        key={index}
+                        mask='99 999 99 99'
+                        value={phone}
+                        onChange={e => handleChangePhone(e, index)}
+                      >
+                        {(inputProps: any) => (
+                          <CustomTextField
+                            {...inputProps}
+                            fullWidth
+                            placeholder='00 000 00 00'
+                            sx={{ '& .MuiInputBase-root': { paddingRight: '1px' } }}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment
+                                  position='start'
                                   sx={{
-                                    minWidth: '32px',
-                                    width: '32px',
-                                    height: '32px',
-                                    padding: '0px',
-                                    borderRadius: '8px',
-                                    backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
-                                    '&:hover': {
-                                      backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                    marginRight: '4px',
+                                    '& .MuiTypography-root': {
+                                      fontSize: '15px',
+                                      lineHeight: '21px'
                                     }
                                   }}
-                                  onClick={index === 0 ? addPhone : removePhone(index)}
                                 >
-                                  {index === 0 ? (
-                                    <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
-                                  ) : (
-                                    <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
-                                  )}
-                                </Button>
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      )}
-                    </InputMask>
-                  ))}
-                </Grid>
+                                  +998
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position='end' sx={{ margin: '2px' }}>
+                                  <Button
+                                    variant='text'
+                                    sx={{
+                                      minWidth: '32px',
+                                      width: '32px',
+                                      height: '32px',
+                                      padding: '0px',
+                                      borderRadius: '8px',
+                                      backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
+                                      '&:hover': {
+                                        backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                      }
+                                    }}
+                                    onClick={index === 0 ? addPhone : removePhone(index)}
+                                  >
+                                    {index === 0 ? (
+                                      <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
+                                    ) : (
+                                      <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
+                                    )}
+                                  </Button>
+                                </InputAdornment>
+                              )
+                            }}
+                          />
+                        )}
+                      </InputMask>
+                    ))}
+                  </Grid>
 
-                {/* Email */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.email}</Typography>
-                  <CustomTextField fullWidth name='email' value={form.email} onChange={handleChange} />
-                </Grid>
+                  {/* Email */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.email}</Typography>
+                    <CustomTextField fullWidth name='email' value={form.email} onChange={handleChange} />
+                  </Grid>
 
-                {/* Gender */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.gender}</Typography>
-                  <CustomTextField select fullWidth name='gender' value={form.gender} onChange={handleChange}>
-                    <MenuItem value='male'>{t.man}</MenuItem>
-                    <MenuItem value='female'>{t.woman}</MenuItem>
-                  </CustomTextField>
-                </Grid>
+                  {/* Gender */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.gender}</Typography>
+                    <CustomTextField select fullWidth name='gender' value={form.gender} onChange={handleChange}>
+                      <MenuItem value='male'>{t.man}</MenuItem>
+                      <MenuItem value='female'>{t.woman}</MenuItem>
+                    </CustomTextField>
+                  </Grid>
 
-                {/* Workplace */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.workplace}</Typography>
-                  <CustomTextField fullWidth name='workplace' value={form.workplace} onChange={handleChange} />
-                </Grid>
+                  {/* Workplace */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.workplace}</Typography>
+                    <CustomTextField fullWidth name='workplace' value={form.workplace} onChange={handleChange} />
+                  </Grid>
 
-                {/* Profession */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.profession}</Typography>
-                  <CustomTextField fullWidth name='profession' value={form.profession} onChange={handleChange} />
-                </Grid>
+                  {/* Profession */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.profession}</Typography>
+                    <CustomTextField fullWidth name='profession' value={form.profession} onChange={handleChange} />
+                  </Grid>
 
-                {/* Passport series */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.passportSeries}</Typography>
-                  <CustomTextField
-                    fullWidth
-                    name='passportSeries'
-                    value={form.passportSeries}
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                {/* Passport Issuer */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.passportIssuer}</Typography>
-                  <CustomTextField
-                    fullWidth
-                    name='passportIssuer'
-                    value={form.passportIssuer}
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                {/* Passport issue date */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.passportIssueDate}</Typography>
-                  <DatePickerWrapper
-                    sx={theme => ({
-                      [theme.breakpoints.down('md')]: {
-                        width: '100%'
-                      }
-                    })}
-                  >
-                    <DatePicker
-                      selected={form.passportIssueDate}
-                      onChange={date => setForm({ ...form, passportIssueDate: date })}
-                      dateFormat='dd.MM.yyyy'
-                      customInput={
-                        <CustomTextField
-                          fullWidth
-                          variant='filled'
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      }
+                  {/* Passport series */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.passportSeries}</Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='passportSeries'
+                      value={form.passportSeries}
+                      onChange={handleChange}
                     />
-                  </DatePickerWrapper>
-                </Grid>
+                  </Grid>
 
-                {/* Birth date */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.birthday}</Typography>
-                  <DatePickerWrapper
-                    sx={theme => ({
-                      [theme.breakpoints.down('md')]: {
-                        width: '100%'
-                      }
-                    })}
-                  >
-                    <DatePicker
-                      selected={form.birthDate}
-                      onChange={date => setForm({ ...form, birthDate: date })}
-                      dateFormat='dd.MM.yyyy'
-                      customInput={
-                        <CustomTextField
-                          fullWidth
-                          variant='filled'
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      }
+                  {/* Passport Issuer */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.passportIssuer}</Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='passportIssuer'
+                      value={form.passportIssuer}
+                      onChange={handleChange}
                     />
-                  </DatePickerWrapper>
-                </Grid>
+                  </Grid>
 
-                {/* Birth place */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.birthPlace}</Typography>
-                  <CustomTextField fullWidth name='birthPlace' value={form.birthPlace} onChange={handleChange} />
-                </Grid>
-
-                {/* Address */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.address}</Typography>
-                  <CustomTextField fullWidth name='address' value={form.address} onChange={handleChange} />
-                </Grid>
-
-                {/* Registered Address */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.registeredAddress}</Typography>
-                  <CustomTextField
-                    fullWidth
-                    name='registeredAddress'
-                    value={form.registeredAddress}
-                    onChange={handleChange}
-                  />
-                </Grid>
-
-                {/* Guarantor */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.guarantor}</Typography>
-                  <CustomTextField fullWidth name='guarantor' value={form.guarantor} onChange={handleChange} />
-                </Grid>
-
-                {/* Guarantor Phone */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client['guarantor-phone']}</Typography>
-                  {form.guarantorPhones.map((phone, index) => (
-                    <InputMask
-                      key={index}
-                      mask='99 999 99 99'
-                      value={phone}
-                      onChange={e => handleChangeGuarantorPhone(e, index)}
+                  {/* Passport issue date */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.passportIssueDate}</Typography>
+                    <DatePickerWrapper
+                      sx={theme => ({
+                        [theme.breakpoints.down('md')]: {
+                          width: '100%'
+                        }
+                      })}
                     >
-                      {(inputProps: any) => (
-                        <CustomTextField
-                          {...inputProps}
-                          fullWidth
-                          placeholder='00 000 00 00'
-                          sx={{ '& .MuiInputBase-root': { paddingRight: '1px' } }}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment
-                                position='start'
-                                sx={{
-                                  marginRight: '4px',
-                                  '& .MuiTypography-root': {
-                                    fontSize: '15px',
-                                    lineHeight: '21px'
-                                  }
-                                }}
-                              >
-                                +998
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position='end' sx={{ margin: '2px' }}>
-                                <Button
-                                  variant='text'
+                      <DatePicker
+                        selected={form.passportIssueDate}
+                        onChange={date => setForm({ ...form, passportIssueDate: date })}
+                        dateFormat='dd.MM.yyyy'
+                        customInput={
+                          <CustomTextField
+                            fullWidth
+                            variant='filled'
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position='end'>
+                                  <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
+                                </InputAdornment>
+                              )
+                            }}
+                          />
+                        }
+                      />
+                    </DatePickerWrapper>
+                  </Grid>
+
+                  {/* Birth date */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.birthday}</Typography>
+                    <DatePickerWrapper
+                      sx={theme => ({
+                        [theme.breakpoints.down('md')]: {
+                          width: '100%'
+                        }
+                      })}
+                    >
+                      <DatePicker
+                        selected={form.birthDate}
+                        onChange={date => setForm({ ...form, birthDate: date })}
+                        dateFormat='dd.MM.yyyy'
+                        customInput={
+                          <CustomTextField
+                            fullWidth
+                            variant='filled'
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position='end'>
+                                  <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
+                                </InputAdornment>
+                              )
+                            }}
+                          />
+                        }
+                      />
+                    </DatePickerWrapper>
+                  </Grid>
+
+                  {/* Birth place */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.birthPlace}</Typography>
+                    <CustomTextField fullWidth name='birthPlace' value={form.birthPlace} onChange={handleChange} />
+                  </Grid>
+
+                  {/* Address */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.address}</Typography>
+                    <CustomTextField fullWidth name='address' value={form.address} onChange={handleChange} />
+                  </Grid>
+
+                  {/* Registered Address */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.registeredAddress}</Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='registeredAddress'
+                      value={form.registeredAddress}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+
+                  {/* Guarantor */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.guarantor}</Typography>
+                    <CustomTextField fullWidth name='guarantor' value={form.guarantor} onChange={handleChange} />
+                  </Grid>
+
+                  {/* Guarantor Phone */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client['guarantor-phone']}</Typography>
+                    {form.guarantorPhones.map((phone, index) => (
+                      <InputMask
+                        key={index}
+                        mask='99 999 99 99'
+                        value={phone}
+                        onChange={e => handleChangeGuarantorPhone(e, index)}
+                      >
+                        {(inputProps: any) => (
+                          <CustomTextField
+                            {...inputProps}
+                            fullWidth
+                            placeholder='00 000 00 00'
+                            sx={{ '& .MuiInputBase-root': { paddingRight: '1px' } }}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment
+                                  position='start'
                                   sx={{
-                                    minWidth: '32px',
-                                    width: '32px',
-                                    height: '32px',
-                                    padding: '0px',
-                                    borderRadius: '8px',
-                                    backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
-                                    '&:hover': {
-                                      backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                    marginRight: '4px',
+                                    '& .MuiTypography-root': {
+                                      fontSize: '15px',
+                                      lineHeight: '21px'
                                     }
                                   }}
-                                  onClick={index === 0 ? addGuarantorPhone : removeGuarantorPhone(index)}
                                 >
-                                  {index === 0 ? (
-                                    <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
-                                  ) : (
-                                    <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
-                                  )}
-                                </Button>
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      )}
-                    </InputMask>
-                  ))}
-                </Grid>
+                                  +998
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position='end' sx={{ margin: '2px' }}>
+                                  <Button
+                                    variant='text'
+                                    sx={{
+                                      minWidth: '32px',
+                                      width: '32px',
+                                      height: '32px',
+                                      padding: '0px',
+                                      borderRadius: '8px',
+                                      backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
+                                      '&:hover': {
+                                        backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                      }
+                                    }}
+                                    onClick={index === 0 ? addGuarantorPhone : removeGuarantorPhone(index)}
+                                  >
+                                    {index === 0 ? (
+                                      <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
+                                    ) : (
+                                      <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
+                                    )}
+                                  </Button>
+                                </InputAdornment>
+                              )
+                            }}
+                          />
+                        )}
+                      </InputMask>
+                    ))}
+                  </Grid>
 
-                {/* Status */}
-                <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <Typography variant='body1'>{t.forms.client.status}</Typography>
-                  <CustomTextField select fullWidth name='status' value={form.status} onChange={handleChange}>
-                    <MenuItem value='active'>{t.active}</MenuItem>
-                    <MenuItem value='inactive'>{t.inactive}</MenuItem>
-                  </CustomTextField>
+                  {/* Status */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>{t.forms.client.status}</Typography>
+                    <CustomTextField select fullWidth name='status' value={form.status} onChange={handleChange}>
+                      <MenuItem value='active'>{t.active}</MenuItem>
+                      <MenuItem value='inactive'>{t.inactive}</MenuItem>
+                    </CustomTextField>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
+              </CollapsibleSection>
+            </Stack>
+            {/* Submit */}
             <Stack
               sx={{
                 marginTop: '24px',
@@ -700,10 +693,11 @@ const EditClient = () => {
                 flexDirection: 'row'
               }}
             >
-              <Button variant='outlined' onClick={onCancel}>
-                {t.forms.cancel}
-              </Button>
-              <Button variant='contained' onClick={onSubmit}>
+              <Button
+                disabled={loading || checkRequiredFields(requiredFields, form)}
+                variant='contained'
+                onClick={onSubmit}
+              >
                 {t.forms.submit}
               </Button>
             </Stack>
@@ -728,10 +722,12 @@ const EditClient = () => {
             flexDirection: 'row'
           }}
         >
-          <Button variant='outlined' onClick={onCancel} sx={{ flex: 1 }}>
-            {t.forms.cancel}
-          </Button>
-          <Button variant='contained' onClick={onSubmit} sx={{ flex: 1 }}>
+          <Button
+            disabled={loading || checkRequiredFields(requiredFields, form)}
+            variant='contained'
+            onClick={onSubmit}
+            sx={{ flex: 1 }}
+          >
             {t.forms.submit}
           </Button>
         </Stack>

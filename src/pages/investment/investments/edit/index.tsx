@@ -3,11 +3,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Title from 'src/@core/components/title'
 import { PostResponse } from 'src/@core/types/base-response'
 import IInvestment from 'src/@core/types/investment'
 import IInvestor from 'src/@core/types/investor'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 import { api } from 'src/configs/api'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
@@ -25,6 +27,8 @@ const initialFormState = {
   investor_id: '',
   amount: ''
 }
+
+const requiredFields = ['investor_id', 'amount']
 
 const EditInvestment = () => {
   const { t } = useLang()
@@ -46,10 +50,6 @@ const EditInvestment = () => {
 
   const handleChange = (field: keyof typeof initialFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
-  }
-
-  const onCancel = () => {
-    setForm(initialFormState)
   }
 
   const onSubmit = async () => {
@@ -88,7 +88,7 @@ const EditInvestment = () => {
         <Title title={t['edit-investment']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
+      <CollapsibleSection title='Asosiy' defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.investments.investor}</Typography>
@@ -117,19 +117,11 @@ const EditInvestment = () => {
             />
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button
-          disabled={loading || Object.values(form).some(item => !item)}
-          variant='outlined'
-          onClick={onCancel}
-          sx={{ width: { xs: '100%', md: 'max-content' } }}
-        >
-          {t.forms.cancel}
-        </Button>
-        <Button
-          disabled={loading || Object.values(form).some(item => !item)}
+          disabled={loading || checkRequiredFields(requiredFields, form)}
           variant='tonal'
           onClick={onSubmit}
           sx={{ width: { xs: '100%', md: 'max-content' } }}

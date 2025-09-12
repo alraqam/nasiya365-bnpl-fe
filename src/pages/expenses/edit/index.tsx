@@ -13,6 +13,8 @@ import IExpense from 'src/@core/types/expense'
 import { api } from 'src/configs/api'
 import dateToString from 'src/@core/utils/date-to-string'
 import { PostResponse } from 'src/@core/types/base-response'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 interface Response {
   status: boolean
@@ -24,6 +26,8 @@ const initialFormState = {
   amount: '',
   created_at: null as Date | null
 }
+
+const requiredFields = ['name', 'amount', 'created_at']
 
 const CreateExpense = () => {
   const { t } = useLang()
@@ -53,10 +57,6 @@ const CreateExpense = () => {
     setForm(prev => ({ ...prev, date }))
   }
 
-  const onCancel = () => {
-    setForm(initialFormState)
-  }
-
   const onSubmit = async () => {
     try {
       setLoading(true)
@@ -84,7 +84,7 @@ const CreateExpense = () => {
         <Title title={t['add-expense']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
+      <CollapsibleSection title='Asosiy' defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography>{t.forms.expenses.name}</Typography>
@@ -130,19 +130,11 @@ const CreateExpense = () => {
             </DatePickerWrapper>
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button
-          disabled={loading || Object.values(form).some(item => !item)}
-          variant='outlined'
-          onClick={onCancel}
-          sx={{ width: { md: 'max-content', xs: '100%' } }}
-        >
-          {t.forms.cancel}
-        </Button>
-        <Button
-          disabled={loading || Object.values(form).some(item => !item)}
+          disabled={loading || checkRequiredFields(requiredFields, form)}
           variant='tonal'
           onClick={onSubmit}
           sx={{ width: { md: 'max-content', xs: '100%' } }}

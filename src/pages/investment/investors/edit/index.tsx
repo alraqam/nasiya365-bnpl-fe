@@ -9,6 +9,8 @@ import { useRouter } from 'next/router'
 import useFetch from 'src/hooks/useFetch'
 import IInvestor from 'src/@core/types/investor'
 import { api } from 'src/configs/api'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const initialFormState = {
   name: '',
@@ -16,6 +18,8 @@ const initialFormState = {
   phone: '',
   percentage: ''
 }
+
+const requiredFields = ['name', 'passport', 'phone', 'percentage']
 
 const EditInvestor = () => {
   const { t } = useLang()
@@ -38,10 +42,6 @@ const EditInvestor = () => {
 
   const handleChange = (field: keyof typeof initialFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
-  }
-
-  const onCancel = () => {
-    setForm(initialFormState)
   }
 
   const onSubmit = async () => {
@@ -71,7 +71,7 @@ const EditInvestor = () => {
         <Title title={t['edit-investor']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
+      <CollapsibleSection title='Asosiy' defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.investors.fio}</Typography>
@@ -125,18 +125,15 @@ const EditInvestor = () => {
             />
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button
-          disabled={loading}
-          variant='outlined'
-          onClick={onCancel}
+          disabled={loading || checkRequiredFields(requiredFields, form)}
+          variant='tonal'
+          onClick={onSubmit}
           sx={{ width: { xs: '100%', md: 'max-content' } }}
         >
-          {t.forms.cancel}
-        </Button>
-        <Button disabled={loading} variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
           {t.forms.submit}
         </Button>
       </Stack>

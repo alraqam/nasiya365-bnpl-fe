@@ -163,7 +163,7 @@ const OrdersReminder = () => {
               >
                 {t.forms.cancel}
               </Button>
-              <Button variant='contained' onClick={handleSavePaymentDate}>
+              <Button disabled={!paymentDate} variant='contained' onClick={handleSavePaymentDate}>
                 {t.forms.submit}
               </Button>
             </Box>

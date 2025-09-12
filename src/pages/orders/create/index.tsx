@@ -8,6 +8,7 @@ import Icon from 'src/@core/components/icon/icon'
 import DatePicker from 'react-datepicker'
 import { useLang } from 'src/providers/LanguageProvider'
 import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const initialFormState = {
   client: '',
@@ -22,9 +23,24 @@ const initialFormState = {
   downPayment: ''
 }
 
+const requiredFields = [
+  'client',
+  'comment',
+  'device',
+  'deviceDocument',
+  'paymentDueMonth',
+  'paymentDay',
+  'orderDate',
+  'totalPrice',
+  'price',
+  'downPayment'
+]
+
 const CreateOrder = () => {
   const { t } = useLang()
+
   const [form, setForm] = useState(initialFormState)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (field: keyof typeof form) => (e: any) => {
     setForm(prev => ({
@@ -40,13 +56,16 @@ const CreateOrder = () => {
     }))
   }
 
-  const onCancel = () => {
-    setForm(initialFormState)
-  }
-
   const onSubmit = () => {
-    console.log(form)
-    // Backend interaction goes here
+    try {
+      setLoading(true)
+      // Backend interaction goes here
+      console.log(form)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -310,10 +329,12 @@ const CreateOrder = () => {
       </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
-        <Button variant='outlined' onClick={onCancel} sx={{ width: { xs: '100%', md: 'max-content' } }}>
-          {t.forms.cancel}
-        </Button>
-        <Button variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
+        <Button
+          disabled={loading || checkRequiredFields(requiredFields, form)}
+          variant='tonal'
+          onClick={onSubmit}
+          sx={{ width: { xs: '100%', md: 'max-content' } }}
+        >
           {t.forms.submit}
         </Button>
       </Stack>

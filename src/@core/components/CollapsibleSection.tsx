@@ -27,22 +27,21 @@ export default function CollapsibleSection({
 
   return (
     <Card sx={{ boxShadow: 3, ...cardSx }}>
-      <CardContent>
+      <CardContent sx={{ padding: 0, pb: '0px !important', cursor: 'pointer' }}>
         <Box
           display='flex'
           justifyContent='space-between'
           alignItems='center'
-          sx={{ cursor: 'pointer' }}
+          // sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'primary.main' } }}
+          sx={{ padding: 6 }}
           onClick={handleToggle}
         >
           <Typography variant='h6'>{title}</Typography>
-          <Icon icon={open ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize={20} onClick={handleToggle} />
+          <Icon icon={open ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize={20} />
         </Box>
 
-        <Collapse in={open} timeout='auto' unmountOnExit sx={{ mt: 3 }}>
-          <Box mt={2} sx={contentSx}>
-            {children}
-          </Box>
+        <Collapse in={open} timeout='auto' unmountOnExit>
+          <Box sx={{ ...contentSx, padding: 6, paddingTop: 0 }}>{children}</Box>
         </Collapse>
       </CardContent>
     </Card>

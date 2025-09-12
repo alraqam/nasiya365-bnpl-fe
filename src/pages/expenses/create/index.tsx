@@ -10,12 +10,16 @@ import DatePicker from 'react-datepicker'
 import { api } from 'src/configs/api'
 import { PostResponse } from 'src/@core/types/base-response'
 import dateToString from 'src/@core/utils/date-to-string'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const initialFormState = {
   name: '',
   amount: '',
   created_at: null as Date | null
 }
+
+const requiredFields = ['name', 'amount', 'created_at']
 
 const CreateExpense = () => {
   const { t } = useLang()
@@ -29,10 +33,6 @@ const CreateExpense = () => {
 
   const handleDateChange = (date: Date | null) => {
     setForm(prev => ({ ...prev, created_at: date }))
-  }
-
-  const onCancel = () => {
-    setForm(initialFormState)
   }
 
   const onSubmit = async () => {
@@ -66,7 +66,7 @@ const CreateExpense = () => {
         <Title title={t['add-expense']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
+      <CollapsibleSection title='Asosiy' defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography>{t.forms.expenses.name}</Typography>
@@ -112,19 +112,11 @@ const CreateExpense = () => {
             </DatePickerWrapper>
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button
-          disabled={loading || Object.values(form).some(item => !item)}
-          variant='outlined'
-          onClick={onCancel}
-          sx={{ width: { md: 'max-content', xs: '100%' } }}
-        >
-          {t.forms.cancel}
-        </Button>
-        <Button
-          disabled={loading || Object.values(form).some(item => !item)}
+          disabled={loading || checkRequiredFields(requiredFields, form)}
           variant='tonal'
           onClick={onSubmit}
           sx={{ width: { md: 'max-content', xs: '100%' } }}

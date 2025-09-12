@@ -16,6 +16,7 @@ import IRole from 'src/@core/types/role'
 import toast from 'react-hot-toast'
 import usePagination from 'src/hooks/usePagination'
 import Link from 'next/link'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const initialState = {
   label: '',
@@ -276,7 +277,11 @@ const Roles = () => {
               >
                 {t.close}
               </Button>
-              <Button disabled={loading} variant='contained' onClick={handleAddRole}>
+              <Button
+                disabled={loading || checkRequiredFields(['label', 'name'], form)}
+                variant='contained'
+                onClick={handleAddRole}
+              >
                 {t.forms.submit}
               </Button>
             </Box>
@@ -321,7 +326,11 @@ const Roles = () => {
               >
                 {t.close}
               </Button>
-              <Button disabled={loading} variant='contained' onClick={handleUpdateRole}>
+              <Button
+                disabled={loading || checkRequiredFields(['label', 'name'], form)}
+                variant='contained'
+                onClick={handleUpdateRole}
+              >
                 {t.forms.submit}
               </Button>
             </Box>

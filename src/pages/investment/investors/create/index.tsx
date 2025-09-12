@@ -7,6 +7,8 @@ import { useLang } from 'src/providers/LanguageProvider'
 import InputMask from 'react-input-mask'
 import { api } from 'src/configs/api'
 import { PostResponse } from 'src/@core/types/base-response'
+import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
 
 const initialFormState = {
   name: '',
@@ -14,6 +16,8 @@ const initialFormState = {
   phone: '',
   percentage: ''
 }
+
+const requiredFields = ['name', 'passport', 'phone', 'percentage']
 
 const CreateInvestor = () => {
   const { t } = useLang()
@@ -23,10 +27,6 @@ const CreateInvestor = () => {
 
   const handleChange = (field: keyof typeof initialFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [field]: event.target.value }))
-  }
-
-  const onCancel = () => {
-    setForm(initialFormState)
   }
 
   const onSubmit = async () => {
@@ -56,7 +56,7 @@ const CreateInvestor = () => {
         <Title title={t['add-investor']} />
       </Box>
 
-      <Card sx={{ padding: '24px 20px', backgroundColor: '#fff' }}>
+      <CollapsibleSection title='Asosiy' defaultOpen>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.investors.fio}</Typography>
@@ -110,18 +110,15 @@ const CreateInvestor = () => {
             />
           </Grid>
         </Grid>
-      </Card>
+      </CollapsibleSection>
 
       <Stack direction='row' justifyContent='flex-start' gap={3}>
         <Button
-          disabled={loading}
-          variant='outlined'
-          onClick={onCancel}
+          disabled={loading || checkRequiredFields(requiredFields, form)}
+          variant='tonal'
+          onClick={onSubmit}
           sx={{ width: { xs: '100%', md: 'max-content' } }}
         >
-          {t.forms.cancel}
-        </Button>
-        <Button disabled={loading} variant='tonal' onClick={onSubmit} sx={{ width: { xs: '100%', md: 'max-content' } }}>
           {t.forms.submit}
         </Button>
       </Stack>
