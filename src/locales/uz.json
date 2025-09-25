@@ -54,6 +54,11 @@
     "logout": "Chiqish",
     "actions": "Amallar",
     "success-edit": "Muvaffaqiyatli o'zgartirildi",
+    "phone": "Telefon",
+    "free": "Bepul",
+    "payment": "To'lov",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
     "nav-blocks": {
         "main": "Asosiy",
         "control": "Boshqaruv"
@@ -79,6 +84,7 @@
         "list": "List",
         "categories": "Kategoriyalar",
         "warehouse": "Ombor",
+        "checkout": "Kassa",
         "investment": {
             "label": "Investitsiya",
             "investors": "Investorlar",
@@ -90,6 +96,35 @@
             "controllers": "Kontroller",
             "actions": "Actions"
         }
+    },
+    "checkout": {
+        "steps": {
+            "basket": "Savat",
+            "address": "Manzil",
+            "payment": "To'lov",
+            "confirmation": "Tasdiqlash"
+        },
+        "basket": "Xarid savati (? ta mahsulot)",
+        "status": {
+            "label": "Holati",
+            "new": "Yangi"
+        },
+        "in_stock": {
+            "yes": "Sotuvda mavjud",
+            "no": "Sotuvda mavjud emas"
+        },
+        "price_reports": "Narx tafsilotlari",
+        "orders": "Buyurtmalar (?)",
+        "discount": "Chegirma",
+        "total": "Jami",
+        "delivery": "Yetkazib berish",
+        "free": "Bepul",
+        "possible_delivery_day": "Taxminiy yetkazib berish sanasi",
+        "enter_address": "Manzilni kiriting",
+        "fast_delivery_plan": "Yetkazib berish tezligini tanlang",
+        "add_new_address": "Yangi manzil qo'shish",
+        "cta": "Rasmiylashtirish",
+        "confirm": "Tasdiqlash"
     },
     "forms": {
         "cancel": "Bekor qilish",

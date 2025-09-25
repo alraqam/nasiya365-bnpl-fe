@@ -54,6 +54,11 @@
     "logout": "Выход",
     "actions": "Действия",
     "success-edit": "Успешно изменено",
+    "phone": "Телефон",
+    "free": "Бесплатно",
+    "payment": "Платеж",
+    "edit": "Редактировать",
+    "delete": "Удалить",
     "nav-blocks": {
         "main": "Основное",
         "control": "Управление"
@@ -79,6 +84,7 @@
         "list": "Список",
         "categories": "Категории",
         "warehouse": "Склад",
+        "checkout": "Касса",
         "investment": {
             "label": "Инвестиции",
             "investors": "Инвесторы",
@@ -90,6 +96,35 @@
             "controllers": "Контроллеры",
             "actions": "Действия"
         }
+    },
+    "checkout": {
+        "steps": {
+            "basket": "Корзина",
+            "address": "Адрес",
+            "payment": "Оплата",
+            "confirmation": "Подтверждение"
+        },
+        "basket": "Корзина покупок (? товаров)",
+        "status": {
+            "label": "Статус",
+            "new": "Новый"
+        },
+        "in_stock": {
+            "yes": "В наличии",
+            "no": "Нет в наличии"
+        },
+        "price_reports": "Детали цены",
+        "orders": "Заказы (?)",
+        "discount": "Скидка",
+        "total": "Итого",
+        "delivery": "Доставка",
+        "free": "Бесплатно",
+        "possible_delivery_day": "Предполагаемая дата доставки",
+        "enter_address": "Введите адрес",
+        "fast_delivery_plan": "Выберите скорость доставки",
+        "add_new_address": "Добавить новый адрес",
+        "cta": "Оформить заказ",
+        "confirm": "Подтвердить"
     },
     "forms": {
         "cancel": "Отменить",

@@ -68,6 +68,13 @@ const useNavigation = (): VerticalNavItemsType => {
       subject: 'CostController'
     },
     {
+      title: t.pages.checkout,
+      path: '/checkout',
+      icon: 'tabler:device-desktop',
+      action: 'index',
+      subject: 'CostController'
+    },
+    {
       sectionTitle: t['nav-blocks'].control
     },
     {
