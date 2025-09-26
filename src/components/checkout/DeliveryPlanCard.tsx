@@ -33,8 +33,10 @@ const DeliveryPlanCard = ({ id, icon, title, desc, price, isSelected, handleSele
       onClick={() => handleSelect(id)}
     >
       <Icon svg={icon} width={28} height={28} color={isSelected ? '#7367F0' : '#2F2B3DE5'} />
-      <Typography fontWeight={600}>{title}</Typography>
-      <Typography>{desc}</Typography>
+      <Typography fontWeight={600} textAlign='center'>
+        {title}
+      </Typography>
+      <Typography textAlign='center'>{desc}</Typography>
       <Checkbox checked={isSelected} />
 
       <Chip

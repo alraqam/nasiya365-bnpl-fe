@@ -1,6 +1,6 @@
 import { Box, Button, Card, Divider, Grid, Stack, styled, Typography } from '@mui/material'
 import { useLang } from 'src/providers/LanguageProvider'
-import { PaddingBox, RightSideBox, StepChildrenProps } from '.'
+import { PaddingBox, RightSideBox, StepChildrenProps, Wrapper } from '.'
 import AddressCard from 'src/components/checkout/AddressCard'
 import { useState } from 'react'
 import Chip from 'src/@core/components/mui/chip'
@@ -69,7 +69,7 @@ const Address = ({ setStep }: StepChildrenProps) => {
 
   const [form, setForm] = useState({
     address: 1,
-    delivery: 0
+    delivery: 1
   })
 
   const handleAddress = (id: number) => {
@@ -81,11 +81,15 @@ const Address = ({ setStep }: StepChildrenProps) => {
   }
 
   const handleSubmit = async () => {
-    setStep(2)
+    setStep(3)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
   }
 
   return (
-    <Stack sx={{ flexDirection: 'row', gap: '24px', padding: '24px', position: 'relative' }}>
+    <Wrapper>
       {/* Left side */}
       <Stack sx={{ flex: 1, gap: 6 }}>
         {/* Address */}
@@ -96,7 +100,7 @@ const Address = ({ setStep }: StepChildrenProps) => {
 
           <Grid container spacing={6}>
             {addresses.map(item => (
-              <Grid item xs={6} key={item.id}>
+              <Grid item xs={12} sm={6} key={item.id}>
                 <AddressCard {...item} isSelected={form.address === item.id} handleSelect={handleAddress} />
               </Grid>
             ))}
@@ -115,7 +119,7 @@ const Address = ({ setStep }: StepChildrenProps) => {
 
           <Grid container spacing={6}>
             {deliveryPlans.map(item => (
-              <Grid item xs={4} key={item.id}>
+              <Grid item xs={12} sm={6} md={4} key={item.id}>
                 <DeliveryPlanCard {...item} isSelected={form.delivery === item.id} handleSelect={handleDelivery} />
               </Grid>
             ))}
@@ -197,7 +201,7 @@ const Address = ({ setStep }: StepChildrenProps) => {
           {t.checkout.confirm}
         </Button>
       </RightSideBox>
-    </Stack>
+    </Wrapper>
   )
 }
 

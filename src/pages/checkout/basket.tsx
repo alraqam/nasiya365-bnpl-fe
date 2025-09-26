@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { Box, Button, Card, Divider, IconButton, Stack, Typography } from '@mui/material'
 import { useLang } from 'src/providers/LanguageProvider'
-import { PaddingBox, RightSideBox, StepChildrenProps } from '.'
+import { PaddingBox, RightSideBox, StepChildrenProps, Wrapper } from '.'
 import Chip from 'src/@core/components/mui/chip'
 
 const items = [
@@ -30,10 +30,14 @@ const Basket = ({ setStep }: StepChildrenProps) => {
 
   const handleSubmit = async () => {
     setStep(2)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
   }
 
   return (
-    <Stack sx={{ flexDirection: 'row', gap: '24px', padding: '24px', position: 'relative' }}>
+    <Wrapper>
       {/* Left side */}
       <Box sx={{ flex: 1 }}>
         <Typography fontWeight={600} sx={{ mb: '16px' }}>
@@ -48,14 +52,18 @@ const Basket = ({ setStep }: StepChildrenProps) => {
               >
                 <Box
                   sx={{
-                    width: '140px',
+                    width: { xs: '120px', md: '120px' },
                     aspectRatio: '1/1',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}
                 >
-                  <img src={item.img} alt={item.title} style={{ objectFit: 'contain' }} />
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                  />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
                   <Typography>{item.title}</Typography>
@@ -74,7 +82,7 @@ const Basket = ({ setStep }: StepChildrenProps) => {
                     <span style={{ textDecoration: 'line-through' }}>${item.old_price}</span>
                   </Typography>
                 </Box>
-                <IconButton sx={{ position: 'absolute', top: '24px', right: '24px' }}>
+                <IconButton sx={{ mb: 'auto' }}>
                   <Icon icon='tabler:x' />
                 </IconButton>
               </Stack>
@@ -124,7 +132,7 @@ const Basket = ({ setStep }: StepChildrenProps) => {
           {t.checkout.cta}
         </Button>
       </RightSideBox>
-    </Stack>
+    </Wrapper>
   )
 }
 

@@ -22,6 +22,8 @@ const AddressCard = ({ id, name, location, number, payment, address_of, isSelect
     <PaddingBox
       sx={{
         display: 'flex',
+        flexDirection: { xs: 'column-reverse', xl: 'row' },
+        alignItems: { xs: 'center', xl: 'start' },
         border: isSelected ? '1px solid #7367F0' : '1px solid #2F2B3D1F',
         cursor: 'pointer',
         borderRadius: '6px',

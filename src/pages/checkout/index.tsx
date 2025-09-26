@@ -5,9 +5,14 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import Basket from './basket'
 import { useLang } from 'src/providers/LanguageProvider'
 import Address from './address'
+import Payment from './payment'
+import Confirmation from './confirmation'
 
 export const PaddingBox = styled(Box)(({ theme }) => ({
-  padding: '24px'
+  padding: '24px',
+  [theme.breakpoints.down('md')]: {
+    padding: '16px'
+  }
 }))
 
 export const RightSideBox = styled(Box)(({ theme }) => ({
@@ -15,7 +20,21 @@ export const RightSideBox = styled(Box)(({ theme }) => ({
   top: '24px',
   maxWidth: '350px',
   width: '100%',
-  height: 'max-content'
+  height: 'max-content',
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '100%'
+  }
+}))
+
+export const Wrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: 'row',
+  gap: '24px',
+  padding: '24px',
+  position: 'relative',
+  [theme.breakpoints.down('md')]: {
+    padding: '16px',
+    flexDirection: 'column'
+  }
 }))
 
 export interface StepChildrenProps {
@@ -33,6 +52,10 @@ const Checkout = () => {
         return <Basket setStep={setStep} />
       case 2:
         return <Address setStep={setStep} />
+      case 3:
+        return <Payment setStep={setStep} />
+      case 4:
+        return <Confirmation />
       default:
         return null
     }
@@ -43,7 +66,14 @@ const Checkout = () => {
       <Card>
         {/* Stepper */}
         <Stack
-          sx={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: '24px', gap: '16px' }}
+          sx={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            padding: { xs: '16px', md: '24px' },
+            gap: '16px'
+          }}
         >
           {steps.map((item, index) => (
             <Box

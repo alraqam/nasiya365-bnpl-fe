@@ -123,8 +123,12 @@
         "enter_address": "Manzilni kiriting",
         "fast_delivery_plan": "Yetkazib berish tezligini tanlang",
         "add_new_address": "Yangi manzil qo'shish",
+        "payment_when_delivery": "Yetkazib berishda to'lov",
+        "thanks": "Rahmat 😇",
+        "your-order": "? Sizning buyurtmangiz",
         "cta": "Rasmiylashtirish",
-        "confirm": "Tasdiqlash"
+        "confirm": "Tasdiqlash",
+        "cash_and_others": "Naqd va boshqa"
     },
     "forms": {
         "cancel": "Bekor qilish",
