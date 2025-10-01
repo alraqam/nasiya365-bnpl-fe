@@ -1,7 +1,6 @@
 import {
   Button,
   Stack,
-  Chip,
   DialogContent,
   Dialog,
   DialogTitle,
@@ -12,7 +11,6 @@ import {
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Title from 'src/@core/components/title'
-import clients from 'src/fake-data/clients'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Box, alpha } from '@mui/system'
 import Icon from 'src/@core/components/icon/icon'

@@ -231,5 +231,113 @@
             "created_at": "2022-01-01",
             "updated_at": "2022-01-01"
         }
+    ],
+    "plans": [
+        {
+            "id": 1,
+            "name": "Plan A",
+            "tenure": 2,
+            "percentage": 50
+        },
+        {
+            "id": 2,
+            "name": "Plan B",
+            "tenure": 4,
+            "percentage": 70
+        },
+        {
+            "id": 3,
+            "name": "Plan C",
+            "tenure": 6,
+            "percentage": 60
+        }
+    ],
+    "products": [
+        {
+            "id": 1,
+            "model": "Samsung",
+            "provider": "Alisher",
+            "price": "1200"
+        },
+        {
+            "id": 2,
+            "model": "LG",
+            "provider": "Javohir",
+            "price": "1300"
+        },
+        {
+            "id": 3,
+            "model": "Haier",
+            "provider": "Alisher",
+            "price": "1400"
+        },
+        {
+            "id": 4,
+            "model": "Apple iPhone 16 Pro Max",
+            "provider": "Alisher",
+            "price": "2000"
+        },
+        {
+            "id": 5,
+            "model": "Apple iphone 15 Pro Max",
+            "provider": "Alisher",
+            "price": "1700"
+        }
+    ],
+    "categories": [
+        {
+            "id": 1,
+            "name": "Maishiy texnika",
+            "color": "#F54927",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        },
+        {
+            "id": 2,
+            "name": "Elektronika",
+            "color": "#F54927",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        },
+        {
+            "id": 3,
+            "name": "Mebel",
+            "color": "#F54927",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        },
+        {
+            "id": 4,
+            "name": "Moda",
+            "color": "#F54927",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        }
+    ],
+    "providers": [
+        {
+            "id": 1,
+            "name": "Abdulaziz Alisherov",
+            "phone": "+998 90 123 45 67",
+            "address": "Tashkent, Yunusobod street, 123",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        },
+        {
+            "id": 2,
+            "name": "Javohir",
+            "phone": "+998 90 123 45 67",
+            "address": "Tashkent, Yunusobod street, 123",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        },
+        {
+            "id": 3,
+            "name": "Alisher",
+            "phone": "+998 90 123 45 67",
+            "address": "Tashkent, Yunusobod street, 123",
+            "created_at": "2025-01-01",
+            "updated_at": "2025-01-01"
+        }
     ]
 }

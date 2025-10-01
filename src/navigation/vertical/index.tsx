@@ -29,27 +29,21 @@ const useNavigation = (): VerticalNavItemsType => {
       children: [
         {
           title: t.pages.list,
-          path: '/products',
+          path: '/warehouse/list',
           action: 'index',
           subject: 'InvestorController'
         },
         {
           title: t.pages.categories,
-          icon: 'tabler:category',
-          children: [
-            {
-              title: 'Maishiy texnika',
-              path: '/warehouse/category/household',
-              action: 'index',
-              subject: 'InvestorController'
-            },
-            {
-              title: 'Transport',
-              path: '/warehouse/category/transport',
-              action: 'index',
-              subject: 'InvestorController'
-            }
-          ]
+          path: '/warehouse/categories',
+          action: 'index',
+          subject: 'InvestorController'
+        },
+        {
+          title: t.pages.providers,
+          path: '/warehouse/providers',
+          action: 'index',
+          subject: 'InvestorController'
         }
       ]
     },

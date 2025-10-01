@@ -22,6 +22,8 @@ import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import useModal from 'src/@core/store/modal'
 import IDevice from 'src/@core/types/device'
+import checkRequiredFields from 'src/@core/utils/check-required-fields'
+import useDebouncedFetch from 'src/hooks/useDebouncedFetch'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
 
@@ -52,9 +54,7 @@ const disabledInput = {
 const initialForm = {
   model: '',
   price: 0,
-  deposit: 0,
-  months: 0,
-  percentage: 0
+  selling_price: 0
 }
 
 const requiredFields = ['price', 'months', 'percentage']
@@ -64,15 +64,32 @@ const Calculator = () => {
   const { t } = useLang()
   const { setModal, modal, clearModal } = useModal()
 
+  // Actual form
   const [form, setForm] = useState(initialForm)
+  const [plan, setPlan] = useState('')
   const [currency, setCurrency] = useState<(typeof currencies)[number]>('USD')
 
+  // Calculation results stored here
   const [total, setTotal] = useState(0)
+  const [minMonthlyPayment, setMinMonthlyPayment] = useState(0)
   const [monthlyPayment, setMonthlyPayment] = useState(0)
 
-  const [url, setUrl] = useState('/api/devices')
+  // Comes from backend
+  const [tenure, setTenure] = useState(2)
+  const [percentage, setPercentage] = useState(2)
 
-  const { data, fetchData } = useFetch<Response>(url)
+  const { data: plans } = useFetch<{ id: number; tenure: number; percentage: number; name: string }[]>(
+    'http://localhost:4000/plans',
+    true,
+    false
+  )
+  const { data: products, fetchData: fetchProducts } = useDebouncedFetch<
+    { id: number; model: string; provider: string; price: number }[]
+  >(`http://localhost:4000/products?model_like=${form.model}`, {
+    auto: false,
+    withBaseURL: false,
+    delay: 700
+  })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -81,52 +98,69 @@ const Calculator = () => {
     })
   }
 
+  const handleMonthlyPayment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setMonthlyPayment(Number(val))
+  }
+  const handleMonthlyPaymentBlur = () => {
+    if (monthlyPayment < minMonthlyPayment) {
+      setMonthlyPayment(minMonthlyPayment)
+    }
+  }
+
+  // Set the tenure and percentage when the plan is selected
   useEffect(() => {
-    if (data && form.model) {
-      const searchedItem = data.data.find(item => item.model === form.model)
+    const selectedPlan = plans?.find(item => item.name === plan)
+
+    setTenure(selectedPlan?.tenure || 0)
+    setPercentage(selectedPlan?.percentage || 0)
+  }, [plans])
+
+  // Set the price of the device when it's selected
+  useEffect(() => {
+    if (products && form.model) {
+      const searchedItem = products.find(item => item.model === form.model)
 
       if (searchedItem) {
         setForm(prev => ({
           ...prev,
-          price: searchedItem.incoming_price
+          price: searchedItem.price
         }))
       }
     }
-  }, [data, form.model])
+  }, [products, form.model])
 
+  // Calculate
   useEffect(() => {
-    const { months: monthsStr, price: priceStr, deposit: depositStr, percentage: percentageStr } = form
+    const { price: priceStr, selling_price: depositStr } = form
 
-    const months = Number(monthsStr)
     const price = Number(priceStr)
-    const deposit = Number(depositStr)
-    const percentage = Number(percentageStr)
+    const selling_price = Number(depositStr)
 
-    // check required fields
-    const isValid = requiredFields.every(
-      field => form[field as keyof typeof form] !== '' && !isNaN(Number(form[field as keyof typeof form]))
-    )
+    const isValid = checkRequiredFields(requiredFields, form)
 
-    if (isValid && months > 0) {
-      const loan = price - deposit
+    if (isValid && tenure > 0) {
+      const loan = price - selling_price
 
-      // ✅ new logic: percentage is for the total period, not monthly
       const totalInterest = loan * (percentage / 100)
       const totalLoanWithInterest = loan + totalInterest
 
-      const monthly = totalLoanWithInterest / months
+      const monthly = totalLoanWithInterest / tenure
 
-      setMonthlyPayment(Number(monthly.toFixed(2))) // round to 2 decimals
-      setTotal(Number((totalLoanWithInterest + deposit).toFixed(2)))
+      if (Number(monthly.toFixed(2)) <= minMonthlyPayment) {
+        setMonthlyPayment(minMonthlyPayment)
+      } else {
+        setMonthlyPayment(Number(monthly.toFixed(2)))
+      }
+      setTotal(Number((totalLoanWithInterest + selling_price).toFixed(2)))
     } else {
-      // reset if form incomplete
       setMonthlyPayment(0)
       setTotal(0)
     }
   }, [form])
 
   const handleSubmit = async () => {
-    console.log(form)
+    console.log(monthlyPayment)
   }
   return (
     <>
@@ -159,7 +193,6 @@ const Calculator = () => {
           <Stack
             sx={theme => ({
               display: 'flex',
-              alignItems: 'center',
               flexDirection: 'row',
               gap: '64px',
               paddingY: '28px',
@@ -178,39 +211,33 @@ const Calculator = () => {
                 minWidth: '470px',
                 width: '100% !important',
                 [theme.breakpoints.down('lg')]: {
-                  minWidth: '0px' // 👈 example override on sm+
+                  minWidth: '0px'
                 }
               })}
             >
+              {/* Name */}
               <Box display='flex' flexDirection='column' gap={1}>
                 <Typography>{t.forms.dashboard.calculator.model}</Typography>
                 <CustomAutocomplete
                   placeholder='Iphone 14 pro max'
                   freeSolo
-                  options={data?.data ?? []}
+                  options={products ?? []}
                   getOptionLabel={option => (typeof option === 'string' ? option : option.model ?? '')}
-                  renderInput={params => <CustomTextField {...params} />}
-                  isOptionEqualToValue={(option, value) =>
-                    typeof option !== 'string' && typeof value !== 'string' && option.id === value.id
-                  }
-                  renderOption={(props, option) => (
-                    <li {...props} key={typeof option === 'string' ? option : option.id}>
-                      {typeof option === 'string' ? option : option.model}
-                    </li>
-                  )}
-                  onChange={(event, value) => {
-                    setForm({
-                      ...form,
-                      model: typeof value === 'string' ? value : value?.model ?? ''
-                    })
+                  inputValue={form.model}
+                  onInputChange={(event, newInputValue) => {
+                    setForm(prev => ({ ...prev, model: newInputValue }))
+                    fetchProducts()
                   }}
+                  renderInput={params => <CustomTextField {...params} />}
                 />
               </Box>
+              {/* Price */}
               <Box display='flex' flexDirection='column' gap={1}>
                 <Typography>{t.forms.dashboard.calculator.price}</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
+                  type='number'
                   InputProps={{
                     sx: {
                       paddingRight: '0px !important'
@@ -251,11 +278,13 @@ const Calculator = () => {
                   onChange={handleChange}
                 />
               </Box>
+              {/* Selling price */}
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>{t.forms.dashboard.calculator.deposit}</Typography>
+                <Typography>Sotish narxi</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
+                  type='number'
                   InputProps={{
                     sx: {
                       paddingRight: '0px !important'
@@ -264,7 +293,6 @@ const Calculator = () => {
                       <InputAdornment position='start' sx={{ marginRight: '4px' }}>
                         <CustomTextField
                           select
-                          placeholder='Hello'
                           sx={{
                             minWidth: '50px',
                             '& .MuiInputBase-root': {
@@ -293,47 +321,32 @@ const Calculator = () => {
                     )
                   }}
                   name='deposit'
-                  value={form.deposit || null}
+                  value={form.selling_price || null}
                   onChange={handleChange}
                 />
               </Box>
+              {/* Plan */}
               <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>{t.forms.dashboard.calculator.months}</Typography>
-                <CustomTextField
-                  placeholder={`0 ${t.forms.dashboard.calculator.month}`}
-                  fullWidth
-                  name='months'
-                  value={form.months || null}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>{t.forms.dashboard.calculator.month}</InputAdornment>
-                    )
-                  }}
-                />
+                <Typography>Tarif</Typography>
+                <CustomTextField select fullWidth value={plan} onChange={e => setPlan(e.target.value)}>
+                  {plans?.map(option => (
+                    <MenuItem key={option.id} value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
               </Box>
-              <Box display='flex' flexDirection='column' gap={1}>
-                <Typography>{t.forms.dashboard.calculator.percentage}</Typography>
-                <CustomTextField
-                  placeholder='0 %'
-                  fullWidth
-                  name='percentage'
-                  value={form.percentage || null}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: <InputAdornment position='start'>%</InputAdornment>
-                  }}
-                />
-              </Box>
+              {/* Monthly payment */}
               <Box display='flex' flexDirection='column' gap={1}>
                 <Typography>{t.forms.dashboard.calculator.monthly_payment}</Typography>
                 <CustomTextField
                   placeholder='0'
                   fullWidth
                   name='monthlyPayment'
+                  type='number'
                   value={monthlyPayment || null}
-                  onChange={handleChange}
-                  disabled={monthlyPayment === 0}
+                  onChange={handleMonthlyPayment}
+                  onBlur={handleMonthlyPaymentBlur}
                   InputProps={{
                     startAdornment: <InputAdornment position='start'>{currency}</InputAdornment>
                   }}
@@ -348,7 +361,7 @@ const Calculator = () => {
                 gap: '20px',
                 maxWidth: '470px',
                 minWidth: '470px',
-                height: '520px',
+                height: '420px',
                 width: '100%',
                 [theme.breakpoints.down('lg')]: {
                   maxWidth: '450px',
@@ -400,15 +413,15 @@ const Calculator = () => {
                 }}
               />
               <CustomTextField
-                placeholder={t.forms.dashboard.calculator.deposit}
+                placeholder='Sotish narxi'
                 disabled
                 sx={disabledInput}
                 fullWidth
                 InputProps={{
-                  endAdornment: <InputAdornment position='end'>{form.deposit}</InputAdornment>
+                  endAdornment: <InputAdornment position='end'>{form.selling_price}</InputAdornment>
                 }}
               />
-              <CustomTextField
+              {/* <CustomTextField
                 placeholder={t.forms.dashboard.calculator.months}
                 disabled
                 sx={disabledInput}
@@ -425,7 +438,7 @@ const Calculator = () => {
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>{form.percentage}</InputAdornment>
                 }}
-              />
+              /> */}
             </Stack>
           </Stack>
 
@@ -435,7 +448,9 @@ const Calculator = () => {
               justifyContent: 'end'
             }}
           >
-            <Button variant='contained'>{t.forms.dashboard.calculator.cta}</Button>
+            <Button variant='contained' onClick={handleSubmit}>
+              {t.forms.dashboard.calculator.cta}
+            </Button>
           </Stack>
         </DialogContent>
       </Dialog>

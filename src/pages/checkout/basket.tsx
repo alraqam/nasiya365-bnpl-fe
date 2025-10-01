@@ -3,6 +3,10 @@ import { Box, Button, Card, Divider, IconButton, Stack, Typography } from '@mui/
 import { useLang } from 'src/providers/LanguageProvider'
 import { PaddingBox, RightSideBox, StepChildrenProps, Wrapper } from '.'
 import Chip from 'src/@core/components/mui/chip'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import { useState } from 'react'
+import useDebouncedFetch from 'src/hooks/useDebouncedFetch'
+import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
 
 const items = [
   {
@@ -28,6 +32,18 @@ const items = [
 const Basket = ({ setStep }: StepChildrenProps) => {
   const { t } = useLang()
 
+  const [basket, setBasket] = useState(items)
+  const [search, setSearch] = useState('')
+
+  const { data, fetchData } = useDebouncedFetch<{ id: number; model: string; provider: string; price: number }[]>(
+    `http://localhost:4000/products?model_like=${search}`,
+    {
+      auto: false,
+      withBaseURL: false,
+      delay: 700
+    }
+  )
+
   const handleSubmit = async () => {
     setStep(2)
     window.scrollTo({
@@ -36,15 +52,71 @@ const Basket = ({ setStep }: StepChildrenProps) => {
     })
   }
 
+  const handleRemoveItem = (id: number) => {
+    setBasket(basket.filter(item => item.id !== id))
+  }
+
   return (
     <Wrapper>
       {/* Left side */}
       <Box sx={{ flex: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            mb: 4
+          }}
+        >
+          <Typography fontWeight={600}>{t.checkout['add-to-basket']}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <CustomAutocomplete
+              placeholder='Iphone 14 pro max'
+              freeSolo
+              fullWidth
+              options={data ?? []}
+              getOptionLabel={option => (typeof option === 'string' ? option : option.model ?? '')}
+              inputValue={search}
+              onInputChange={(event, newInputValue) => {
+                setSearch(newInputValue)
+                fetchData()
+              }}
+              onChange={(event, value) => {
+                if (value && typeof value !== 'string') {
+                  setSearch('')
+                  setBasket(prev => {
+                    if (prev.find(item => item.id === value.id)) return prev as any
+                    return [...prev, value]
+                  })
+                }
+              }}
+              renderInput={params => <CustomTextField {...params} />}
+            />
+            <Button variant='contained'>{t.add}</Button>
+          </Box>
+        </Box>
+
         <Typography fontWeight={600} sx={{ mb: '16px' }}>
-          {t.checkout.basket.replace('?', '2')}
+          {t.checkout.basket.replace('?', `${basket.length}`)}
         </Typography>
         <Card variant='outlined' sx={{ boxShadow: 'none' }}>
-          {items.map((item, index) => (
+          {/* Basket empty */}
+          {basket.length <= 0 && (
+            <Box
+              sx={{
+                height: '168px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Typography>{t.checkout.basket_empty}</Typography>
+            </Box>
+          )}
+
+          {/* Render the items */}
+          {basket.map((item, index) => (
             <>
               <Stack
                 key={item.id}
@@ -82,7 +154,7 @@ const Basket = ({ setStep }: StepChildrenProps) => {
                     <span style={{ textDecoration: 'line-through' }}>${item.old_price}</span>
                   </Typography>
                 </Box>
-                <IconButton sx={{ mb: 'auto' }}>
+                <IconButton sx={{ mb: 'auto' }} onClick={() => handleRemoveItem(item.id)}>
                   <Icon icon='tabler:x' />
                 </IconButton>
               </Stack>

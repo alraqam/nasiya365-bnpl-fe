@@ -80,7 +80,15 @@ const initialFormState = {
   passportFile: null as File | null
 }
 
-const requiredFields: (keyof typeof initialFormState)[] = ['name', 'surname']
+const requiredFields: (keyof typeof initialFormState)[] = [
+  'name',
+  'surname',
+  'passportSeries',
+  'birthPlace',
+  'birthDate',
+  'registeredAddress',
+  'address'
+]
 
 const CreateClient = () => {
   const { t } = useLang()
@@ -358,6 +366,81 @@ const CreateClient = () => {
                     </Typography>
                     <CustomTextField fullWidth name='name' value={form.name} onChange={handleChange} />
                   </Grid>
+
+                  {/* Passport series */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.passportSeries} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='passportSeries'
+                      value={form.passportSeries}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+
+                  {/* Birth date */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.birthday} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <DatePickerWrapper
+                      sx={theme => ({
+                        [theme.breakpoints.down('md')]: {
+                          width: '100%'
+                        }
+                      })}
+                    >
+                      <DatePicker
+                        selected={form.birthDate}
+                        onChange={date => setForm({ ...form, birthDate: date })}
+                        dateFormat='dd.MM.yyyy'
+                        customInput={
+                          <CustomTextField
+                            fullWidth
+                            variant='filled'
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position='end'>
+                                  <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
+                                </InputAdornment>
+                              )
+                            }}
+                          />
+                        }
+                      />
+                    </DatePickerWrapper>
+                  </Grid>
+
+                  {/* Birth place */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.birthPlace} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField fullWidth name='birthPlace' value={form.birthPlace} onChange={handleChange} />
+                  </Grid>
+
+                  {/* Address */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.address} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField fullWidth name='address' value={form.address} onChange={handleChange} />
+                  </Grid>
+
+                  {/* Registered Address */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.registeredAddress} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='registeredAddress'
+                      value={form.registeredAddress}
+                      onChange={handleChange}
+                    />
+                  </Grid>
                 </Grid>
               </CollapsibleSection>
               <CollapsibleSection title="Qo'shimcha">
@@ -458,17 +541,6 @@ const CreateClient = () => {
                     <CustomTextField fullWidth name='profession' value={form.profession} onChange={handleChange} />
                   </Grid>
 
-                  {/* Passport series */}
-                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <Typography variant='body1'>{t.forms.client.passportSeries}</Typography>
-                    <CustomTextField
-                      fullWidth
-                      name='passportSeries'
-                      value={form.passportSeries}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-
                   {/* Passport Issuer */}
                   <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <Typography variant='body1'>{t.forms.client.passportIssuer}</Typography>
@@ -509,60 +581,6 @@ const CreateClient = () => {
                         }
                       />
                     </DatePickerWrapper>
-                  </Grid>
-
-                  {/* Birth date */}
-                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <Typography variant='body1'>{t.forms.client.birthday}</Typography>
-                    <DatePickerWrapper
-                      sx={theme => ({
-                        [theme.breakpoints.down('md')]: {
-                          width: '100%'
-                        }
-                      })}
-                    >
-                      <DatePicker
-                        selected={form.birthDate}
-                        onChange={date => setForm({ ...form, birthDate: date })}
-                        dateFormat='dd.MM.yyyy'
-                        customInput={
-                          <CustomTextField
-                            fullWidth
-                            variant='filled'
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position='end'>
-                                  <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
-                                </InputAdornment>
-                              )
-                            }}
-                          />
-                        }
-                      />
-                    </DatePickerWrapper>
-                  </Grid>
-
-                  {/* Birth place */}
-                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <Typography variant='body1'>{t.forms.client.birthPlace}</Typography>
-                    <CustomTextField fullWidth name='birthPlace' value={form.birthPlace} onChange={handleChange} />
-                  </Grid>
-
-                  {/* Address */}
-                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <Typography variant='body1'>{t.forms.client.address}</Typography>
-                    <CustomTextField fullWidth name='address' value={form.address} onChange={handleChange} />
-                  </Grid>
-
-                  {/* Registered Address */}
-                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <Typography variant='body1'>{t.forms.client.registeredAddress}</Typography>
-                    <CustomTextField
-                      fullWidth
-                      name='registeredAddress'
-                      value={form.registeredAddress}
-                      onChange={handleChange}
-                    />
                   </Grid>
 
                   {/* Guarantor */}

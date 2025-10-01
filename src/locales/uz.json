@@ -23,6 +23,8 @@
     "add-controller": "Kontroller qo'shish",
     "add-action": "Action qo'shish",
     "add-branch": "Filial qo'shish",
+    "add-category": "Kategoriya qo'shish",
+    "add-provider": "Yetkazib beruvchi qo'shish",
     "edit-client": "Mijozni tahrirlash",
     "edit-product": "Mahsulotni tahrirlash",
     "edit-order": "Shartnomani tahrirlash",
@@ -33,6 +35,8 @@
     "edit-role": "Rolni tahrirlash",
     "edit-controller": "Kontrollerni tahrirlash",
     "edit-action": "Actionni tahrirlash",
+    "edit-category": "Kategoriyani tahrirlash",
+    "edit-provider": "Yetkazib beruvchini tahrirlash",
     "choose-branch": "Filial tanlang",
     "version": "Versiya",
     "client": "Mijoz",
@@ -58,6 +62,7 @@
     "free": "Bepul",
     "payment": "To'lov",
     "edit": "Tahrirlash",
+    "add": "Qo'shish",
     "delete": "O'chirish",
     "nav-blocks": {
         "main": "Asosiy",
@@ -84,6 +89,7 @@
         "list": "List",
         "categories": "Kategoriyalar",
         "warehouse": "Ombor",
+        "providers": "Yetkazib beruvchilar",
         "checkout": "Kassa",
         "investment": {
             "label": "Investitsiya",
@@ -104,7 +110,9 @@
             "payment": "To'lov",
             "confirmation": "Tasdiqlash"
         },
+        "add-to-basket": "Savatga qo'shish",
         "basket": "Xarid savati (? ta mahsulot)",
+        "basket_empty": "Savat bo'sh",
         "status": {
             "label": "Holati",
             "new": "Yangi"
