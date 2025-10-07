@@ -1,7 +1,7 @@
 function dateToString(
   date: Date | string | null,
   expected: 'year-month-day' | 'day-month-year' | 'month-day-year' = 'year-month-day',
-  separator: string = '-'
+  separator = '-'
 ): string | null {
   if (!date) return null
 

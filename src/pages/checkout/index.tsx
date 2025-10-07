@@ -1,5 +1,4 @@
 import { Box, Card, Divider, Stack, styled, Typography } from '@mui/material'
-import steps from './steps'
 import Icon from 'src/@core/components/icon/icon'
 import { Dispatch, SetStateAction, useState } from 'react'
 import Basket from './basket'
@@ -7,6 +6,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import Address from './address'
 import Payment from './payment'
 import Confirmation from './confirmation'
+import steps from 'src/@core/constants/checkout-steps'
 
 export const PaddingBox = styled(Box)(({ theme }) => ({
   padding: '24px',
@@ -77,6 +77,7 @@ const Checkout = () => {
         >
           {steps.map((item, index) => (
             <Box
+              key={item.activeStep}
               sx={{
                 display: 'flex',
                 alignItems: 'center',

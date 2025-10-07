@@ -5,11 +5,11 @@ import Link from 'next/link'
 import Title from 'src/@core/components/title'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
-import { Payment, Response } from './types'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import dateToString from 'src/@core/utils/date-to-string'
 import formatPhoneNumber from 'src/@core/utils/formatPhone'
+import { Response, Payment } from 'src/@core/types/order-details'
 
 const ButtonStyle = {
   boxShadow: 'none',
@@ -39,7 +39,7 @@ const OrderDetail = () => {
     if (router.query.number) {
       fetchData(`/api/orders/show-order/${router.query.number}`)
     }
-  }, [router.query])
+  }, [router.query, fetchData])
 
   useEffect(() => {
     setPayDay(data?.data.order.pay_day || 0)
@@ -171,7 +171,7 @@ const OrderDetail = () => {
                   <Typography>{data?.data.client.bail_name}</Typography>
                   <Typography>{data?.data.order.box ? t.given : t['not-given']}</Typography>
                   {data?.data.phone.map(item => (
-                    <Typography>{formatPhoneNumber(item)}</Typography>
+                    <Typography key={item}>{formatPhoneNumber(item)}</Typography>
                   ))}
                 </Box>
               </Box>

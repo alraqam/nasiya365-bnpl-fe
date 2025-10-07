@@ -1,4 +1,4 @@
-export default [
+const steps = [
   {
     icon: '/icons/basket.svg',
     activeStep: 1,
@@ -20,3 +20,5 @@ export default [
     label: 'confirmation'
   }
 ]
+
+export default steps
