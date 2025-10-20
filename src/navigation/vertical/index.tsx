@@ -10,8 +10,8 @@ const useNavigation = (): VerticalNavItemsType => {
       title: t.pages.dashboard,
       path: '/dashboard',
       icon: 'tabler:brand-speedtest',
-      action: 'index',
-      subject: 'DashboardController'
+      action: 'view',
+      subject: 'clients'
     },
     {
       sectionTitle: t['nav-blocks'].main
@@ -20,8 +20,8 @@ const useNavigation = (): VerticalNavItemsType => {
       title: t.pages.clients,
       path: '/clients',
       icon: 'tabler:users-group',
-      action: 'index',
-      subject: 'ClientController'
+      action: 'view',
+      subject: 'clients'
     },
     {
       title: t.pages.warehouse,
@@ -30,20 +30,20 @@ const useNavigation = (): VerticalNavItemsType => {
         {
           title: t.pages.list,
           path: '/warehouse/list',
-          action: 'index',
-          subject: 'InvestorController'
+          action: 'view',
+          subject: 'investors'
         },
         {
           title: t.pages.categories,
           path: '/warehouse/categories',
-          action: 'index',
-          subject: 'InvestorController'
+          action: 'view',
+          subject: 'investors'
         },
         {
           title: t.pages.providers,
           path: '/warehouse/providers',
-          action: 'index',
-          subject: 'InvestorController'
+          action: 'view',
+          subject: 'investors'
         }
       ]
     },
@@ -51,22 +51,22 @@ const useNavigation = (): VerticalNavItemsType => {
       title: t.pages.orders,
       path: '/orders',
       icon: 'tabler:shopping-cart',
-      action: 'index',
-      subject: 'OrderController'
+      action: 'view',
+      subject: 'orders'
     },
     {
       title: t.pages.expenses,
       path: '/expenses',
       icon: 'tabler:exposure',
-      action: 'index',
-      subject: 'CostController'
+      action: 'view',
+      subject: 'costs'
     },
     {
       title: t.pages.checkout,
       path: '/checkout',
       icon: 'tabler:device-desktop',
-      action: 'index',
-      subject: 'CostController'
+      action: 'view',
+      subject: 'costs'
     },
     {
       sectionTitle: t['nav-blocks'].control
@@ -75,15 +75,15 @@ const useNavigation = (): VerticalNavItemsType => {
       title: t.pages.branches,
       path: '/branches',
       icon: 'tabler:hierarchy',
-      action: 'index',
-      subject: 'AdminController'
+      action: 'view',
+      subject: 'branches'
     },
     {
       title: t.pages.employees,
       path: '/employees',
       icon: 'tabler:users',
-      action: 'index',
-      subject: 'AdminController'
+      action: 'view',
+      subject: 'employees'
     },
     {
       title: t.pages.investment.label,
@@ -92,14 +92,14 @@ const useNavigation = (): VerticalNavItemsType => {
         {
           title: t.pages.investment.investors,
           path: '/investment/investors',
-          action: 'index',
-          subject: 'InvestorController'
+          action: 'view',
+          subject: 'investments'
         },
         {
           title: t.pages.investment.investments,
           path: '/investment/investments',
-          action: 'index',
-          subject: 'InvestmentController'
+          action: 'view',
+          subject: 'investments'
         }
       ]
     },
@@ -110,8 +110,8 @@ const useNavigation = (): VerticalNavItemsType => {
         {
           title: t.pages.settings.roles,
           path: '/settings/roles',
-          action: 'index',
-          subject: 'Mirfozil'
+          action: 'view',
+          subject: 'investments'
         }
       ]
     }

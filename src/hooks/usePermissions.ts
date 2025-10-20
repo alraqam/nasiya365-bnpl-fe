@@ -3,7 +3,7 @@ import { useAuth } from './useAuth'
 import { PermissionChecker } from 'src/@core/utils/permission-checker'
 
 export const usePermissions = () => {
-  const { user, permissions } = useAuth()
+  const { permissions } = useAuth()
 
   // Create permission checker instance
   const checker = useMemo(() => {

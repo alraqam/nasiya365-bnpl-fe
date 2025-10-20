@@ -5,42 +5,36 @@ export interface Permission {
 
 // Route to Permission Mapping
 export const routePermissions: Record<string, Permission> = {
-  '/dashboard': { action: 'index', subject: 'DashboardController' },
+  '/dashboard': { action: 'view', subject: 'clients' },
   // More on dashboard things
 
-  '/clients': { action: 'index', subject: 'ClientController' },
-  '/clients/create': { action: 'store', subject: 'ClientController' },
-  '/clients/edit': { action: 'updateClient', subject: 'ClientController' },
-  '/clients/[id]': { action: 'show', subject: 'ClientController' },
+  '/clients': { action: 'view', subject: 'clients' },
+  '/clients/create': { action: 'store', subject: 'clients' },
+  '/clients/edit': { action: 'updateClient', subject: 'clients' },
+  '/clients/[id]': { action: 'show', subject: 'clients' },
 
-  '/products': { action: 'index', subject: 'DeviceController' },
-  '/products/create': { action: 'store', subject: 'DeviceController' },
-  '/products/edit': { action: 'update', subject: 'DeviceController' },
+  '/orders': { action: 'view', subject: 'orders' },
+  '/orders/create': { action: 'post_createOrder', subject: 'orders' },
+  '/orders/edit': { action: 'putUpdateOrder', subject: 'orders' },
+  '/orders/reminder': { action: 'get_notes', subject: 'orders' },
 
-  '/orders': { action: 'index', subject: 'OrderController' },
-  '/orders/create': { action: 'post_createOrder', subject: 'OrderController' },
-  '/orders/edit': { action: 'putUpdateOrder', subject: 'OrderController' },
-  '/orders/reminder': { action: 'get_notes', subject: 'OrderController' },
+  '/employees': { action: 'view', subject: 'employees' },
+  '/employees/create': { action: 'store', subject: 'employees' },
+  '/employees/edit': { action: 'update', subject: 'employees' },
 
-  '/employees': { action: 'index', subject: 'AdminController' },
-  '/employees/create': { action: 'store', subject: 'AdminController' },
-  '/employees/edit': { action: 'update', subject: 'AdminController' },
+  '/expenses': { action: 'view', subject: 'orders' },
+  '/expenses/create': { action: 'store', subject: 'orders' },
+  '/expenses/edit': { action: 'update', subject: 'orders' },
 
-  '/expenses': { action: 'index', subject: 'CostController' },
-  '/expenses/create': { action: 'store', subject: 'CostController' },
-  '/expenses/edit': { action: 'update', subject: 'CostController' },
+  '/investment/investors': { action: 'view', subject: 'investors' },
+  '/investment/investors/create': { action: 'store', subject: 'investors' },
+  '/investment/investors/edit': { action: 'update', subject: 'investors' },
 
-  '/investment/investors': { action: 'index', subject: 'InvestorController' },
-  '/investment/investors/create': { action: 'store', subject: 'InvestorController' },
-  '/investment/investors/edit': { action: 'update', subject: 'InvestorController' },
+  '/investment/investments': { action: 'view', subject: 'investments' },
+  '/investment/investments/create': { action: 'store', subject: 'investments' },
+  '/investment/investments/edit': { action: 'update', subject: 'investments' },
 
-  '/investment/investments': { action: 'index', subject: 'InvestmentController' },
-  '/investment/investments/create': { action: 'store', subject: 'InvestmentController' },
-  '/investment/investments/edit': { action: 'update', subject: 'InvestmentController' },
-
-  '/settings/roles': { action: 'index', subject: 'Mirfozil' },
-  '/settings/controllers': { action: 'index', subject: 'Mirfozil' },
-  '/settings/actions': { action: 'index', subject: 'Mirfozil' }
+  '/settings/roles': { action: 'view', subject: 'roles' }
 }
 
 // Permission checker class
@@ -61,22 +55,15 @@ export class PermissionChecker {
     return requiredPermissions.some(required => this.hasPermission(required.action, required.subject))
   }
 
-  // Check if user has all of the given permissions
   hasAllPermissions(requiredPermissions: Permission[]): boolean {
     return requiredPermissions.every(required => this.hasPermission(required.action, required.subject))
   }
 
-  // Get permission for a specific route
   canAccessRoute(route: string): boolean {
     const requiredPermission = this.getRoutePermission(route)
     if (!requiredPermission) {
-      // OPTION 1: Allow access if no permission is defined (more permissive)
       console.warn(`No permission defined for route: ${route}. Allowing access.`)
       return true
-
-      // OPTION 2: Deny access if no permission is defined (more restrictive)
-      // console.warn(`No permission defined for route: ${route}. Denying access.`)
-      // return false
     }
     return this.hasPermission(requiredPermission.action, requiredPermission.subject)
   }

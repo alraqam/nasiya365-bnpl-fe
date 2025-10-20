@@ -8,7 +8,23 @@ export type LoginParams = {
   rememberMe?: boolean
 }
 
-export type UserDataType = {
+export interface IMerchant {
+  id: number
+  name: string
+  logo: null | string
+  domain: string
+  subdomain: string
+  colors: string
+  user_id: number
+  schema_name: string
+  merchant_uid: string
+  billing_id: string
+  is_active: boolean
+  created_at: Date
+  updated_at: Date
+}
+
+export interface CentralUser {
   id: number
   name: string
   surname: string
@@ -39,11 +55,26 @@ export type UserDataType = {
   }
 }
 
+export interface TenantUser {
+  id: number
+  name: string
+  sur_name: string
+  phone: string
+  email: string
+  photo: null | string
+  is_active: boolean
+  created_at: Date
+  updated_at: Date
+}
+
+export type User = CentralUser | TenantUser
+export type UserType = 'central' | 'tenant'
+
 export type AuthValuesType = {
   loading: boolean
-  user: UserDataType | null
+  user: User | null
   setLoading: (value: boolean) => void
-  setUser: (value: UserDataType | null) => void
+  setUser: (value: User | null) => void
   permissions: Permission[]
   setPermissions: (value: Permission[]) => void
 }

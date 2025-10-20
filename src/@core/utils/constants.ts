@@ -1,7 +1,10 @@
+import { UserType } from 'src/context/types'
+
 export const STORAGE_KEYS = {
   token: 'token',
   lang: 'nasiya-lang',
-  permissions: 'nasiya-permissions'
+  permissions: 'nasiya-permissions',
+  user_type: 'user-type' as UserType
 }
 
 export const MONTHS = [

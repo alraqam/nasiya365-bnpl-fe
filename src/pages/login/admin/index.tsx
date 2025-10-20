@@ -40,7 +40,7 @@ import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
 import { Permission } from 'src/@core/utils/permission-checker'
-import { IMerchant, TenantUser } from 'src/context/types'
+import { CentralUser } from 'src/context/types'
 import { ErrorResponse } from 'src/@core/types/response'
 
 // ** Styled Components
@@ -71,30 +71,24 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const defaultValues: FormData = {
-  email: 'employee.manager@example.com',
-  password: 'employee12345',
-  company_schema: 'techstore'
+  phone1: '1111111',
+  password: 'admin12345'
 }
 
 interface FormData {
-  email: string
+  phone1: string
   password: string
-  company_schema: string
 }
 
 interface Response {
-  message: string
-  data: {
-    employee: TenantUser
-    merchant: IMerchant
-    token: string
-    type: string
-    permissions: Permission[]
-  }
+  token: string
+  token_type: string
+  user: CentralUser
+  permissions: Permission[]
   errors?: Record<keyof FormData, string[]>
 }
 
-const LoginPage = () => {
+const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const { t } = useLang()
@@ -121,15 +115,14 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (data: FormData) => {
-    const { email, password, company_schema } = data
+    const { phone1, password } = data
 
     try {
-      const res: Response = await api(`/api/employee/login?tenant=${company_schema}`, {
+      const res: Response = await api('/api/central/login', {
         method: 'POST',
         body: JSON.stringify({
-          email,
-          password,
-          company_schema
+          phone1: phone1,
+          password: password
         })
       })
 
@@ -159,45 +152,34 @@ const LoginPage = () => {
           })
         }
       } else {
-        auth.setUser(res.data.employee)
-        auth.setPermissions(res.data.permissions)
-        localStorage.setItem(STORAGE_KEYS.token, res.data.token)
-        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.data.permissions))
-        localStorage.setItem(STORAGE_KEYS.user_type, 'tenant')
+        auth.setUser(res.user)
+        auth.setPermissions(res.permissions)
+        localStorage.setItem(STORAGE_KEYS.token, res.token)
+        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
+        localStorage.setItem(STORAGE_KEYS.user_type, 'central')
         router.push('/dashboard')
       }
     } catch (error: any) {
-      const err = error as ErrorResponse<FormData>
-
-      if (err.errors) {
-        Object.entries(err.errors).forEach(([key, value]) => {
-          value.forEach((msg: string) => {
-            setError(key as keyof FormData, {
-              type: 'manual',
-              message: msg
-            })
-          })
-        })
-      }
-
-      if (typeof err.status === 'number') {
-        if (err.status === 401) {
-          setError('email', {
+      if (!error.status && error.errors) {
+        if ('phone1' in error.errors) {
+          setError('phone1', {
             type: 'manual',
-            message: error.message
+            message: error.errors.phone1[0]
           })
+        }
+
+        if ('password' in error.errors) {
           setError('password', {
             type: 'manual',
-            message: error.message
+            message: error.errors.password[0]
           })
         }
 
-        if (err.status === 404) {
-          setError('company_schema', {
-            type: 'manual',
-            message: error.error
-          })
+        if (Array.isArray(error.errors) && error.errors.includes('Unauthorized')) {
+          toast.error(error.errors[0])
         }
+      } else {
+        toast.error('Nimadir xato ketti')
       }
     }
   }
@@ -251,8 +233,7 @@ const LoginPage = () => {
               <Typography sx={{ color: 'text.secondary' }}>{t['welcome-description']}</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-              {/* Phone */}
-              {/* <Box sx={{ mb: 6 }}>
+              <Box sx={{ mb: 6 }}>
                 <Controller
                   name='phone1'
                   control={control}
@@ -288,68 +269,7 @@ const LoginPage = () => {
                     />
                   )}
                 />
-              </Box> */}
-
-              {/* Tenant (company_schema) */}
-              <Box sx={{ mb: 6 }}>
-                <Controller
-                  name='company_schema'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <CustomTextField
-                      fullWidth
-                      autoFocus
-                      label={t.login['no-subdomain']}
-                      value={value}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                      placeholder='techstore'
-                      error={Boolean(errors.company_schema)}
-                      {...(errors.company_schema && { helperText: errors.company_schema.message })}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position='end'>
-                            <div
-                              style={{
-                                fontSize: 14,
-                                pointerEvents: 'none',
-                                lineHeight: '44px',
-                                height: '44px',
-                                color: '#000'
-                              }}
-                            >
-                              .nasiya365.uz
-                            </div>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  )}
-                />
               </Box>
-              {/* Email */}
-              <Box sx={{ mb: 6 }}>
-                <Controller
-                  name='email'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      onBlur={onBlur}
-                      label={t.login.email}
-                      onChange={onChange}
-                      id='auth-login-v2-email'
-                      error={Boolean(errors.email)}
-                      {...(errors.email && { helperText: errors.email.message })}
-                      type='email'
-                    />
-                  )}
-                />
-              </Box>
-              {/* Password */}
               <Box sx={{ mb: 1.5 }}>
                 <Controller
                   name='password'
@@ -394,8 +314,8 @@ const LoginPage = () => {
   )
 }
 
-LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+AdminLogin.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-LoginPage.guestGuard = true
+AdminLogin.guestGuard = true
 
-export default LoginPage
+export default AdminLogin

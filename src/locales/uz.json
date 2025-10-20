@@ -75,8 +75,10 @@
         "submit": "Login",
         "phone": "Telefon raqam",
         "password": "Parol",
+        "email": "Email",
         "no-phone": "Telefon raqamingizni kiriting",
-        "no-password": "Parolingizni kiriting"
+        "no-password": "Parolingizni kiriting",
+        "no-subdomain": "Subdomainingizni kiriting"
     },
     "pages": {
         "dashboard": "Dashboard",

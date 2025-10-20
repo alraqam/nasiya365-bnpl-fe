@@ -35,14 +35,14 @@ const RouteGuard = (props: RouteGuardProps) => {
 
   // Redirect authenticated users from guest-only pages
   useEffect(() => {
-    if (!isInitialLoad && user && guestOnly) {
+    if (!isInitialLoad && user && guestOnly && permissions.length) {
       router.replace(homeRoute)
     }
   }, [user, guestOnly, homeRoute, isInitialLoad, router])
 
   // Redirect to home if user is on root and authenticated
   useEffect(() => {
-    if (!isInitialLoad && user && user.role_id && router.asPath === '/') {
+    if (!isInitialLoad && user && router.asPath === '/') {
       router.replace(homeRoute)
     }
   }, [user, router.asPath, router, homeRoute, isInitialLoad])
