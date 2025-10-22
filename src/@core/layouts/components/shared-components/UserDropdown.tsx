@@ -27,6 +27,8 @@ import { useLang } from 'src/providers/LanguageProvider'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { api } from 'src/configs/api'
 import { useAuth } from 'src/hooks/useAuth'
+import { storage } from 'src/@core/utils/storage'
+import toast from 'react-hot-toast'
 
 interface Props {
   settings: Settings
@@ -95,14 +97,21 @@ const UserDropdown = (props: Props) => {
   }
 
   const handleChangeProfile = async () => {
-    const res = await api('/api/profile/update', {
-      method: 'PUT',
-      body: JSON.stringify({
-        current_password: oldPassword,
-        password: newPassword
+    try {
+      await api('/api/profile/update', {
+        method: 'PUT',
+        body: JSON.stringify({
+          current_password: oldPassword,
+          password: newPassword
+        })
       })
-    })
-    console.log(res)
+      toast.success(t['profile-updated'] || 'Profile updated successfully')
+      clearModal()
+      setOldPassword('')
+      setNewPassword('')
+    } catch (error) {
+      // Error is already handled by API client
+    }
   }
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
@@ -117,8 +126,9 @@ const UserDropdown = (props: Props) => {
   }
 
   const handleLogout = async () => {
-    localStorage.removeItem(STORAGE_KEYS.token)
-    localStorage.removeItem(STORAGE_KEYS.permissions)
+    storage.removeItem(STORAGE_KEYS.token)
+    storage.removeItem(STORAGE_KEYS.permissions)
+    storage.removeItem(STORAGE_KEYS.user_type)
     handleDropdownClose()
     router.reload()
   }

@@ -75,8 +75,7 @@ const Orders = () => {
   }
 
   const handleSearch = async () => {
-    console.log(filters)
-    // backend interaction goes here
+    // TODO: Implement search functionality with filters
   }
 
   return (

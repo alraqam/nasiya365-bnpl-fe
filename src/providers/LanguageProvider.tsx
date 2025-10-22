@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
+import { storage } from 'src/@core/utils/storage'
 import uz from 'src/locales/uz.json'
 import ru from 'src/locales/ru.json'
 
@@ -30,21 +31,24 @@ export const LanguageProvider = ({ children }: Props) => {
   const changeLang = (newLang: AppLang) => {
     if (newLang !== lang) {
       setLang(newLang)
-      localStorage.setItem(STORAGE_KEYS.lang, newLang)
+      storage.setItem(STORAGE_KEYS.lang, newLang)
     }
   }
 
   useEffect(() => {
-    setLang(localStorage.getItem(STORAGE_KEYS.lang) as AppLang)
-  }, [lang])
+    const storedLang = storage.getItem(STORAGE_KEYS.lang) as AppLang
+    if (storedLang) {
+      setLang(storedLang)
+    }
+  }, [])
 
   useEffect(() => {
     setT(translations[lang])
   }, [lang])
 
   useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEYS.lang)) {
-      localStorage.setItem(STORAGE_KEYS.lang, lang)
+    if (!storage.has(STORAGE_KEYS.lang)) {
+      storage.setItem(STORAGE_KEYS.lang, lang)
     }
   }, [lang])
 

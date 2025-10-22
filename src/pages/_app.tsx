@@ -24,6 +24,7 @@ import UserLayout from 'src/layouts/UserLayout'
 import { LanguageProvider } from 'src/providers/LanguageProvider'
 
 // ** Custom RouteGuard Import
+import ErrorBoundary from 'src/@core/components/error-boundary/ErrorBoundary'
 
 // ** Spinner Import
 
@@ -117,43 +118,45 @@ const App = (props: ExtendedAppProps) => {
   const guestGuard = Component.guestGuard ?? false
 
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>{`${themeConfig.templateName}`}</title>
-        <meta name='description' content={`${themeConfig.templateName} Nasiya`} />
-        <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1, viewport-fit=cover'
-        />
-      </Head>
+    <ErrorBoundary>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>{`${themeConfig.templateName}`}</title>
+          <meta name='description' content={`${themeConfig.templateName} Nasiya`} />
+          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+          <meta name='viewport' content='initial-scale=1, width=device-width' />
+          <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1, viewport-fit=cover'
+          />
+        </Head>
 
-      <AuthProvider>
-        <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-          <SettingsConsumer>
-            {({ settings }) => {
-              return (
-                <ThemeComponent settings={settings}>
-                  <LanguageProvider>
-                    <RouteGuard requireAuth={authGuard} guestOnly={guestGuard}>
-                      {getLayout(<Component {...pageProps} />)}
-                    </RouteGuard>
-                  </LanguageProvider>
-                  <Toaster
-                    position={settings.toastPosition}
-                    toastOptions={{
-                      className: 'react-hot-toast',
-                      style: { zIndex: 9999, marginTop: 'env(safe-area-inset-top)' }
-                    }}
-                  />
-                </ThemeComponent>
-              )
-            }}
-          </SettingsConsumer>
-        </SettingsProvider>
-      </AuthProvider>
-    </CacheProvider>
+        <AuthProvider>
+          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+            <SettingsConsumer>
+              {({ settings }) => {
+                return (
+                  <ThemeComponent settings={settings}>
+                    <LanguageProvider>
+                      <RouteGuard requireAuth={authGuard} guestOnly={guestGuard}>
+                        {getLayout(<Component {...pageProps} />)}
+                      </RouteGuard>
+                    </LanguageProvider>
+                    <Toaster
+                      position={settings.toastPosition}
+                      toastOptions={{
+                        className: 'react-hot-toast',
+                        style: { zIndex: 9999, marginTop: 'env(safe-area-inset-top)' }
+                      }}
+                    />
+                  </ThemeComponent>
+                )
+              }}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </AuthProvider>
+      </CacheProvider>
+    </ErrorBoundary>
   )
 }
 

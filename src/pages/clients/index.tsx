@@ -22,26 +22,30 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
-import useFetch from 'src/hooks/useFetch'
 import IClient from 'src/@core/types/client'
 import env from 'src/configs/env'
 import formatDate from 'src/@core/utils/format-date'
 import resolveStatus from 'src/@core/utils/table-utils'
-import { api } from 'src/configs/api'
 import Form from 'src/@core/components/DialogForm'
 import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
+import { useClients, useDeleteClient } from 'src/hooks/api'
+import toast from 'react-hot-toast'
 
 const Clients = () => {
   const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
-  const { data } = useFetch<{ data: IClient[] }>('/api/clients')
+  const { clients, loading, refetch } = useClients({ page: 1, per_page: 100 })
+  const { deleteClient, loading: deleting } = useDeleteClient()
+  
+  const data = { data: clients }
 
   const handleDelete = async (id: number) => {
-    const res = await api(`/api/clients/${id}`, {
-      method: 'DELETE'
-    })
-
-    console.log(res)
+    try {
+      await deleteClient(id)
+      refetch() // Refresh the list after deletion
+    } catch (error) {
+      // Error is already handled by the hook
+    }
   }
 
   const initialColumns: GridColDef[] = [
@@ -233,8 +237,8 @@ const Clients = () => {
   }
 
   const handleSearch = async () => {
-    console.log(filters)
     // Backend interaction goes here
+    // TODO: Implement search functionality with filters
   }
 
   return (

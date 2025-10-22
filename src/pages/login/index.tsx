@@ -42,6 +42,9 @@ import { useRouter } from 'next/router'
 import { Permission } from 'src/@core/utils/permission-checker'
 import { IMerchant, TenantUser } from 'src/context/types'
 import { ErrorResponse } from 'src/@core/types/response'
+import { storage } from 'src/@core/utils/storage'
+import { authService } from 'src/services/authService'
+import { LoginResponse } from 'src/@core/types/auth'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -71,13 +74,13 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const defaultValues: FormData = {
-  email: 'employee.manager@example.com',
-  password: 'employee12345',
-  company_schema: 'techstore'
+  phone: '',
+  password: '',
+  company_schema: ''
 }
 
 interface FormData {
-  email: string
+  phone: string
   password: string
   company_schema: string
 }
@@ -121,21 +124,18 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (data: FormData) => {
-    const { email, password, company_schema } = data
+    const { phone, password, company_schema } = data
 
     try {
-      const res: Response = await api(`/api/employee/login?tenant=${company_schema}`, {
-        method: 'POST',
-        body: JSON.stringify({
-          email,
-          password,
-          company_schema
-        })
+      const res: LoginResponse = await authService.employeeLogin({
+        phone,
+        password,
+        company_schema
       })
 
-      if ('status' in res && !res.status) {
+      if ('success' in res && !res.success) {
         if (!res.errors) {
-          toast.error('Nimadir xato ketti')
+          toast.error(t['login-error'] || 'Something went wrong')
           return
         }
 
@@ -144,7 +144,7 @@ const LoginPage = () => {
             if (!value.length) {
               setError(key as keyof FormData, {
                 type: 'manual',
-                message: 'Maydonlar majburiy'
+                message: t['required-fields'] || 'Required fields'
               })
             }
           })
@@ -158,12 +158,12 @@ const LoginPage = () => {
             })
           })
         }
-      } else {
-        auth.setUser(res.data.employee)
+      } else if (res.success && res.data) {
+        auth.setUser(res.data.employee || res.data.user)
         auth.setPermissions(res.data.permissions)
-        localStorage.setItem(STORAGE_KEYS.token, res.data.token)
-        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.data.permissions))
-        localStorage.setItem(STORAGE_KEYS.user_type, 'tenant')
+        storage.setItem(STORAGE_KEYS.token, res.data.token)
+        storage.setJSON(STORAGE_KEYS.permissions, res.data.permissions)
+        storage.setItem(STORAGE_KEYS.user_type, res.data.type || 'tenant')
         router.push('/dashboard')
       }
     } catch (error: any) {
@@ -182,7 +182,7 @@ const LoginPage = () => {
 
       if (typeof err.status === 'number') {
         if (err.status === 401) {
-          setError('email', {
+          setError('phone', {
             type: 'manual',
             message: error.message
           })
@@ -328,10 +328,10 @@ const LoginPage = () => {
                   )}
                 />
               </Box>
-              {/* Email */}
+              {/* Phone */}
               <Box sx={{ mb: 6 }}>
                 <Controller
-                  name='email'
+                  name='phone'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
@@ -339,12 +339,12 @@ const LoginPage = () => {
                       fullWidth
                       value={value}
                       onBlur={onBlur}
-                      label={t.login.email}
+                      label={t.login['no-phone'] || 'Phone'}
                       onChange={onChange}
-                      id='auth-login-v2-email'
-                      error={Boolean(errors.email)}
-                      {...(errors.email && { helperText: errors.email.message })}
-                      type='email'
+                      id='auth-login-v2-phone'
+                      error={Boolean(errors.phone)}
+                      {...(errors.phone && { helperText: errors.phone.message })}
+                      type='tel'
                     />
                   )}
                 />

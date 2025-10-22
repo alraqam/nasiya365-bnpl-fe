@@ -1,3 +1,5 @@
+import { logger } from './logger'
+
 export interface Permission {
   action: string
   subject: string
@@ -62,7 +64,7 @@ export class PermissionChecker {
   canAccessRoute(route: string): boolean {
     const requiredPermission = this.getRoutePermission(route)
     if (!requiredPermission) {
-      console.warn(`No permission defined for route: ${route}. Allowing access.`)
+      logger.warn(`No permission defined for route: ${route}. Allowing access.`)
       return true
     }
     return this.hasPermission(requiredPermission.action, requiredPermission.subject)

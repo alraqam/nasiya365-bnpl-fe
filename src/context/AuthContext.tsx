@@ -6,6 +6,8 @@ import { AuthValuesType, CentralUser, TenantUser, User, UserType } from './types
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { api } from 'src/configs/api'
 import { Permission } from 'src/@core/utils/permission-checker'
+import { storage } from 'src/@core/utils/storage'
+import { logger } from 'src/@core/utils/logger'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -32,23 +34,20 @@ const AuthProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
-  console.log(userType)
-  console.log(user)
-
   const fetchUser = useCallback(async () => {
     setLoading(true)
     try {
       if (userType === 'central') {
-        const res = (await api('/api/user')) as CentralUser
-        setUser(res)
+        const response = await api<{ data: CentralUser }>('/api/central/me')
+        setUser(response.data)
       }
 
       if (userType === 'tenant') {
-        const res = (await api('/api/employee')) as TenantUser
-        setUser(res)
+        const response = await api<{ data: TenantUser }>('/api/employee/me')
+        setUser(response.data)
       }
     } catch (error) {
-      console.error('Failed to fetch user:', error)
+      logger.error('Failed to fetch user:', error)
       setUser(null)
     } finally {
       setLoading(false)
@@ -56,13 +55,11 @@ const AuthProvider = ({ children }: Props) => {
   }, [userType])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem(STORAGE_KEYS.token)
-      const storedUserType = localStorage.getItem(STORAGE_KEYS.user_type)
+    const storedToken = storage.getItem(STORAGE_KEYS.token)
+    const storedUserType = storage.getItem(STORAGE_KEYS.user_type)
 
-      setToken(storedToken)
-      setUserType(storedUserType as UserType)
-    }
+    setToken(storedToken)
+    setUserType(storedUserType as UserType)
     setLoading(false)
   }, [])
 
@@ -72,10 +69,8 @@ const AuthProvider = ({ children }: Props) => {
       fetchUser()
     }
 
-    if (typeof window !== 'undefined') {
-      const cachedPermissions = JSON.parse(localStorage.getItem(STORAGE_KEYS.permissions) || '[]') as Permission[]
-      setPermissions(cachedPermissions)
-    }
+    const cachedPermissions = storage.getJSON<Permission[]>(STORAGE_KEYS.permissions) || []
+    setPermissions(cachedPermissions)
   }, [token, user, fetchUser])
 
   const getAllActions = (subject: string) => {

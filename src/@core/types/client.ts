@@ -1,32 +1,58 @@
-export default interface IClient {
+/**
+ * Client types
+ * Generated from Nasiya BNPL API - Clients module
+ */
+
+export interface Client {
   id: number
-  name: string
-  surname: string
-  middle_name: null | string
-  passport: null | string
-  place_of_issue: null | string
-  date_of_issue: null | string
-  file_passport: 'undefined' | string
-  date_of_birth: null | string
-  gender: number
-  place_of_birth: null | string
-  place_of_registration: null | string
-  place_of_residence: null | string
-  workplace: null | string
-  specialization: null | string
-  family_status: null | string
-  number_of_children: null | string
-  phones: string
-  email: null | string
-  file: 'undefined' | string
-  status: number
-  bail_name: null | string
-  bail_phone: null | string
-  guarantor: null | string
-  passport_status: null | string
+  first_name: string
+  last_name: string
+  phone: string
+  passport: string
+  address: string
   created_at: string
   updated_at: string
-  file_url: string
-  file_passport_url: string
-  phone: string[]
+  status?: 'active' | 'inactive' | 'blocked'
+  email?: string
+  date_of_birth?: string
+  place_of_issue?: string
+  date_of_issue?: string
+  file_passport?: string
+  place_of_birth?: string
+  place_of_registration?: string
+  place_of_residence?: string
+  workplace?: string
+  specialization?: string
+  gender?: 0 | 1 // 0: female, 1: male
+  middle_name?: string
+}
+
+export interface CreateClientRequest {
+  first_name: string
+  last_name: string
+  phone: string
+  passport: string
+  address: string
+  email?: string
+  date_of_birth?: string
+  gender?: 0 | 1
+  middle_name?: string
+  place_of_issue?: string
+  date_of_issue?: string
+  place_of_birth?: string
+  place_of_registration?: string
+  place_of_residence?: string
+  workplace?: string
+  specialization?: string
+}
+
+export type UpdateClientRequest = Partial<CreateClientRequest>
+
+export interface ClientQueryParams {
+  page?: number
+  per_page?: number
+  search?: string
+  status?: string
+  passport?: string
+  phone?: string
 }
