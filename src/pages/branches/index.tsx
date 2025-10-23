@@ -47,7 +47,7 @@ const Branches = () => {
 
   const [filters, setFilters] = useState(initialFilters)
 
-  const { data } = useFetch<Response[]>('http://localhost:4000/branches', true, false)
+  const { data } = useFetch<Response[]>('/api/branches')
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 50, flex: 1 },

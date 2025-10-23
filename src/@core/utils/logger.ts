@@ -39,9 +39,9 @@ class Logger {
     }
   }
 
-  log(...args: any[]): void {
-    this.log('log', ...args)
-  }
+  // log(...args: any[]): void {
+  //   this.log('log', ...args)
+  // }
 
   info(...args: any[]): void {
     this.log('info', ...args)
@@ -74,4 +74,3 @@ class Logger {
 }
 
 export const logger = new Logger()
-

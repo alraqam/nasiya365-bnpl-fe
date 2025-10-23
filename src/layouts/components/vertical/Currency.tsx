@@ -12,16 +12,17 @@ import {
   InputAdornment,
   Stack,
   styled,
-  Theme,
   Typography
 } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
+import type { Currency } from 'src/@core/types/currency'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
+import { currencyService } from 'src/services/currencyService'
 
 type Response = {
   currency: string
@@ -45,12 +46,22 @@ const Currency = () => {
   const { setModal, modal, clearModal } = useModal()
   const { t } = useLang()
 
+  const [data, setData] = useState<Currency[]>([])
+
   const [form, setForm] = useState(initialForm)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   const [hasSent, setHasSent] = useState(false)
 
-  const { data } = useFetch<Response>('http://localhost:4000/currency', true, false)
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await currencyService.getAll()
+      setData(data.data)
+      console.log(data)
+    }
+
+    fetchData()
+  }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({

@@ -78,11 +78,10 @@ const Calculator = () => {
   const [tenure, setTenure] = useState(2)
   const [percentage, setPercentage] = useState(2)
 
-  const { data: plans } = useFetch<{ id: number; tenure: number; percentage: number; name: string }[]>(
-    'http://localhost:4000/plans',
-    true,
-    false
-  )
+  // tenure, percentage, name
+
+  const { data: plans } =
+    useFetch<{ id: number; tenure: number; percentage: number; name: string }[]>('/api/bnpl-plans')
   const { data: products, fetchData: fetchProducts } = useDebouncedFetch<
     { id: number; model: string; provider: string; price: number }[]
   >(`http://localhost:4000/products?model_like=${form.model}`, {

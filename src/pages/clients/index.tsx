@@ -22,7 +22,6 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
-import IClient from 'src/@core/types/client'
 import env from 'src/configs/env'
 import formatDate from 'src/@core/utils/format-date'
 import resolveStatus from 'src/@core/utils/table-utils'
@@ -34,19 +33,6 @@ import toast from 'react-hot-toast'
 const Clients = () => {
   const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
-  const { clients, loading, refetch } = useClients({ page: 1, per_page: 100 })
-  const { deleteClient, loading: deleting } = useDeleteClient()
-  
-  const data = { data: clients }
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteClient(id)
-      refetch() // Refresh the list after deletion
-    } catch (error) {
-      // Error is already handled by the hook
-    }
-  }
 
   const initialColumns: GridColDef[] = [
     // { field: 'id', headerName: 'ID', flex: 1, minWidth: 10 },
@@ -211,7 +197,7 @@ const Clients = () => {
   ]
 
   const [paginationModel, setPaginationModel] = useState({
-    page: 0,
+    page: 1,
     pageSize: 10
   })
   const {
@@ -228,6 +214,20 @@ const Clients = () => {
     passport: '',
     phone: ''
   })
+
+  const { clients, loading, refetch } = useClients({ page: paginationModel.page, per_page: paginationModel.pageSize })
+  const { deleteClient, loading: deleting } = useDeleteClient()
+
+  const data = { data: clients }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteClient(id)
+      refetch() // Refresh the list after deletion
+    } catch (error) {
+      // Error is already handled by the hook
+    }
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({
@@ -361,27 +361,27 @@ const Clients = () => {
           <Form>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.client.client}</Typography>
-              <CustomAutocomplete
+              {/* <CustomAutocomplete
                 placeholder={t.forms.client.name}
                 freeSolo
                 options={data?.data ?? []}
-                getOptionLabel={option => (typeof option === 'string' ? option : option.name ?? '')}
+                getOptionLabel={option => (typeof option === 'string' ? option : option.first_name ?? '')}
                 renderInput={params => <CustomTextField {...params} />}
                 isOptionEqualToValue={(option, value) =>
                   typeof option !== 'string' && typeof value !== 'string' && option.id === value.id
                 }
                 renderOption={(props, option) => (
                   <li {...props} key={typeof option === 'string' ? option : option.id}>
-                    {typeof option === 'string' ? option : option.name}
+                    {typeof option === 'string' ? option : option.first_name}
                   </li>
                 )}
                 onChange={(event, value) => {
                   setFilters({
                     ...filters,
-                    name: typeof value === 'string' ? value : value?.name ?? ''
+                    name: typeof value === 'string' ? value : value?.first_name ?? ''
                   })
                 }}
-              />
+              /> */}
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.client.passport}</Typography>

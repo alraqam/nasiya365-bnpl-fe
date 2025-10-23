@@ -40,8 +40,10 @@ import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
 import { Permission } from 'src/@core/utils/permission-checker'
-import { CentralUser } from 'src/context/types'
 import { ErrorResponse } from 'src/@core/types/response'
+import { authService } from 'src/services/authService'
+import { CentralLoginResponse } from 'src/@core/types/auth'
+import useHomeRoute from 'src/layouts/components/acl/useHomeRoute'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -71,21 +73,13 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const defaultValues: FormData = {
-  phone1: '1111111',
-  password: 'admin12345'
+  phone: '+998901234567',
+  password: 'password123'
 }
 
 interface FormData {
-  phone1: string
+  phone: string
   password: string
-}
-
-interface Response {
-  token: string
-  token_type: string
-  user: CentralUser
-  permissions: Permission[]
-  errors?: Record<keyof FormData, string[]>
 }
 
 const AdminLogin = () => {
@@ -100,6 +94,7 @@ const AdminLogin = () => {
   const bgColors = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const homeRoute = useHomeRoute()
 
   // ** Vars
   const { skin } = settings
@@ -115,16 +110,10 @@ const AdminLogin = () => {
   })
 
   const onSubmit = async (data: FormData) => {
-    const { phone1, password } = data
+    const { phone, password } = data
 
     try {
-      const res: Response = await api('/api/central/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          phone1: phone1,
-          password: password
-        })
-      })
+      const res: CentralLoginResponse & { errors?: ErrorResponse } = await authService.centralLogin({ phone, password })
 
       if ('status' in res && !res.status) {
         if (!res.errors) {
@@ -152,34 +141,29 @@ const AdminLogin = () => {
           })
         }
       } else {
-        auth.setUser(res.user)
-        auth.setPermissions(res.permissions)
-        localStorage.setItem(STORAGE_KEYS.token, res.token)
-        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.permissions))
+        auth.setUser(res.data.user)
+        auth.setPermissions(res.data.user.permission_groups)
+        localStorage.setItem(STORAGE_KEYS.token, res.data.token)
+        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.data.user.permission_groups))
         localStorage.setItem(STORAGE_KEYS.user_type, 'central')
-        router.push('/dashboard')
+        router.push(homeRoute)
       }
     } catch (error: any) {
-      if (!error.status && error.errors) {
-        if ('phone1' in error.errors) {
-          setError('phone1', {
+      if ('errors' in error && typeof error.errors === 'object') {
+        Object.entries(error.errors).forEach(([key, value]) => {
+          setError(key as keyof FormData, {
             type: 'manual',
-            message: error.errors.phone1[0]
+            message: value as string[][0]
           })
-        }
+        })
+      }
 
-        if ('password' in error.errors) {
-          setError('password', {
-            type: 'manual',
-            message: error.errors.password[0]
-          })
-        }
+      if ('error_code' in error) {
+        toast.error("Juda ko'p urinishlar. Birozdan keyin qayta urinib ko'ring")
+      }
 
-        if (Array.isArray(error.errors) && error.errors.includes('Unauthorized')) {
-          toast.error(error.errors[0])
-        }
-      } else {
-        toast.error('Nimadir xato ketti')
+      if ('message' in error && error.message === 'Invalid credentials') {
+        toast.error(error.message)
       }
     }
   }
@@ -235,7 +219,7 @@ const AdminLogin = () => {
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 6 }}>
                 <Controller
-                  name='phone1'
+                  name='phone'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
@@ -247,8 +231,8 @@ const AdminLogin = () => {
                       onBlur={onBlur}
                       onChange={onChange}
                       placeholder='admin@vuexy.com'
-                      error={Boolean(errors.phone1)}
-                      {...(errors.phone1 && { helperText: errors.phone1.message })}
+                      error={Boolean(errors.phone)}
+                      {...(errors.phone && { helperText: errors.phone.message })}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position='start'>

@@ -103,6 +103,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/cleave.js": "1.4.7",
     "@types/draft-js": "0.11.10",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "8.5.9",
     "@types/node": "18.16.3",
     "@types/nprogress": "0.2.0",

@@ -24,7 +24,7 @@ interface Response {
 const Home = () => {
   const { t } = useLang()
 
-  const { data } = useFetch<Response>('http://localhost:4000/dashboard', true, false)
+  const { data } = useFetch<Response>('/api/dashboard', true, false)
 
   return (
     <Stack flexDirection='column' spacing={12}>

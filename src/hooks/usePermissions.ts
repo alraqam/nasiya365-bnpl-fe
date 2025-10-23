@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { useAuth } from './useAuth'
-import { PermissionChecker } from 'src/@core/utils/permission-checker'
+import { createPermissionChecker } from 'src/@core/utils/permission-checker'
 
 export const usePermissions = () => {
   const { permissions } = useAuth()
 
   // Create permission checker instance
   const checker = useMemo(() => {
-    return new PermissionChecker(permissions)
+    return createPermissionChecker(permissions)
   }, [permissions])
 
   return {

@@ -5,14 +5,20 @@
  */
 
 import { api } from 'src/configs/api'
-import { LoginRequest, LoginResponse, RegisterRequest, AuthUser } from 'src/@core/types/auth'
+import {
+  LoginRequest,
+  RegisterRequest,
+  AuthUser,
+  CentralLoginResponse,
+  EmployeeLoginResponse
+} from 'src/@core/types/auth'
 
 export const authService = {
   /**
    * Central user login
    */
   centralLogin: (credentials: LoginRequest) =>
-    api<LoginResponse>('/api/central/login', {
+    api<CentralLoginResponse>('/api/central/login', {
       method: 'POST',
       body: JSON.stringify(credentials)
     }),
@@ -21,7 +27,7 @@ export const authService = {
    * Central user registration
    */
   centralRegister: (data: RegisterRequest) =>
-    api<LoginResponse>('/api/central/register', {
+    api<CentralLoginResponse>('/api/central/register', {
       method: 'POST',
       body: JSON.stringify(data)
     }),
@@ -37,13 +43,16 @@ export const authService = {
   /**
    * Employee login with tenant schema
    */
-  employeeLogin: (credentials: LoginRequest & { company_schema: string }) =>
-    api<LoginResponse>(`/api/employee/login?tenant=${credentials.company_schema}`, {
+  employeeLogin: (credentials: LoginRequest) =>
+    api<EmployeeLoginResponse>(`/api/employee/login`, {
       method: 'POST',
       body: JSON.stringify({
         phone: credentials.phone,
         password: credentials.password
-      })
+      }),
+      headers: {
+        'X-Tenant-ID': 'demo'
+      }
     }),
 
   /**
@@ -70,4 +79,3 @@ export const authService = {
       method: 'GET'
     })
 }
-

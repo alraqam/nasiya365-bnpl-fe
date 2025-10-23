@@ -13,7 +13,10 @@ interface FetchOptions extends RequestInit {
 }
 
 interface RequestInterceptor {
-  onRequest?: (url: string, options: FetchOptions) => Promise<{ url: string; options: FetchOptions }> | { url: string; options: FetchOptions }
+  onRequest?: (
+    url: string,
+    options: FetchOptions
+  ) => Promise<{ url: string; options: FetchOptions }> | { url: string; options: FetchOptions }
   onError?: (error: Error) => void
 }
 
@@ -43,11 +46,7 @@ class ApiClient {
   /**
    * Make an API request with retry logic
    */
-  async request<T = any>(
-    endpoint: string,
-    options: FetchOptions = {},
-    withBaseURL = true
-  ): Promise<T> {
+  async request<T = any>(endpoint: string, options: FetchOptions = {}, withBaseURL = true): Promise<T> {
     const { retry = 0, retryDelay = 1000, ...fetchOptions } = options
 
     let lastError: Error | null = null
@@ -73,11 +72,7 @@ class ApiClient {
   /**
    * Execute a single request
    */
-  private async executeRequest<T>(
-    endpoint: string,
-    options: RequestInit,
-    withBaseURL: boolean
-  ): Promise<T> {
+  private async executeRequest<T>(endpoint: string, options: RequestInit, withBaseURL: boolean): Promise<T> {
     let url = `${withBaseURL ? BASE_URL : ''}${endpoint}`
     let requestOptions: FetchOptions = { ...options }
 
@@ -88,7 +83,8 @@ class ApiClient {
     requestOptions.headers = {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(requestOptions.headers || {})
+      ...(requestOptions.headers || {}),
+      'X-Tenant-ID': 'demo'
     }
 
     // Apply request interceptors
@@ -135,7 +131,7 @@ class ApiClient {
       const errorBody = await response.json().catch(() => ({
         message: `HTTP ${response.status}: ${response.statusText}`
       }))
-      
+
       const error = parseApiError({
         status: response.status,
         ...errorBody
@@ -194,31 +190,8 @@ class ApiClient {
 // Create singleton instance
 const apiClient = new ApiClient()
 
-// Add default interceptors
-apiClient.addResponseInterceptor({
-  onResponse: (response) => {
-    // Handle 401 - Unauthorized
-    if (response.status === 401) {
-      // Clear auth data
-      storage.removeItem(STORAGE_KEYS.token)
-      storage.removeItem(STORAGE_KEYS.permissions)
-      storage.removeItem(STORAGE_KEYS.user_type)
-      
-      // Redirect to login if not already there
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
-    }
-    return response
-  }
-})
-
 // Export the main API function for backward compatibility
-export async function api<T = any>(
-  endpoint: string,
-  options: FetchOptions = {},
-  withBaseURL = true
-): Promise<T> {
+export async function api<T = any>(endpoint: string, options: FetchOptions = {}, withBaseURL = true): Promise<T> {
   return apiClient.request<T>(endpoint, options, withBaseURL)
 }
 

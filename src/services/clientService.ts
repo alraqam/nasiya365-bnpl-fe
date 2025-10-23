@@ -5,12 +5,7 @@
  */
 
 import { api, apiClient } from 'src/configs/api'
-import {
-  Client,
-  CreateClientRequest,
-  UpdateClientRequest,
-  ClientQueryParams
-} from 'src/@core/types/client'
+import { Client, CreateClientRequest, UpdateClientRequest, ClientQueryParams } from 'src/@core/types/client'
 import { PaginatedResponse } from 'src/@core/types/api'
 
 export const clientService = {
@@ -27,34 +22,28 @@ export const clientService = {
     if (params?.phone) query.append('phone', params.phone)
 
     const queryString = query.toString()
-    return api<PaginatedResponse<Client>>(
-      `/api/central/clients${queryString ? '?' + queryString : ''}`
-    )
+    return api<PaginatedResponse<Client>>(`/api/clients${queryString ? '?' + queryString : ''}`)
   },
 
   /**
    * Get a single client by ID
    */
-  getById: (id: number) =>
-    api<{ data: Client }>(`/api/central/clients/${id}`),
+  getById: (id: number) => api<{ data: Client }>(`/api/clients/${id}`),
 
   /**
    * Create a new client
    */
-  create: (data: CreateClientRequest) =>
-    apiClient.post<{ data: Client }>('/api/central/clients', data),
+  create: (data: CreateClientRequest) => apiClient.post<{ data: Client }>('/api/clients', data),
 
   /**
    * Update an existing client
    */
-  update: (id: number, data: UpdateClientRequest) =>
-    apiClient.put<{ data: Client }>(`/api/central/clients/${id}`, data),
+  update: (id: number, data: UpdateClientRequest) => apiClient.put<{ data: Client }>(`/api/clients/${id}`, data),
 
   /**
    * Delete a client
    */
-  delete: (id: number) =>
-    apiClient.delete(`/api/central/clients/${id}`),
+  delete: (id: number) => apiClient.delete(`/api/clients/${id}`),
 
   /**
    * Search clients
@@ -62,4 +51,3 @@ export const clientService = {
   search: (searchTerm: string, params?: Omit<ClientQueryParams, 'search'>) =>
     clientService.getAll({ ...params, search: searchTerm })
 }
-

@@ -54,7 +54,8 @@ const GeneralChart = () => {
     setAnchorEl(null)
   }
 
-  const { data: sales } = useFetch<Response>('http://localhost:4000/sales', true, false)
+  const { data: sales } = useFetch<Response>('/api/dashboard')
+  console.log(sales)
 
   const selectedMonth = MONTHS[month]
 

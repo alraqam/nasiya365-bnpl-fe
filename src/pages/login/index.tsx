@@ -40,11 +40,11 @@ import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
 import { Permission } from 'src/@core/utils/permission-checker'
-import { IMerchant, TenantUser } from 'src/context/types'
 import { ErrorResponse } from 'src/@core/types/response'
 import { storage } from 'src/@core/utils/storage'
 import { authService } from 'src/services/authService'
-import { LoginResponse } from 'src/@core/types/auth'
+import { EmployeeLoginResponse } from 'src/@core/types/auth'
+import useHomeRoute from 'src/layouts/components/acl/useHomeRoute'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -74,27 +74,13 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const defaultValues: FormData = {
-  phone: '',
-  password: '',
-  company_schema: ''
+  phone: '+998901000001',
+  password: 'admin123'
 }
 
 interface FormData {
   phone: string
   password: string
-  company_schema: string
-}
-
-interface Response {
-  message: string
-  data: {
-    employee: TenantUser
-    merchant: IMerchant
-    token: string
-    type: string
-    permissions: Permission[]
-  }
-  errors?: Record<keyof FormData, string[]>
 }
 
 const LoginPage = () => {
@@ -109,6 +95,7 @@ const LoginPage = () => {
   const bgColors = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const homeRoute = useHomeRoute()
 
   // ** Vars
   const { skin } = settings
@@ -124,13 +111,12 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (data: FormData) => {
-    const { phone, password, company_schema } = data
+    const { phone, password } = data
 
     try {
-      const res: LoginResponse = await authService.employeeLogin({
+      const res: EmployeeLoginResponse & { errors?: ErrorResponse } = await authService.employeeLogin({
         phone,
-        password,
-        company_schema
+        password
       })
 
       if ('success' in res && !res.success) {
@@ -158,12 +144,12 @@ const LoginPage = () => {
             })
           })
         }
-      } else if (res.success && res.data) {
-        auth.setUser(res.data.employee || res.data.user)
-        auth.setPermissions(res.data.permissions)
+      } else if (res.status && res.data) {
+        auth.setUser(res.data.employee)
+        auth.setPermissions(res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.token, res.data.token)
-        storage.setJSON(STORAGE_KEYS.permissions, res.data.permissions)
-        storage.setItem(STORAGE_KEYS.user_type, res.data.type || 'tenant')
+        storage.setJSON(STORAGE_KEYS.permissions, res.data.employee.permission_groups)
+        storage.setItem(STORAGE_KEYS.user_type, 'tenant')
         router.push('/dashboard')
       }
     } catch (error: any) {
@@ -189,13 +175,6 @@ const LoginPage = () => {
           setError('password', {
             type: 'manual',
             message: error.message
-          })
-        }
-
-        if (err.status === 404) {
-          setError('company_schema', {
-            type: 'manual',
-            message: error.error
           })
         }
       }
@@ -251,83 +230,6 @@ const LoginPage = () => {
               <Typography sx={{ color: 'text.secondary' }}>{t['welcome-description']}</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-              {/* Phone */}
-              {/* <Box sx={{ mb: 6 }}>
-                <Controller
-                  name='phone1'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <CustomTextField
-                      fullWidth
-                      autoFocus
-                      label={t.login['no-phone']}
-                      value={value}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                      placeholder='admin@vuexy.com'
-                      error={Boolean(errors.phone1)}
-                      {...(errors.phone1 && { helperText: errors.phone1.message })}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position='start'>
-                            <div
-                              style={{
-                                fontSize: 14,
-                                pointerEvents: 'none',
-                                lineHeight: '44px',
-                                height: '44px',
-                                color: '#000'
-                              }}
-                            >
-                              +998
-                            </div>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  )}
-                />
-              </Box> */}
-
-              {/* Tenant (company_schema) */}
-              <Box sx={{ mb: 6 }}>
-                <Controller
-                  name='company_schema'
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <CustomTextField
-                      fullWidth
-                      autoFocus
-                      label={t.login['no-subdomain']}
-                      value={value}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                      placeholder='techstore'
-                      error={Boolean(errors.company_schema)}
-                      {...(errors.company_schema && { helperText: errors.company_schema.message })}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position='end'>
-                            <div
-                              style={{
-                                fontSize: 14,
-                                pointerEvents: 'none',
-                                lineHeight: '44px',
-                                height: '44px',
-                                color: '#000'
-                              }}
-                            >
-                              .nasiya365.uz
-                            </div>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  )}
-                />
-              </Box>
               {/* Phone */}
               <Box sx={{ mb: 6 }}>
                 <Controller

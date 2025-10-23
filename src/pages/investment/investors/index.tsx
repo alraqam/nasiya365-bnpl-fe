@@ -12,7 +12,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import InputMask from 'react-input-mask'
 import Form from 'src/@core/components/DialogForm'
 import useFetch from 'src/hooks/useFetch'
-import IInvestor from 'src/@core/types/investor'
+import { Investor } from 'src/@core/types/investor'
 import setParams from 'src/@core/utils/set-params'
 import usePagination from 'src/hooks/usePagination'
 
@@ -32,13 +32,13 @@ const initialFilters = {
 } as const
 
 const Investors = () => {
-  const { modal, clearModal,setModal} = useModal()
+  const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
   const [url, setUrl] = useState('/api/investors')
 
-  const { data, fetchData } = useFetch<Response<IInvestor[]>>(url)
+  const { data, fetchData } = useFetch<Response<Investor[]>>(url)
   const { current_page, per_page } = data || {}
   const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
@@ -163,18 +163,18 @@ const Investors = () => {
               {t.reload}
             </Button>
             <Button
-                                        variant='tonal'
-                                        sx={theme => ({
-                                          gap: 2,
-                                          backgroundColor: '#2F2B3D0F',
-                                          color: theme.palette.text.primary,
-                                          '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
-                                        })}
-                                        onClick={() => setModal('search-investors')}
-                                      >
-                                        <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
-                                        {t.filter}
-                                      </Button>
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary,
+                '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
+              })}
+              onClick={() => setModal('search-investors')}
+            >
+              <Icon svg='/icons/filter.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t.filter}
+            </Button>
 
             <Link href='/investment/investors/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
