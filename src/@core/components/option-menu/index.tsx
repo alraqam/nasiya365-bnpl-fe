@@ -66,9 +66,15 @@ const OptionsMenu = (props: OptionsMenuType) => {
 
   return (
     <>
-      <IconButton aria-haspopup='true' onClick={handleClick} {...iconButtonProps} sx={{ borderRadius: '999px' }}>
-        {customTrigger ? customTrigger : icon ? icon : <Icon icon='tabler:dots-vertical' {...iconProps} />}
-      </IconButton>
+      {customTrigger ? (
+        <Box onClick={handleClick} sx={{ display: 'inline-flex' }}>
+          {customTrigger}
+        </Box>
+      ) : (
+        <IconButton aria-haspopup='true' onClick={handleClick} {...iconButtonProps} sx={{ borderRadius: '999px' }}>
+          {icon ? icon : <Icon icon='tabler:dots-vertical' {...iconProps} />}
+        </IconButton>
+      )}
       <Menu
         keepMounted
         anchorEl={anchorEl}

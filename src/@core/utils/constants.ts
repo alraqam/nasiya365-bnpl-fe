@@ -2,7 +2,12 @@ export const STORAGE_KEYS = {
   token: 'token',
   lang: 'nasiya-lang',
   permissions: 'nasiya-permissions',
+<<<<<<< HEAD
   user_type: 'user-type'
+=======
+  user_type: 'user-type' as UserType,
+  tenant_id: 'tenant-id'
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 }
 
 export const MONTHS = [

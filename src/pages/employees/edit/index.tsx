@@ -17,6 +17,7 @@ import useFetch from 'src/hooks/useFetch'
 import IRole from 'src/@core/types/role'
 import IEmployee from 'src/@core/types/employee'
 import CollapsibleSection from 'src/@core/components/CollapsibleSection'
+import { ApiResponse } from 'src/@core/types/api'
 
 const CreateEmployee = () => {
   const { t } = useLang()
@@ -26,11 +27,11 @@ const CreateEmployee = () => {
   const [form, setForm] = useState(initialEmployeeForm)
   const [loading, setLoading] = useState(false)
 
-  const { data: roles } = useFetch<Response<IRole[]>>('/api/role')
+  const { data: roles } = useFetch<ApiResponse<IRole[]>>('/api/tenant-roles')
   const { data } = useFetch<{
     status: boolean
     data: IEmployee
-  }>(`/api/admins/${id}`)
+  }>(`/api/employees/${id}`)
 
   useEffect(() => {
     setForm({
@@ -64,7 +65,7 @@ const CreateEmployee = () => {
   const onSubmit = async () => {
     try {
       setLoading(true)
-      const res = (await api(`/api/admins/${id}`, {
+      const res = (await api(`/api/employees/${id}`, {
         method: 'PUT',
         body: JSON.stringify({
           ...form,
@@ -88,9 +89,11 @@ const CreateEmployee = () => {
 
   return (
     <Stack sx={{ flexDirection: 'column', gap: 5 }}>
-      <Box display='flex' gap={1}>
-        <Link href='/employees' style={{ textDecoration: 'none' }}>
-          <Title title={t.pages.employees} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
+      <Box display='flex' gap={1} alignItems='center'>
+        <Link href='/employees' passHref legacyBehavior>
+          <Box component='a' sx={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <Title title={t.pages.employees} sx={{ color: '#7F7F7FE5' }} color='#7F7F7FE5' />
+          </Box>
         </Link>
         <Typography variant='h6' color='#7F7F7FE5'>
           /
@@ -143,7 +146,7 @@ const CreateEmployee = () => {
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees['role']}</Typography>
             <CustomTextField select fullWidth value={form.role_id} onChange={handleChange('role_id')}>
-              {roles?.data.data.map(role => (
+              {(roles?.data || []).map(role => (
                 <MenuItem key={role.id} value={role.id}>
                   {role.label}
                 </MenuItem>
@@ -209,12 +212,13 @@ const CreateEmployee = () => {
                 selected={form.date_of_issue}
                 onChange={handleDateChange('date_of_issue')}
                 dateFormat='dd.MM.yyyy'
+                showPopperArrow={false}
                 customInput={
                   <CustomTextField
                     fullWidth
                     InputProps={{
                       endAdornment: (
-                        <InputAdornment position='end'>
+                        <InputAdornment position='end' sx={{ pointerEvents: 'none' }}>
                           <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
                         </InputAdornment>
                       )
@@ -234,12 +238,13 @@ const CreateEmployee = () => {
                 selected={form.date_of_birth}
                 onChange={handleDateChange('date_of_birth')}
                 dateFormat='dd.MM.yyyy'
+                showPopperArrow={false}
                 customInput={
                   <CustomTextField
                     fullWidth
                     InputProps={{
                       endAdornment: (
-                        <InputAdornment position='end'>
+                        <InputAdornment position='end' sx={{ pointerEvents: 'none' }}>
                           <Icon svg='/icons/date.svg' color='#2F2B3D' width={20} height={20} />
                         </InputAdornment>
                       )

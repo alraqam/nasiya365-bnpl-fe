@@ -28,8 +28,18 @@ export function useProducts(params?: ProductQueryParams) {
       setLoading(true)
       setError(null)
       const response = await productService.getAll(params)
-      setProducts(response.data)
-      setMeta(response.meta)
+      // Handle nested response structure: { status, data: { data: [...], meta... } }
+      if (response.data && Array.isArray(response.data.data)) {
+        setProducts(response.data.data)
+        const { data: _data, ...paginationMeta } = response.data
+        setMeta(paginationMeta)
+      } else if (Array.isArray(response.data)) {
+        setProducts(response.data)
+        setMeta(response.meta)
+      } else {
+        setProducts([])
+        setMeta(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load products')
@@ -50,7 +60,18 @@ export function useProducts(params?: ProductQueryParams) {
 
   useEffect(() => {
     fetchProducts()
-  }, [fetchProducts])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    params?.page,
+    params?.per_page,
+    params?.search,
+    params?.category_id,
+    params?.brand_id,
+    params?.is_active,
+    params?.low_stock,
+    params?.price_min,
+    params?.price_max
+  ])
 
   return { products, loading, error, meta, refetch: fetchProducts }
 }
@@ -68,7 +89,18 @@ export function useProduct(id: number) {
       setLoading(true)
       setError(null)
       const response = await productService.getById(id)
-      setProduct(response.data)
+      // Handle nested response structure
+      if (response.data) {
+        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
+          setProduct(response.data.data)
+        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
+          setProduct(response.data)
+        } else {
+          setProduct(null)
+        }
+      } else {
+        setProduct(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load product')
@@ -81,7 +113,8 @@ export function useProduct(id: number) {
     if (id) {
       fetchProduct()
     }
-  }, [id, fetchProduct])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return { product, loading, error, refetch: fetchProduct }
 }
@@ -172,4 +205,5 @@ export function useInventorySummary() {
 
   return { summary, loading, error }
 }
+
 

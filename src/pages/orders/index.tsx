@@ -1,5 +1,5 @@
 import { Button, Stack, Chip, DialogContent, Dialog, DialogTitle, Typography, MenuItem } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
@@ -10,18 +10,8 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
 import Form from 'src/@core/components/DialogForm'
-import useFetch from 'src/hooks/useFetch'
-import usePagination from 'src/hooks/usePagination'
-import IOrder from 'src/@core/types/order'
 import CustomAutocomplete from 'src/@core/components/mui/autocomplete'
-
-interface Response {
-  current_page: string
-  per_page: number
-  total: number
-  last_page: number
-  data: IOrder[]
-}
+import { useOrders } from 'src/hooks/api'
 
 const initialFilters = {
   status: '',
@@ -36,15 +26,15 @@ const Orders = () => {
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
-  const [url, setUrl] = useState('/api/orders/all-orders')
-
-  const { data, fetchData } = useFetch<Response>(url)
-  const { current_page, per_page } = data || {}
-  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
-
-  useEffect(() => {
-    setUrl(`/api/orders/all-orders?page=${paginationModel.page + 1}`)
-  }, [paginationModel.page])
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  })
+  
+  const { orders, loading, refetch, meta } = useOrders({ 
+    page: paginationModel.page + 1, // API uses 1-based indexing, DataGrid uses 0-based
+    per_page: paginationModel.pageSize 
+  })
 
   const initialColumns: GridColDef[] = [
     { field: 'status', headerName: t.forms.orders.status, minWidth: 100, flex: 1 },
@@ -124,7 +114,7 @@ const Orders = () => {
                 color: theme.palette.text.primary,
                 '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
               })}
-              onClick={() => fetchData(`/api/orders/all-orders?page=${paginationModel.page + 1}`)}
+              onClick={() => refetch()}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
@@ -154,7 +144,7 @@ const Orders = () => {
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
             columns={initialColumns}
-            rows={data?.data || []}
+            rows={orders || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
@@ -162,14 +152,15 @@ const Orders = () => {
             slots={{
               footer: () => (
                 <CustomFooter
-                  total={data?.total || 0}
-                  totalPages={data?.last_page || 0}
+                  total={meta?.total || 0}
+                  totalPages={meta?.last_page || 1}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
                 />
               )
             }}
+            loading={loading}
           />
         </Box>
       </Stack>
@@ -207,7 +198,7 @@ const Orders = () => {
               <CustomAutocomplete
                 placeholder={t.forms.client.name}
                 freeSolo
-                options={data?.data ?? []}
+                options={orders ?? []}
                 getOptionLabel={option => (typeof option === 'string' ? option : option.client_name ?? '')}
                 renderInput={params => <CustomTextField {...params} />}
                 isOptionEqualToValue={(option, value) =>

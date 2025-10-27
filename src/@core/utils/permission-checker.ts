@@ -11,36 +11,130 @@ export interface PermissionGroups {
 }
 
 // Route to Permission Mapping
+// Using standardized actions: view, create, edit, delete, and resource-specific actions
 export const routePermissions: Record<string, Permission> = {
-  '/dashboard': { action: 'view', subject: 'clients' },
-  // More on dashboard things
+  // Dashboard
+  '/dashboard': { action: 'view', subject: 'reports' },
 
+  // Clients
   '/clients': { action: 'view', subject: 'clients' },
   '/clients/create': { action: 'create', subject: 'clients' },
   '/clients/edit': { action: 'edit', subject: 'clients' },
   '/clients/[id]': { action: 'view', subject: 'clients' },
 
+  // Orders
   '/orders': { action: 'view', subject: 'orders' },
   '/orders/create': { action: 'create', subject: 'orders' },
   '/orders/edit': { action: 'edit', subject: 'orders' },
+<<<<<<< HEAD
+=======
+  '/orders/[id]': { action: 'view', subject: 'orders' },
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   '/orders/reminder': { action: 'view', subject: 'orders' },
 
+  // Employees
   '/employees': { action: 'view', subject: 'employees' },
   '/employees/create': { action: 'create', subject: 'employees' },
   '/employees/edit': { action: 'edit', subject: 'employees' },
+<<<<<<< HEAD
 
   '/expenses': { action: 'view', subject: 'expenses' },
   '/expenses/create': { action: 'create', subject: 'expenses' },
   '/expenses/edit': { action: 'edit', subject: 'expenses' },
+=======
+  '/employees/[id]': { action: 'view', subject: 'employees' },
 
+  // Expenses
+  '/expenses': { action: 'view', subject: 'expenses' },
+  '/expenses/create': { action: 'create', subject: 'expenses' },
+  '/expenses/edit': { action: 'edit', subject: 'expenses' },
+  '/expenses/[id]': { action: 'view', subject: 'expenses' },
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
+
+  // Branches
+  '/branches': { action: 'view', subject: 'branches' },
+  '/branches/create': { action: 'create', subject: 'branches' },
+  '/branches/edit': { action: 'edit', subject: 'branches' },
+  '/branches/[id]': { action: 'view', subject: 'branches' },
+
+  // Checkout
+  '/checkout': { action: 'create', subject: 'orders' },
+
+  // Products/Warehouse
+  '/warehouse/list': { action: 'view', subject: 'products' },
+  '/warehouse/create': { action: 'create', subject: 'products' },
+  '/warehouse/edit': { action: 'edit', subject: 'products' },
+  '/warehouse/[id]': { action: 'view', subject: 'products' },
+  '/warehouse/categories': { action: 'view', subject: 'categories' },
+  '/warehouse/categories/create': { action: 'create', subject: 'categories' },
+  '/warehouse/categories/edit': { action: 'edit', subject: 'categories' },
+  '/warehouse/providers': { action: 'view', subject: 'warehouses' },
+
+  // Inventory
+  '/inventory': { action: 'view', subject: 'inventory' },
+  '/inventory/manage': { action: 'manage', subject: 'inventory' },
+  '/inventory/reports': { action: 'reports', subject: 'inventory' },
+
+  // Investment
   '/investment/investors': { action: 'view', subject: 'investors' },
   '/investment/investors/create': { action: 'create', subject: 'investors' },
   '/investment/investors/edit': { action: 'edit', subject: 'investors' },
+<<<<<<< HEAD
 
   '/investment/investments': { action: 'view', subject: 'investments' },
   '/investment/investments/create': { action: 'create', subject: 'investments' },
   '/investment/investments/edit': { action: 'edit', subject: 'investments' },
+=======
+  '/investment/investors/[id]': { action: 'view', subject: 'investors' },
+  
+  '/investment/investments': { action: 'view', subject: 'investments' },
+  '/investment/investments/create': { action: 'create', subject: 'investments' },
+  '/investment/investments/edit': { action: 'edit', subject: 'investments' },
+  '/investment/investments/[id]': { action: 'view', subject: 'investments' },
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
+  '/investment/salary': { action: 'view', subject: 'investor-salary' },
+
+  // Contracts (future)
+  '/contracts': { action: 'view', subject: 'contracts' },
+  '/contracts/create': { action: 'generate', subject: 'contracts' },
+  '/contracts/sign': { action: 'sign', subject: 'contracts' },
+  '/contracts/download': { action: 'download', subject: 'contracts' },
+  '/contracts/[id]': { action: 'view', subject: 'contracts' },
+
+  // Payments (future)
+  '/payments': { action: 'view', subject: 'payments' },
+  '/payments/create': { action: 'create', subject: 'payments' },
+  '/payments/process': { action: 'process', subject: 'payments' },
+  '/payments/[id]': { action: 'view', subject: 'payments' },
+
+  // Invoices (future)
+  '/invoices': { action: 'view', subject: 'invoices' },
+  '/invoices/[id]': { action: 'view', subject: 'invoices' },
+
+  // Currencies (future)
+  '/currencies': { action: 'view', subject: 'currencies' },
+
+  // Exchange Rates (future)
+  '/exchange-rates': { action: 'view', subject: 'exchange-rates' },
+
+  // Tariffs (future)
+  '/tariffs': { action: 'view', subject: 'tariffs' },
+
+  // Balances (future)
+  '/balances': { action: 'view', subject: 'balances' },
+
+  // Cash (future)
+  '/cash': { action: 'view', subject: 'cash' },
+
+  // Reports (future)
+  '/reports': { action: 'view', subject: 'reports' },
+  '/reports/dashboard': { action: 'dashboard', subject: 'reports' },
+
+  // Finance (future)
+  '/finance': { action: 'view', subject: 'finance' },
+
+  // Settings
   '/settings/roles': { action: 'view', subject: 'roles' }
 }
 
@@ -76,6 +170,7 @@ export class PermissionChecker {
       logger.warn(`No permission defined for route: ${route}. Allowing access.`)
       return true
     }
+    
     return this.hasPermission(requiredPermission.action, requiredPermission.subject)
   }
 

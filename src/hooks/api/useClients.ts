@@ -22,8 +22,20 @@ export function useClients(params?: ClientQueryParams) {
       setLoading(true)
       setError(null)
       const response = await clientService.getAll(params)
-      setClients(response.data)
-      setMeta(response.meta)
+      // Handle nested response structure: { status, data: { data: [...], meta... } }
+      if (response.data && Array.isArray(response.data.data)) {
+        setClients(response.data.data)
+        // Extract pagination meta from the response
+        const { data: _data, ...paginationMeta } = response.data
+        setMeta(paginationMeta)
+      } else if (Array.isArray(response.data)) {
+        // Fallback for old response structure
+        setClients(response.data)
+        setMeta(response.meta)
+      } else {
+        setClients([])
+        setMeta(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load clients')
@@ -33,8 +45,20 @@ export function useClients(params?: ClientQueryParams) {
   }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phone])
 
   useEffect(() => {
-    fetchClients()
-  }, [fetchClients])
+    let cancelled = false
+    
+    const loadClients = async () => {
+      if (cancelled) return
+      await fetchClients()
+    }
+    
+    loadClients()
+    
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phone])
 
   return { clients, loading, error, meta, refetch: fetchClients }
 }
@@ -52,7 +76,18 @@ export function useClient(id: number) {
       setLoading(true)
       setError(null)
       const response = await clientService.getById(id)
-      setClient(response.data)
+      // Handle nested response structure
+      if (response.data) {
+        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
+          setClient(response.data.data)
+        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
+          setClient(response.data)
+        } else {
+          setClient(null)
+        }
+      } else {
+        setClient(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load client')
@@ -62,10 +97,22 @@ export function useClient(id: number) {
   }, [id])
 
   useEffect(() => {
-    if (id) {
-      fetchClient()
+    let cancelled = false
+    
+    const loadClient = async () => {
+      if (cancelled || !id) return
+      await fetchClient()
     }
-  }, [id, fetchClient])
+    
+    if (id) {
+      loadClient()
+    }
+    
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return { client, loading, error, refetch: fetchClient }
 }
@@ -146,4 +193,5 @@ export function useDeleteClient() {
 
   return { deleteClient, loading, error }
 }
+
 

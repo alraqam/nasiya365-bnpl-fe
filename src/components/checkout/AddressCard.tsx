@@ -24,7 +24,7 @@ const AddressCard = ({ id, name, location, number, payment, address_of, isSelect
         display: 'flex',
         flexDirection: { xs: 'column-reverse', xl: 'row' },
         alignItems: { xs: 'center', xl: 'start' },
-        border: isSelected ? '1px solid #7367F0' : '1px solid #2F2B3D1F',
+        border: isSelected ? '1px solid #0553F1' : '1px solid #2F2B3D1F',
         cursor: 'pointer',
         borderRadius: '6px',
         gap: '8px'

@@ -25,8 +25,7 @@ import themeOptions from 'src/@core/theme/ThemeOptions'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-import CustomTextField from 'src/@core/components/mui/text-field'
-import { Button, MenuItem, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { useLang } from 'src/providers/LanguageProvider'
 
 interface Props {
@@ -87,10 +86,6 @@ const Navigation = (props: Props) => {
   const [groupActive, setGroupActive] = useState<string[]>([])
   const [currentActiveGroup, setCurrentActiveGroup] = useState<string[]>([])
   const { t } = useLang()
-
-  const [branch, setBranch] = useState('Yunusobod')
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setBranch(e.target.value)
 
   // ** Ref
   const shadowRef = useRef(null)
@@ -177,12 +172,12 @@ const Navigation = (props: Props) => {
               ? beforeNavMenuContent(navMenuContentProps)
               : null}
             {userNavMenuContent ? (
-              userNavMenuContent(navMenuContentProps)
-            ) : (
-              <List className='nav-items' sx={{ pt: 0, '& > :first-child': { mt: '0' } }}>
-                <VerticalNavItems
-                  navHover={navHover}
-                  groupActive={groupActive}
+            userNavMenuContent(navMenuContentProps)
+          ) : (
+            <List className='nav-items' sx={{ pt: 0, '& > :first-of-type': { mt: '0' } }}>
+              <VerticalNavItems
+                navHover={navHover}
+                groupActive={groupActive}
                   setGroupActive={setGroupActive}
                   currentActiveGroup={currentActiveGroup}
                   setCurrentActiveGroup={setCurrentActiveGroup}
@@ -200,13 +195,9 @@ const Navigation = (props: Props) => {
           : null}
 
         <Box sx={{ pt: 4, pb: 2, borderTop: '1px solid rgba(47, 43, 61, 0.2)' }}>
-          <Typography sx={{ mb: 2, ml: 2 }}>{t['choose-branch']}</Typography>
-          <CustomTextField select fullWidth value={branch} onChange={handleChange} sx={{ px: 2 }}>
-            <MenuItem value={'Bodomzor'}>Bodomzor</MenuItem>
-            <MenuItem value={'Yunusobod'}>Yunusobod</MenuItem>
-            <MenuItem value={'Yakkasaroy'}>Yakkasaroy</MenuItem>
-          </CustomTextField>
-          <Typography sx={{ m: 2, textAlign: 'center' }}>{t.version} 1.0.0</Typography>
+          <Typography sx={{ m: 2, textAlign: 'center' }}>
+            v{process.env.APP_VERSION || '1.0.0'}
+          </Typography>
         </Box>
       </Drawer>
     </ThemeProvider>

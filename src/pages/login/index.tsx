@@ -43,8 +43,12 @@ import { Permission } from 'src/@core/utils/permission-checker'
 import { ErrorResponse } from 'src/@core/types/response'
 import { storage } from 'src/@core/utils/storage'
 import { authService } from 'src/services/authService'
+<<<<<<< HEAD
 import { EmployeeLoginResponse } from 'src/@core/types/auth'
 import useHomeRoute from 'src/layouts/components/acl/useHomeRoute'
+=======
+import { TransformedLoginResponse } from 'src/@core/types/auth'
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -81,7 +85,14 @@ const defaultValues: FormData = {
 interface FormData {
   phone: string
   password: string
+<<<<<<< HEAD
 }
+=======
+  company_schema: string
+}
+
+// Interface moved - using LoginResponse from auth types
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -114,7 +125,11 @@ const LoginPage = () => {
     const { phone, password } = data
 
     try {
+<<<<<<< HEAD
       const res: EmployeeLoginResponse & { errors?: ErrorResponse } = await authService.employeeLogin({
+=======
+      const res: TransformedLoginResponse = await authService.employeeLogin({
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
         phone,
         password
       })
@@ -145,12 +160,33 @@ const LoginPage = () => {
           })
         }
       } else if (res.status && res.data) {
+<<<<<<< HEAD
         auth.setUser(res.data.employee)
         auth.setPermissions(res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.token, res.data.token)
         storage.setJSON(STORAGE_KEYS.permissions, res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.user_type, 'tenant')
         router.push('/dashboard')
+=======
+        // Store all data BEFORE setting auth state
+        storage.setItem(STORAGE_KEYS.token, res.data.token)
+        storage.setJSON(STORAGE_KEYS.permissions, res.data.permissions)
+        storage.setItem(STORAGE_KEYS.user_type, res.data.type || 'tenant')
+        
+        // Store tenant ID for X-Tenant-ID header
+        const tenantId = res.data.tenant?.subdomain
+        
+        if (tenantId) {
+          storage.setItem(STORAGE_KEYS.tenant_id, String(tenantId))
+        }
+        
+        // Set auth state AFTER storage (this triggers AuthContext updates)
+        auth.setUser((res.data.employee || res.data.user) ?? null)
+        auth.setPermissions(res.data.permissions)
+        
+        // Redirect to dashboard with full page reload to ensure AuthContext loads from storage
+        window.location.href = '/dashboard'
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
       }
     } catch (error: any) {
       const err = error as ErrorResponse<FormData>
@@ -205,7 +241,7 @@ const LoginPage = () => {
             alignItems: 'center',
             borderRadius: '20px',
             justifyContent: 'center',
-            backgroundColor: '#7367F03D'
+            backgroundColor: '#0553F13D'
           }}
         >
           <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}.svg`} />

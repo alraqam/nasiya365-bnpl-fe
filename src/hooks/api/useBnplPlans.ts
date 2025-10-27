@@ -28,8 +28,18 @@ export function useBnplPlans(params?: BnplPlanQueryParams) {
       setLoading(true)
       setError(null)
       const response = await bnplPlanService.getAll(params)
-      setPlans(response.data)
-      setMeta(response.meta)
+      // Handle nested response structure: { status, data: { data: [...], meta... } }
+      if (response.data && Array.isArray(response.data.data)) {
+        setPlans(response.data.data)
+        const { data: _data, ...paginationMeta } = response.data
+        setMeta(paginationMeta)
+      } else if (Array.isArray(response.data)) {
+        setPlans(response.data)
+        setMeta(response.meta)
+      } else {
+        setPlans([])
+        setMeta(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load BNPL plans')
@@ -40,7 +50,8 @@ export function useBnplPlans(params?: BnplPlanQueryParams) {
 
   useEffect(() => {
     fetchPlans()
-  }, [fetchPlans])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.page, params?.per_page, params?.is_active, params?.is_default])
 
   return { plans, loading, error, meta, refetch: fetchPlans }
 }
@@ -100,4 +111,5 @@ export function useCalculatePlanPreview() {
 
   return { calculatePreview, loading, error }
 }
+
 

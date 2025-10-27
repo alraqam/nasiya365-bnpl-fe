@@ -22,6 +22,7 @@ import NotificationDropdown from './Notification'
 import { ThemeColor } from 'src/@core/layouts/types'
 import Calculator from './Calculator'
 import Currency from './Currency'
+import BranchSelector from './BranchSelector'
 
 interface Props {
   hidden: boolean
@@ -150,6 +151,7 @@ const AppBarContent = (props: Props) => {
             <Icon fontSize='1.5rem' icon='tabler:menu-2' />
           </IconButton>
         ) : null}
+        <BranchSelector />
         {/* <Stack display='flex' direction='row' onClick={handleSearchClick}>
           <Icon2 svg='/icons/search.svg' width={44} height={44}></Icon2>
           <CustomTextField

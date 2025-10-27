@@ -149,7 +149,7 @@ const Confirmation = () => {
                     />
                   </Box>
                   <Typography>
-                    <span style={{ color: '#7367F0' }}>${item.new_price}</span>/
+                    <span style={{ color: '#0553F1' }}>${item.new_price}</span>/
                     <span style={{ textDecoration: 'line-through' }}>${item.old_price}</span>
                   </Typography>
                 </Stack>

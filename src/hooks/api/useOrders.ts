@@ -29,8 +29,18 @@ export function useOrders(params?: OrderQueryParams) {
       setLoading(true)
       setError(null)
       const response = await orderService.getAll(params)
-      setOrders(response.data)
-      setMeta(response.meta)
+      // Handle nested response structure: { status, data: { data: [...], meta... } }
+      if (response.data && Array.isArray(response.data.data)) {
+        setOrders(response.data.data)
+        const { data: _data, ...paginationMeta } = response.data
+        setMeta(paginationMeta)
+      } else if (Array.isArray(response.data)) {
+        setOrders(response.data)
+        setMeta(response.meta)
+      } else {
+        setOrders([])
+        setMeta(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load orders')
@@ -41,7 +51,8 @@ export function useOrders(params?: OrderQueryParams) {
 
   useEffect(() => {
     fetchOrders()
-  }, [fetchOrders])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.page, params?.per_page, params?.search, params?.status, params?.client_id, params?.date_from, params?.date_to])
 
   return { orders, loading, error, meta, refetch: fetchOrders }
 }
@@ -59,7 +70,18 @@ export function useOrder(id: number) {
       setLoading(true)
       setError(null)
       const response = await orderService.getById(id)
-      setOrder(response.data)
+      // Handle nested response structure
+      if (response.data) {
+        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
+          setOrder(response.data.data)
+        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
+          setOrder(response.data)
+        } else {
+          setOrder(null)
+        }
+      } else {
+        setOrder(null)
+      }
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load order')
@@ -72,7 +94,8 @@ export function useOrder(id: number) {
     if (id) {
       fetchOrder()
     }
-  }, [id, fetchOrder])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return { order, loading, error, refetch: fetchOrder }
 }
@@ -178,4 +201,5 @@ export function usePayInitialPayment() {
 
   return { payInitial, loading, error }
 }
+
 

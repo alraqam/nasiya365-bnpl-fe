@@ -41,7 +41,7 @@ const CreateProduct = () => {
   const [loading, setLoading] = useState(false)
   const { id } = router.query
 
-  const { data } = useFetch<Response>(`/api/devices/${id}`)
+  const { data } = useFetch<Response>(`/api/products/${id}`)
 
   useEffect(() => {
     setForm({
@@ -63,7 +63,7 @@ const CreateProduct = () => {
   const onSubmit = async () => {
     try {
       setLoading(true)
-      const res = (await api(`/api/devices/${id}`, {
+      const res = (await api(`/api/products/${id}`, {
         method: 'PUT',
         body: JSON.stringify(form)
       })) as PostResponse<keyof typeof initialFormState>

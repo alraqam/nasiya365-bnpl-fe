@@ -175,3 +175,4 @@ export const brandService = {
     api<PaginatedResponse<Product>>(`/api/brands/${brandId}/products`)
 }
 
+

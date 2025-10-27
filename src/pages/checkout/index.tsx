@@ -95,11 +95,11 @@ const Checkout = () => {
               >
                 <Icon
                   svg={item.icon}
-                  color={step >= item.activeStep ? '#7367F0' : '#2F2B3DE5'}
+                  color={step >= item.activeStep ? '#0553F1' : '#2F2B3DE5'}
                   width={60}
                   height={60}
                 />
-                <Typography sx={{ color: step >= item.activeStep ? '#7367F0' : '#2F2B3DE5' }}>
+                <Typography sx={{ color: step >= item.activeStep ? '#0553F1' : '#2F2B3DE5' }}>
                   {t.checkout.steps[item.label as keyof typeof t.checkout.steps]}
                 </Typography>
               </Box>
@@ -110,7 +110,7 @@ const Checkout = () => {
                   svg='/icons/chevron-down.svg'
                   width={20}
                   height={20}
-                  color={step > item.activeStep ? '#7367F0' : '#2F2B3DB2'}
+                  color={step > item.activeStep ? '#0553F1' : '#2F2B3DB2'}
                   styles={{ rotate: '-90deg' }}
                 />
               )}

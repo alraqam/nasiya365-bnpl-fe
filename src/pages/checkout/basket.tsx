@@ -36,10 +36,10 @@ const Basket = ({ setStep }: StepChildrenProps) => {
   const [search, setSearch] = useState('')
 
   const { data, fetchData } = useDebouncedFetch<{ id: number; model: string; provider: string; price: number }[]>(
-    `http://localhost:4000/products?model_like=${search}`,
+    `/api/products?model_like=${search}`,
     {
       auto: false,
-      withBaseURL: false,
+      withBaseURL: true,
       delay: 700
     }
   )

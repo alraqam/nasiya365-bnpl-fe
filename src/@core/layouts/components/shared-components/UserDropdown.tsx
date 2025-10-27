@@ -129,6 +129,7 @@ const UserDropdown = (props: Props) => {
     storage.removeItem(STORAGE_KEYS.token)
     storage.removeItem(STORAGE_KEYS.permissions)
     storage.removeItem(STORAGE_KEYS.user_type)
+    storage.removeItem(STORAGE_KEYS.tenant_id)
     handleDropdownClose()
     router.reload()
   }

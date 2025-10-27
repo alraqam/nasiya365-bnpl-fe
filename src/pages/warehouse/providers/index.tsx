@@ -92,7 +92,7 @@ const Providers = () => {
       created_at: string
       updated_at: string
     }[]
-  >('http://localhost:4000/providers', true, false)
+  >('/api/providers', true, true)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -104,7 +104,7 @@ const Providers = () => {
   //   const handleAddRole = async () => {
   //     try {
   //       setLoading(true)
-  //       const res = (await api('/api/role/store', {
+  //       const res = (await api('/api/tenant-roles/store', {
   //         method: 'POST',
   //         body: JSON.stringify(form)
   //       })) as PostResponse<keyof typeof initialState>
@@ -130,7 +130,7 @@ const Providers = () => {
   //   const handleUpdateRole = async () => {
   //     try {
   //       setLoading(true)
-  //       const res = (await api(`/api/role/update/${editingId}`, {
+  //       const res = (await api(`/api/tenant-roles/update/${editingId}`, {
   //         method: 'POST',
   //         body: JSON.stringify(form)
   //       })) as PostResponse<keyof typeof initialState>
@@ -156,7 +156,7 @@ const Providers = () => {
   //   const handleDeleteRole = async (id: number) => {
   //     try {
   //       setLoading(true)
-  //       await api(`/api/role/destroy/${id}`, {
+  //       await api(`/api/tenant-roles/destroy/${id}`, {
   //         method: 'DELETE'
   //       })
   //       await fetchData()

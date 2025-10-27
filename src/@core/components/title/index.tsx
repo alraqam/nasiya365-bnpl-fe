@@ -11,7 +11,7 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const Title = ({ title, color = '#7367F0', ...rest }: Props) => {
+const Title = ({ title, color = '#0553F1', ...rest }: Props) => {
   return (
     <TitleWrapper className='page-title' {...rest}>
       <Icon svg='/icons/star-s-fill.svg' width={20} height={20} color={color} /> {title}

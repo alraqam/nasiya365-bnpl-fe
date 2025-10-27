@@ -269,7 +269,7 @@ const Button = () => {
           })
         }),
         contained: ({ theme }: OwnerStateThemeType) => ({
-          boxShadow: '0px 2px 6px 0px #7367F04D',
+          boxShadow: '0px 2px 6px 0px #0553F14D',
           padding: theme.spacing(2.5, 5),
           '&:hover': {
             boxShadow: theme.shadows[2]

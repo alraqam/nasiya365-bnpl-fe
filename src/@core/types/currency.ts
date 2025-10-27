@@ -51,3 +51,4 @@ export interface CurrencyStats {
   last_update: string
 }
 
+

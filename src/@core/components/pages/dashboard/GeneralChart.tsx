@@ -16,14 +16,16 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import useFetch from 'src/hooks/useFetch'
+// Sales API integration removed - useFetch import no longer needed
+// import useFetch from 'src/hooks/useFetch'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
-interface Response {
-  straight: Record<string, Record<string, number>>
-  bnpl: Record<string, Record<string, number>>
-}
+// Sales Response interface removed - no longer needed
+// interface Response {
+//   straight: Record<string, Record<string, number>>
+//   bnpl: Record<string, Record<string, number>>
+// }
 
 const Circle = styled(Box)(({ theme }) => ({
   width: '10px',
@@ -54,14 +56,20 @@ const GeneralChart = () => {
     setAnchorEl(null)
   }
 
+<<<<<<< HEAD
   const { data: sales } = useFetch<Response>('/api/dashboard')
   console.log(sales)
+=======
+  // Sales API integration removed
+  // const { data: sales } = useFetch<Response>('/api/sales', true, true)
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const selectedMonth = MONTHS[month]
 
-  const labels = Object.keys(sales?.straight[selectedMonth] || [])
-  const straightValues = Object.values(sales?.straight[selectedMonth] || [])
-  const bnplValues = Object.values(sales?.bnpl[selectedMonth] || [])
+  // Using empty data since sales API is removed
+  const labels: string[] = []
+  const straightValues: number[] = []
+  const bnplValues: number[] = []
 
   const options: ChartOptions<'line'> = {
     responsive: true,

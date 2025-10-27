@@ -103,3 +103,4 @@ export const investmentService = {
     apiClient.delete(`/api/investments/${id}`)
 }
 
+

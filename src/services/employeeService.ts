@@ -110,3 +110,4 @@ export const employeeService = {
     api<{ data: Permission[] }>(`/api/employees/${id}/permissions`)
 }
 
+

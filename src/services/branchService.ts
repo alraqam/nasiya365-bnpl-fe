@@ -62,3 +62,4 @@ export const branchService = {
     api<{ data: BranchStats }>(`/api/branches/${id}/stats`)
 }
 
+

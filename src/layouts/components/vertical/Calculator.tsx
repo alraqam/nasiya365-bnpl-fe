@@ -24,8 +24,8 @@ import useModal from 'src/@core/store/modal'
 import IDevice from 'src/@core/types/device'
 import checkRequiredFields from 'src/@core/utils/check-required-fields'
 import useDebouncedFetch from 'src/hooks/useDebouncedFetch'
-import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
+import { useBnplPlans } from 'src/hooks/api'
 
 interface Response {
   data: IDevice[]
@@ -78,15 +78,19 @@ const Calculator = () => {
   const [tenure, setTenure] = useState(2)
   const [percentage, setPercentage] = useState(2)
 
+<<<<<<< HEAD
   // tenure, percentage, name
 
   const { data: plans } =
     useFetch<{ id: number; tenure: number; percentage: number; name: string }[]>('/api/bnpl-plans')
+=======
+  const { plans } = useBnplPlans()
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   const { data: products, fetchData: fetchProducts } = useDebouncedFetch<
     { id: number; model: string; provider: string; price: number }[]
-  >(`http://localhost:4000/products?model_like=${form.model}`, {
+  >(`/api/products?model_like=${form.model}`, {
     auto: false,
-    withBaseURL: false,
+    withBaseURL: true,
     delay: 700
   })
 
@@ -111,9 +115,13 @@ const Calculator = () => {
   useEffect(() => {
     const selectedPlan = plans?.find(item => item.name === plan)
 
-    setTenure(selectedPlan?.tenure || 0)
-    setPercentage(selectedPlan?.percentage || 0)
-  }, [plans])
+    if (selectedPlan) {
+      // Use the first payment period if available, otherwise use min_period_months
+      const duration = selectedPlan.payment_periods?.[0] || selectedPlan.min_period_months || 0
+      setTenure(duration)
+      setPercentage(selectedPlan.interest_rate || 0)
+    }
+  }, [plan, plans])
 
   // Set the price of the device when it's selected
   useEffect(() => {
@@ -319,7 +327,7 @@ const Calculator = () => {
                       </InputAdornment>
                     )
                   }}
-                  name='deposit'
+                  name='selling_price'
                   value={form.selling_price || null}
                   onChange={handleChange}
                 />
@@ -328,11 +336,15 @@ const Calculator = () => {
               <Box display='flex' flexDirection='column' gap={1}>
                 <Typography>Tarif</Typography>
                 <CustomTextField select fullWidth value={plan} onChange={e => setPlan(e.target.value)}>
-                  {plans?.map(option => (
-                    <MenuItem key={option.id} value={option.name}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
+                  {plans && plans.length > 0 ? (
+                    plans.map(option => (
+                      <MenuItem key={option.id} value={option.name}>
+                        {option.name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>No plans available</MenuItem>
+                  )}
                 </CustomTextField>
               </Box>
               {/* Monthly payment */}
@@ -379,16 +391,16 @@ const Calculator = () => {
               <Card
                 sx={(theme: Theme) => ({
                   padding: '21px 32px',
-                  background: '#7367F03D',
+                  background: '#0553F13D',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '10px'
                 })}
               >
-                <Typography variant='h6' color={'#7367F0'}>
+                <Typography variant='h6' color={'#0553F1'}>
                   {t.forms.dashboard.calculator.total_payment}
                 </Typography>
-                <Typography variant='h3' color={'#7367F0'}>
+                <Typography variant='h3' color={'#0553F1'}>
                   {total === 0 ? 0 : total.toFixed(2)} {currency}
                 </Typography>
               </Card>

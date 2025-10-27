@@ -34,7 +34,7 @@ const CreateProduct = () => {
   const onSubmit = async () => {
     try {
       setLoading(true)
-      const res = (await api('/api/devices', {
+      const res = (await api('/api/products', {
         method: 'POST',
         body: JSON.stringify(form)
       })) as PostResponse<keyof typeof initialFormState>

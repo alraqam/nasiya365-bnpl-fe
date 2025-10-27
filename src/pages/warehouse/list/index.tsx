@@ -36,7 +36,7 @@ const Products = () => {
 
   const [tab, setTab] = useState<'devices' | 'accessories'>('devices')
   const [filters, setFilters] = useState(initialFilters)
-  const [url, setUrl] = useState('/api/devices')
+  const [url, setUrl] = useState('/api/products')
 
   const { hasPermission } = usePermissions()
 
@@ -44,7 +44,7 @@ const Products = () => {
   // const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
   useEffect(() => {
-    setUrl(`/api/${tab}`)
+    //setUrl(`/api/${tab}`)
 
     const params = new URLSearchParams(window.location.search)
     params.set('type', tab)

@@ -14,6 +14,8 @@ import Form from 'src/@core/components/DialogForm'
 import { PostResponse } from 'src/@core/types/base-response'
 import toast from 'react-hot-toast'
 import checkRequiredFields from 'src/@core/utils/check-required-fields'
+import { ApiResponse } from 'src/@core/types/api'
+import { Category } from 'src/@core/types/product'
 
 const initialState = {
   label: '',
@@ -83,15 +85,7 @@ const Categories = () => {
     }
   ]
 
-  const { data, fetchData } = useFetch<
-    {
-      id: number
-      name: string
-      color: string
-      created_at: string
-      updated_at: string
-    }[]
-  >('http://localhost:4000/categories', true, false)
+  const { data, fetchData } = useFetch<ApiResponse<Category[]>>('/api/categories', true, true)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -103,7 +97,7 @@ const Categories = () => {
   //   const handleAddRole = async () => {
   //     try {
   //       setLoading(true)
-  //       const res = (await api('/api/role/store', {
+  //       const res = (await api('/api/tenant-roles/store', {
   //         method: 'POST',
   //         body: JSON.stringify(form)
   //       })) as PostResponse<keyof typeof initialState>
@@ -129,7 +123,7 @@ const Categories = () => {
   //   const handleUpdateRole = async () => {
   //     try {
   //       setLoading(true)
-  //       const res = (await api(`/api/role/update/${editingId}`, {
+  //       const res = (await api(`/api/tenant-roles/update/${editingId}`, {
   //         method: 'POST',
   //         body: JSON.stringify(form)
   //       })) as PostResponse<keyof typeof initialState>
@@ -155,7 +149,7 @@ const Categories = () => {
   //   const handleDeleteRole = async (id: number) => {
   //     try {
   //       setLoading(true)
-  //       await api(`/api/role/destroy/${id}`, {
+  //       await api(`/api/tenant-roles/destroy/${id}`, {
   //         method: 'DELETE'
   //       })
   //       await fetchData()
@@ -201,7 +195,7 @@ const Categories = () => {
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
             columns={initialColumns}
-            rows={data || []}
+            rows={data?.data || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
+const packageJson = require('./package.json')
 
 /** @type {import('next').NextConfig} */
 
@@ -12,7 +13,12 @@ module.exports = {
   // If you need these features, remove or comment out the 'output' line below
   output: 'export',
   trailingSlash: true,
-  reactStrictMode: true, // Enable React Strict Mode for better development experience
+  reactStrictMode: false, // Disabled - prevents double API calls in development
+  
+  // Expose version from package.json
+  env: {
+    APP_VERSION: packageJson.version
+  },
   
   webpack: config => {
     config.resolve.alias = {

@@ -76,17 +76,23 @@ class ApiClient {
     let url = `${withBaseURL ? BASE_URL : ''}${endpoint}`
     let requestOptions: FetchOptions = { ...options }
 
-    // Get token from storage
+    // Get token and tenant ID from storage
     const token = storage.getItem(STORAGE_KEYS.token)
-
+    const tenantId = storage.getItem(STORAGE_KEYS.tenant_id)
+    
     // Set default headers
     requestOptions.headers = {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
+<<<<<<< HEAD
       ...(requestOptions.headers || {}),
       'X-Tenant-ID': 'demo'
+=======
+      ...(tenantId ? { 'X-Tenant-ID': tenantId } : {}),
+      ...(requestOptions.headers || {})
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
     }
-
+    
     // Apply request interceptors
     for (const interceptor of this.requestInterceptors) {
       if (interceptor.onRequest) {

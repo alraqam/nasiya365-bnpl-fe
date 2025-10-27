@@ -192,7 +192,7 @@ const AdminLogin = () => {
             alignItems: 'center',
             borderRadius: '20px',
             justifyContent: 'center',
-            backgroundColor: '#7367F03D'
+            backgroundColor: '#0553F13D'
           }}
         >
           <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}.svg`} />

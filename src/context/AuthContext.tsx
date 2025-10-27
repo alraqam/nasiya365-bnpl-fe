@@ -62,9 +62,11 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const storedToken = storage.getItem(STORAGE_KEYS.token)
     const storedUserType = storage.getItem(STORAGE_KEYS.user_type)
+    const cachedPermissions = storage.getJSON<Permission[]>(STORAGE_KEYS.permissions) || []
 
     setToken(storedToken)
     setUserType(storedUserType as UserType)
+    setPermissions(cachedPermissions)
     setLoading(false)
   }, [])
 
@@ -72,13 +74,19 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     // If user authenticated, fetch user
-    if (token && user === null) {
+    // Remove fetchUser from dependencies to prevent unnecessary re-runs
+    if (token && user === null && userType) {
       fetchUser()
     }
+<<<<<<< HEAD
 
     const cachedPermissions = storage.getJSON<PermissionGroups[]>(STORAGE_KEYS.permissions) || []
     setPermissions(cachedPermissions)
   }, [token, user, fetchUser])
+=======
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user, userType])
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const values = {
     user,

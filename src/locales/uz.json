@@ -1,5 +1,5 @@
 {
-    "welcome": "Nasiya 365-ga xush kelibsiz! 👋🏻",
+    "welcome": "Nasiya365-ga xush kelibsiz! 👋🏻",
     "welcome-description": "Hisobingizga kirish uchun maʼlumotlarni kiriting.",
     "view": "Ko'rish",
     "balance": "Balans",
@@ -81,7 +81,7 @@
         "email": "Email",
         "no-phone": "Telefon raqamingizni kiriting",
         "no-password": "Parolingizni kiriting",
-        "no-subdomain": "Subdomainingizni kiriting"
+        "no-subdomain": "Brendingizni kiriting"
     },
     "pages": {
         "dashboard": "Dashboard",

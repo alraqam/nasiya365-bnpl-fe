@@ -21,7 +21,7 @@ const DeliveryPlanCard = ({ id, icon, title, desc, price, isSelected, handleSele
       sx={{
         p: 4,
         borderRadius: '6px',
-        border: isSelected ? '1px solid #7367F0' : '1px solid #2F2B3D1F',
+        border: isSelected ? '1px solid #0553F1' : '1px solid #2F2B3D1F',
         display: 'flex',
         flexDirection: 'column',
         gap: '8px',
@@ -32,7 +32,7 @@ const DeliveryPlanCard = ({ id, icon, title, desc, price, isSelected, handleSele
       }}
       onClick={() => handleSelect(id)}
     >
-      <Icon svg={icon} width={28} height={28} color={isSelected ? '#7367F0' : '#2F2B3DE5'} />
+      <Icon svg={icon} width={28} height={28} color={isSelected ? '#0553F1' : '#2F2B3DE5'} />
       <Typography fontWeight={600} textAlign='center'>
         {title}
       </Typography>

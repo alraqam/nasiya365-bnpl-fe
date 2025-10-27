@@ -11,7 +11,7 @@ const useNavigation = (): VerticalNavItemsType => {
       path: '/dashboard',
       icon: 'tabler:brand-speedtest',
       action: 'view',
-      subject: 'clients'
+      subject: 'reports'
     },
     {
       sectionTitle: t['nav-blocks'].main
@@ -28,22 +28,22 @@ const useNavigation = (): VerticalNavItemsType => {
       icon: 'tabler:building-cottage',
       children: [
         {
-          title: t.pages.list,
+          title: t.pages.products,
           path: '/warehouse/list',
           action: 'view',
-          subject: 'investors'
+          subject: 'products'
         },
         {
           title: t.pages.categories,
           path: '/warehouse/categories',
           action: 'view',
-          subject: 'investors'
+          subject: 'categories'
         },
         {
           title: t.pages.providers,
           path: '/warehouse/providers',
           action: 'view',
-          subject: 'investors'
+          subject: 'warehouses'
         }
       ]
     },
@@ -59,14 +59,14 @@ const useNavigation = (): VerticalNavItemsType => {
       path: '/expenses',
       icon: 'tabler:exposure',
       action: 'view',
-      subject: 'costs'
+      subject: 'expenses'
     },
     {
       title: t.pages.checkout,
       path: '/checkout',
       icon: 'tabler:device-desktop',
-      action: 'view',
-      subject: 'costs'
+      action: 'create',
+      subject: 'orders'
     },
     {
       sectionTitle: t['nav-blocks'].control
@@ -93,7 +93,7 @@ const useNavigation = (): VerticalNavItemsType => {
           title: t.pages.investment.investors,
           path: '/investment/investors',
           action: 'view',
-          subject: 'investments'
+          subject: 'investors'
         },
         {
           title: t.pages.investment.investments,
@@ -111,7 +111,7 @@ const useNavigation = (): VerticalNavItemsType => {
           title: t.pages.settings.roles,
           path: '/settings/roles',
           action: 'view',
-          subject: 'investments'
+          subject: 'roles'
         }
       ]
     }

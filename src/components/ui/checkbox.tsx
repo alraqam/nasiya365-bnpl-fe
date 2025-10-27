@@ -13,9 +13,9 @@ const Checkbox = ({ checked, ...props }: Props) => {
           height: '24px',
           backgroundColor: '#fff',
           borderRadius: '999px',
-          border: checked ? '7px solid #7367F0' : '2px solid #2F2B3D66',
+          border: checked ? '7px solid #0553F1' : '2px solid #2F2B3D66',
           transition: '0.1s',
-          boxShadow: checked ? '0px 2px 6px 0px #7367F04D' : 'none',
+          boxShadow: checked ? '0px 2px 6px 0px #0553F14D' : 'none',
           cursor: 'pointer'
         }}
         {...props}

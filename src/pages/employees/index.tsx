@@ -9,7 +9,7 @@ import {
   InputAdornment,
   MenuItem
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { alpha, Box } from '@mui/system'
@@ -20,22 +20,10 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import InputMask from 'react-input-mask'
 import Link from 'next/link'
 import { useLang } from 'src/providers/LanguageProvider'
-import useFetch from 'src/hooks/useFetch'
-import IEmployee from 'src/@core/types/employee'
-import usePagination from 'src/hooks/usePagination'
 import Form from 'src/@core/components/DialogForm'
-import setParams from 'src/@core/utils/set-params'
 import dashToDotFormat from 'src/@core/utils/dash-to-dot-format'
 import maskFormat from 'src/@core/utils/mask-format'
-import { api } from 'src/configs/api'
-
-interface Response {
-  current_page: string
-  per_page: number
-  total: number
-  last_page: number
-  data: IEmployee[]
-}
+import { useEmployees, useDeleteEmployee } from 'src/hooks/api'
 
 const initialFilters = {
   id: '',
@@ -48,15 +36,18 @@ const Employees = () => {
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
-  const [url, setUrl] = useState('/api/admins')
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  })
+  const [searchParams, setSearchParams] = useState<any>({})
 
-  const { data, fetchData } = useFetch<Response>(url)
-  const { current_page, per_page } = data || {}
-  const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
-
-  useEffect(() => {
-    setUrl(`/api/admins?page=${paginationModel.page + 1}`)
-  }, [paginationModel.page])
+  const { employees, loading, refetch, meta } = useEmployees({
+    page: paginationModel.page + 1,
+    per_page: paginationModel.pageSize,
+    ...searchParams
+  })
+  const { deleteEmployee, loading: deleting } = useDeleteEmployee()
 
   const initialColumns: GridColDef[] = [
     { field: 'name', headerName: 'F.I.O', minWidth: 200, flex: 1 },
@@ -67,7 +58,7 @@ const Employees = () => {
       minWidth: 200,
       flex: 1,
       renderCell(params) {
-        return <p>+998 {maskFormat(params.row.phone1, '## ### ## ##')}</p>
+        return <p>+998 {params.row.phone1 ? maskFormat(params.row.phone1, '## ### ## ##') : ''}</p>
       }
     },
     {
@@ -76,7 +67,7 @@ const Employees = () => {
       minWidth: 200,
       flex: 1,
       renderCell(params) {
-        return <p>{dashToDotFormat(params.row.date_of_birth)}</p>
+        return <p>{params.row.date_of_birth ? dashToDotFormat(params.row.date_of_birth) : ''}</p>
       }
     },
     { field: 'passport', headerName: 'Pasport', minWidth: 200 },
@@ -107,6 +98,7 @@ const Employees = () => {
             <Button
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
               onClick={() => handleDelete(id)}
+              disabled={deleting}
             >
               <Icon
                 svg='/icons/trash.svg'
@@ -134,8 +126,15 @@ const Employees = () => {
   }
 
   const handleSearch = async () => {
-    const params = setParams({ ...filters, phone: filters.phone.replace(/\D/g, '') })
-    setUrl(`/api/filter/admins?${params}`)
+    const searchFilters: any = {}
+    // Use the generic search parameter - backend will search across all fields
+    const phoneClean = filters.phone ? filters.phone.replace(/\D/g, '') : ''
+    const searchTerm = filters.passport || phoneClean || filters.id
+    if (searchTerm) {
+      searchFilters.search = searchTerm
+    }
+    
+    setSearchParams(searchFilters)
     setPaginationModel({
       page: 0,
       pageSize: 10
@@ -148,19 +147,20 @@ const Employees = () => {
     setFilters(initialFilters)
 
     if (Object.values(filters).some(value => value !== '')) {
-      setUrl(`/api/admins?page=${paginationModel.page + 1}`)
+      setSearchParams({})
+      setPaginationModel({
+        page: 0,
+        pageSize: 10
+      })
     }
   }
 
   const handleDelete = async (id: number) => {
     try {
-      await api(`/api/admins/destroy/${id}`, {
-        method: 'DELETE'
-      })
-      await fetchData()
-      clearModal()
+      await deleteEmployee(id)
+      refetch()
     } catch (error) {
-      console.log(error)
+      // Error is already handled by the hook
     }
   }
 
@@ -195,7 +195,8 @@ const Employees = () => {
                 color: theme.palette.text.primary,
                 '&:hover': { backgroundColor: alpha(theme.palette.grey[300], 0.8) }
               })}
-              onClick={() => fetchData()}
+              onClick={() => refetch()}
+              disabled={loading}
             >
               <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
               {t.reload}
@@ -226,16 +227,17 @@ const Employees = () => {
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
             columns={initialColumns}
-            rows={data?.data || []}
+            rows={employees || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
             paginationModel={paginationModel}
+            loading={loading}
             slots={{
               footer: () => (
                 <CustomFooter
-                  total={data?.total || 0}
-                  totalPages={data?.last_page || 0}
+                  total={meta?.total || 0}
+                  totalPages={meta?.last_page || 1}
                   page={paginationModel.page}
                   pageSize={paginationModel.pageSize}
                   onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
@@ -267,7 +269,7 @@ const Employees = () => {
                 value={filters.id}
                 onChange={handleChange}
               >
-                {data?.data.map(item => (
+                {employees?.map(item => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.name}
                   </MenuItem>

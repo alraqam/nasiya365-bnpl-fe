@@ -492,15 +492,15 @@ const CreateClient = () => {
                                       height: '32px',
                                       padding: '0px',
                                       borderRadius: '8px',
-                                      backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
+                                      backgroundColor: index === 0 ? '#0553F11A' : 'transparent',
                                       '&:hover': {
-                                        backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                        backgroundColor: index === 0 ? '#0553F133' : '#FF474755'
                                       }
                                     }}
                                     onClick={index === 0 ? addPhone : removePhone(index)}
                                   >
                                     {index === 0 ? (
-                                      <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
+                                      <Icon svg='/icons/plus.svg' color='#0553F1' width={20} height={20} />
                                     ) : (
                                       <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
                                     )}
@@ -630,15 +630,15 @@ const CreateClient = () => {
                                       height: '32px',
                                       padding: '0px',
                                       borderRadius: '8px',
-                                      backgroundColor: index === 0 ? '#7367F01A' : 'transparent',
+                                      backgroundColor: index === 0 ? '#0553F11A' : 'transparent',
                                       '&:hover': {
-                                        backgroundColor: index === 0 ? '#7367F033' : '#FF474755'
+                                        backgroundColor: index === 0 ? '#0553F133' : '#FF474755'
                                       }
                                     }}
                                     onClick={index === 0 ? addGuarantorPhone : removeGuarantorPhone(index)}
                                   >
                                     {index === 0 ? (
-                                      <Icon svg='/icons/plus.svg' color='#7367F0' width={20} height={20} />
+                                      <Icon svg='/icons/plus.svg' color='#0553F1' width={20} height={20} />
                                     ) : (
                                       <Icon svg='/icons/trash.svg' color='#FF4747' width={18} height={18} />
                                     )}

@@ -22,18 +22,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import DatePicker from 'react-datepicker'
 import Form from 'src/@core/components/DialogForm'
-import useFetch from 'src/hooks/useFetch'
-
-interface Response {
-  id: number
-  location: string
-  phone: string
-  address: string
-  manager: string
-  is_main: number
-  created_at: string
-  updated_at: string
-}
+import { useBranches, useDeleteBranch } from 'src/hooks/api'
 
 const initialFilters = {
   name: '',
@@ -46,26 +35,47 @@ const Branches = () => {
   const { t } = useLang()
 
   const [filters, setFilters] = useState(initialFilters)
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10
+  })
 
+<<<<<<< HEAD
   const { data } = useFetch<Response[]>('/api/branches')
+=======
+  const { branches, loading, refetch, meta } = useBranches({
+    page: paginationModel.page + 1,
+    per_page: paginationModel.pageSize
+  })
+  const { deleteBranch, loading: deleting } = useDeleteBranch()
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteBranch(id)
+      refetch()
+    } catch (error) {
+      // Error is already handled by the hook
+    }
+  }
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 50, flex: 1 },
-    { field: 'location', headerName: 'Lokatsiya', minWidth: 150, flex: 1 },
+    { field: 'name', headerName: 'Nomi', minWidth: 150, flex: 1 },
     { field: 'address', headerName: 'Adres', minWidth: 250, flex: 1 },
     { field: 'phone', headerName: 'Telefon', minWidth: 100, flex: 1 },
-    { field: 'manager', headerName: 'Menejer', minWidth: 150, flex: 1 },
+    { field: 'email', headerName: 'Email', minWidth: 150, flex: 1 },
     { field: 'created_at', headerName: 'Kiritilgan vaqti', minWidth: 150, flex: 1 },
     {
       field: 'actions',
-      headerName: 'Harakatlar',
+      headerName: t.actions || 'Harakatlar',
       minWidth: 150,
       renderCell: params => {
         const id = params.row.id
 
         return (
           <Box sx={{ display: 'flex' }}>
-            <Link href={`/expenses/edit?id=${id}`}>
+            <Link href={`/branches/edit?id=${id}`}>
               <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
                 <Icon
                   svg='/icons/edit.svg'
@@ -80,7 +90,11 @@ const Branches = () => {
                 />
               </Button>
             </Link>
-            <Button sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}>
+            <Button 
+              sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
+              onClick={() => handleDelete(id)}
+              disabled={deleting}
+            >
               <Icon
                 svg='/icons/trash.svg'
                 width={24}
@@ -129,10 +143,23 @@ const Branches = () => {
               flexWrap: 'wrap'
             }}
           >
-            <Link href='/expenses/create'>
+            <Button
+              variant='tonal'
+              sx={theme => ({
+                gap: 2,
+                backgroundColor: '#2F2B3D0F',
+                color: theme.palette.text.primary
+              })}
+              onClick={() => refetch()}
+              disabled={loading}
+            >
+              <Icon svg='/icons/reload.svg' styles={theme => ({ backgroundColor: theme.palette.text.primary })} />
+              {t.reload || 'Yangilash'}
+            </Button>
+            <Link href='/branches/create'>
               <Button variant='contained' sx={{ gap: 2 }}>
                 <Icon svg='/icons/plus.svg' styles={theme => ({ backgroundColor: '#fff' })} />
-                {t['add-branch']}
+                {t['add-branch'] || 'Filial qo\'shish'}
               </Button>
             </Link>
           </Stack>
@@ -141,22 +168,23 @@ const Branches = () => {
         <Box sx={{ backgroundColor: '#fff', borderRadius: '16px' }}>
           <DataGrid
             columns={initialColumns}
-            rows={data || []}
+            rows={branches || []}
             autoHeight
             sx={{ '& .MuiDataGrid-columnHeaders': { backgroundColor: '#fff' } }}
             disableColumnMenu
-            hideFooter
-            // slots={{
-            //   footer: () => (
-            //     <CustomFooter
-            //       total={data?.total || 0}
-            //       totalPages={data?.last_page || 0}
-            //       page={paginationModel.page}
-            //       pageSize={paginationModel.pageSize}
-            //       onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
-            //     />
-            //   )
-            // }}
+            paginationModel={paginationModel}
+            loading={loading}
+            slots={{
+              footer: () => (
+                <CustomFooter
+                  total={meta?.total || 0}
+                  totalPages={meta?.last_page || 1}
+                  page={paginationModel.page}
+                  pageSize={paginationModel.pageSize}
+                  onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}
+                />
+              )
+            }}
           />
         </Box>
       </Stack>

@@ -1791,7 +1791,36 @@
                                 "categories"
                             ]
                         }
-                    }
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/categories",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "categories"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Electronics\",\n            \"description\": \"Electronic devices and gadgets\",\n            \"parent_id\": null,\n            \"level\": 0,\n            \"order\": 1,\n            \"is_active\": true,\n            \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Smartphones\",\n            \"description\": \"Mobile phones and accessories\",\n            \"parent_id\": 1,\n            \"level\": 1,\n            \"order\": 1,\n            \"is_active\": true,\n            \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Category Tree",
@@ -2933,17 +2962,45 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/central/roles",
+                            "raw": "{{base_url}}/api/tenant-roles",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "api",
-                                "central",
-                                "roles"
+                                "tenant-roles"
                             ]
                         }
-                    }
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/tenant-roles",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "tenant-roles"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"admin\",\n            \"label\": \"Administrator\",\n            \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"manager\",\n            \"label\": \"Manager\",\n            \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Create Role",
@@ -2961,17 +3018,17 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"Manager\",\n    \"guard_name\": \"web\",\n    \"permissions\": [1, 2, 3]\n}"
+                            "raw": "{\n    \"name\": \"Manager\",\n    \"label\": \"Manager\",\n    \"permissions\": [1, 2, 3]\n}"
                         },
                         "url": {
-                            "raw": "{{base_url}}/api/central/roles",
+                            "raw": "{{base_url}}/api/tenant-roles/store",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "api",
-                                "central",
-                                "roles"
+                                "tenant-roles",
+                                "store"
                             ]
                         }
                     }

@@ -104,12 +104,12 @@ const Roles = () => {
     }
   ]
 
-  const { data, fetchData } = useFetch<Response<IRole[]>>('/api/role')
+  const { data, fetchData } = useFetch<Response<IRole[]>>('/api/tenant-roles')
   const { current_page, per_page } = data?.data || {}
   const { paginationModel, setPaginationModel } = usePagination({ current_page, per_page })
 
   useEffect(() => {
-    fetchData(`/api/role?page=${paginationModel.page + 1}`)
+    fetchData(`/api/tenant-roles?page=${paginationModel.page + 1}`)
   }, [paginationModel.page, fetchData])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +122,7 @@ const Roles = () => {
   const handleAddRole = async () => {
     try {
       setLoading(true)
-      const res = (await api('/api/role/store', {
+      const res = (await api('/api/tenant-roles/store', {
         method: 'POST',
         body: JSON.stringify(form)
       })) as PostResponse<keyof typeof initialState>
@@ -148,7 +148,7 @@ const Roles = () => {
   const handleUpdateRole = async () => {
     try {
       setLoading(true)
-      const res = (await api(`/api/role/update/${editingId}`, {
+      const res = (await api(`/api/tenant-roles/update/${editingId}`, {
         method: 'POST',
         body: JSON.stringify(form)
       })) as PostResponse<keyof typeof initialState>
@@ -174,7 +174,7 @@ const Roles = () => {
   const handleDeleteRole = async (id: number) => {
     try {
       setLoading(true)
-      await api(`/api/role/destroy/${id}`, {
+      await api(`/api/tenant-roles/destroy/${id}`, {
         method: 'DELETE'
       })
       await fetchData()

@@ -24,7 +24,11 @@ interface Response {
 const Home = () => {
   const { t } = useLang()
 
+<<<<<<< HEAD
   const { data } = useFetch<Response>('/api/dashboard', true, false)
+=======
+  const { data } = useFetch<Response>('/api/dashboard', true, true)
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   return (
     <Stack flexDirection='column' spacing={12}>
@@ -37,7 +41,7 @@ const Home = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <DelayedContracts
-                stats={data?.contracts.expired || 0}
+                stats={data?.contracts?.expired || 0}
                 chartColor='error'
                 title='Revenue Generated'
                 avatarIcon='tabler:credit-card'

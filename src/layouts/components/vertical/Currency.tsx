@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
+<<<<<<< HEAD
 import type { Currency } from 'src/@core/types/currency'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
@@ -28,6 +29,10 @@ type Response = {
   currency: string
   created_at: string
 }[]
+=======
+import { useLang } from 'src/providers/LanguageProvider'
+import { useCurrencies, useBaseCurrency } from 'src/hooks/api'
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 const CustomCloseButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   top: '10px',
@@ -53,6 +58,7 @@ const Currency = () => {
 
   const [hasSent, setHasSent] = useState(false)
 
+<<<<<<< HEAD
   useEffect(() => {
     const fetchData = async () => {
       const data = await currencyService.getAll()
@@ -62,6 +68,10 @@ const Currency = () => {
 
     fetchData()
   }, [])
+=======
+  const { currencies, loading, refetch } = useCurrencies()
+  const { baseCurrency } = useBaseCurrency()
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -80,11 +90,14 @@ const Currency = () => {
   const initialColumns: GridColDef[] = [
     { field: 'created_at', headerName: t.forms.dashboard.currency.form.created_at, flex: 1 },
     {
-      field: 'currency',
+      field: 'code',
       headerName: t.forms.dashboard.currency.form.currency,
       flex: 1,
       headerAlign: 'right',
-      align: 'right'
+      align: 'right',
+      renderCell: (params) => (
+        <span>{params.row.symbol} {params.value} - {params.row.rate}</span>
+      )
     }
   ]
 
@@ -100,7 +113,7 @@ const Currency = () => {
         }}
         onClick={() => setModal('set-currency-modal')}
       >
-        $ 12500
+        {baseCurrency ? `${baseCurrency.symbol} ${baseCurrency.rate}` : '$ 12500'}
       </Card>
 
       <Dialog
@@ -184,7 +197,7 @@ const Currency = () => {
 
             <DataGrid
               columns={initialColumns}
-              rows={data || []}
+              rows={currencies || []}
               autoHeight
               sx={{
                 '& .MuiDataGrid-columnHeaders': { backgroundColor: '#2F2B3D14' },
@@ -194,11 +207,12 @@ const Currency = () => {
               }}
               disableColumnMenu
               paginationModel={paginationModel}
+              loading={loading}
               slots={{
                 footer: () => (
                   <CustomFooter
-                    total={data?.length || 0}
-                    totalPages={data?.length || 0}
+                    total={currencies?.length || 0}
+                    totalPages={Math.ceil((currencies?.length || 0) / paginationModel.pageSize)}
                     page={paginationModel.page}
                     pageSize={paginationModel.pageSize}
                     onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}

@@ -12,7 +12,7 @@ class Logger {
     this.isDevelopment = process.env.NODE_ENV === 'development'
   }
 
-  private log(level: LogLevel, ...args: any[]): void {
+  private writeLog(level: LogLevel, ...args: any[]): void {
     if (!this.isDevelopment && level !== 'error') {
       // In production, only log errors
       return
@@ -39,24 +39,30 @@ class Logger {
     }
   }
 
+<<<<<<< HEAD
   // log(...args: any[]): void {
   //   this.log('log', ...args)
   // }
+=======
+  log(...args: any[]): void {
+    this.writeLog('log', ...args)
+  }
+>>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   info(...args: any[]): void {
-    this.log('info', ...args)
+    this.writeLog('info', ...args)
   }
 
   warn(...args: any[]): void {
-    this.log('warn', ...args)
+    this.writeLog('warn', ...args)
   }
 
   error(...args: any[]): void {
-    this.log('error', ...args)
+    this.writeLog('error', ...args)
   }
 
   debug(...args: any[]): void {
-    this.log('debug', ...args)
+    this.writeLog('debug', ...args)
   }
 
   // Group related logs together
