@@ -33,29 +33,6 @@ import toast from 'react-hot-toast'
 const Clients = () => {
   const { modal, clearModal, setModal } = useModal()
   const { t } = useLang()
-<<<<<<< HEAD
-=======
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10
-  })
-  const { clients, loading, refetch, meta } = useClients({ 
-    page: paginationModel.page + 1, // API uses 1-based indexing, DataGrid uses 0-based
-    per_page: paginationModel.pageSize 
-  })
-  const { deleteClient, loading: deleting } = useDeleteClient()
-  
-  const data = { data: clients }
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteClient(id)
-      refetch() // Refresh the list after deletion
-    } catch (error) {
-      // Error is already handled by the hook
-    }
-  }
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const initialColumns: GridColDef[] = [
     // { field: 'id', headerName: 'ID', flex: 1, minWidth: 10 },
@@ -219,13 +196,10 @@ const Clients = () => {
     }
   ]
 
-<<<<<<< HEAD
   const [paginationModel, setPaginationModel] = useState({
     page: 1,
     pageSize: 10
   })
-=======
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   const {
     anchorEl,
     handleSetAnchorEl,
@@ -241,7 +215,7 @@ const Clients = () => {
     phone: ''
   })
 
-  const { clients, loading, refetch } = useClients({ page: paginationModel.page, per_page: paginationModel.pageSize })
+  const { clients, loading, refetch, meta } = useClients({ page: paginationModel.page, per_page: paginationModel.pageSize })
   const { deleteClient, loading: deleting } = useDeleteClient()
 
   const data = { data: clients }

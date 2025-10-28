@@ -19,7 +19,6 @@ import { useEffect, useState } from 'react'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import CustomFooter from 'src/@core/components/TableFooter'
 import useModal from 'src/@core/store/modal'
-<<<<<<< HEAD
 import type { Currency } from 'src/@core/types/currency'
 import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
@@ -29,10 +28,6 @@ type Response = {
   currency: string
   created_at: string
 }[]
-=======
-import { useLang } from 'src/providers/LanguageProvider'
-import { useCurrencies, useBaseCurrency } from 'src/hooks/api'
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 const CustomCloseButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   top: '10px',
@@ -58,20 +53,15 @@ const Currency = () => {
 
   const [hasSent, setHasSent] = useState(false)
 
-<<<<<<< HEAD
   useEffect(() => {
     const fetchData = async () => {
       const data = await currencyService.getAll()
       setData(data.data)
-      console.log(data)
+      // console.log(data)
     }
 
     fetchData()
   }, [])
-=======
-  const { currencies, loading, refetch } = useCurrencies()
-  const { baseCurrency } = useBaseCurrency()
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -113,7 +103,7 @@ const Currency = () => {
         }}
         onClick={() => setModal('set-currency-modal')}
       >
-        {baseCurrency ? `${baseCurrency.symbol} ${baseCurrency.rate}` : '$ 12500'}
+{'$ 12500'}
       </Card>
 
       <Dialog
@@ -197,7 +187,7 @@ const Currency = () => {
 
             <DataGrid
               columns={initialColumns}
-              rows={currencies || []}
+              rows={data || []}
               autoHeight
               sx={{
                 '& .MuiDataGrid-columnHeaders': { backgroundColor: '#2F2B3D14' },
@@ -207,12 +197,12 @@ const Currency = () => {
               }}
               disableColumnMenu
               paginationModel={paginationModel}
-              loading={loading}
+              loading={false}
               slots={{
                 footer: () => (
                   <CustomFooter
-                    total={currencies?.length || 0}
-                    totalPages={Math.ceil((currencies?.length || 0) / paginationModel.pageSize)}
+                    total={data?.length || 0}
+                    totalPages={Math.ceil((data?.length || 0) / paginationModel.pageSize)}
                     page={paginationModel.page}
                     pageSize={paginationModel.pageSize}
                     onPageChange={newPage => setPaginationModel(prev => ({ ...prev, page: newPage }))}

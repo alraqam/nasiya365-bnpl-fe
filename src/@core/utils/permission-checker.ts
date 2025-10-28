@@ -26,30 +26,16 @@ export const routePermissions: Record<string, Permission> = {
   '/orders': { action: 'view', subject: 'orders' },
   '/orders/create': { action: 'create', subject: 'orders' },
   '/orders/edit': { action: 'edit', subject: 'orders' },
-<<<<<<< HEAD
-=======
-  '/orders/[id]': { action: 'view', subject: 'orders' },
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   '/orders/reminder': { action: 'view', subject: 'orders' },
 
   // Employees
   '/employees': { action: 'view', subject: 'employees' },
   '/employees/create': { action: 'create', subject: 'employees' },
   '/employees/edit': { action: 'edit', subject: 'employees' },
-<<<<<<< HEAD
 
   '/expenses': { action: 'view', subject: 'expenses' },
   '/expenses/create': { action: 'create', subject: 'expenses' },
   '/expenses/edit': { action: 'edit', subject: 'expenses' },
-=======
-  '/employees/[id]': { action: 'view', subject: 'employees' },
-
-  // Expenses
-  '/expenses': { action: 'view', subject: 'expenses' },
-  '/expenses/create': { action: 'create', subject: 'expenses' },
-  '/expenses/edit': { action: 'edit', subject: 'expenses' },
-  '/expenses/[id]': { action: 'view', subject: 'expenses' },
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   // Branches
   '/branches': { action: 'view', subject: 'branches' },
@@ -79,19 +65,10 @@ export const routePermissions: Record<string, Permission> = {
   '/investment/investors': { action: 'view', subject: 'investors' },
   '/investment/investors/create': { action: 'create', subject: 'investors' },
   '/investment/investors/edit': { action: 'edit', subject: 'investors' },
-<<<<<<< HEAD
 
   '/investment/investments': { action: 'view', subject: 'investments' },
   '/investment/investments/create': { action: 'create', subject: 'investments' },
   '/investment/investments/edit': { action: 'edit', subject: 'investments' },
-=======
-  '/investment/investors/[id]': { action: 'view', subject: 'investors' },
-  
-  '/investment/investments': { action: 'view', subject: 'investments' },
-  '/investment/investments/create': { action: 'create', subject: 'investments' },
-  '/investment/investments/edit': { action: 'edit', subject: 'investments' },
-  '/investment/investments/[id]': { action: 'view', subject: 'investments' },
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   '/investment/salary': { action: 'view', subject: 'investor-salary' },
 

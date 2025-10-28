@@ -24,8 +24,8 @@ import useModal from 'src/@core/store/modal'
 import IDevice from 'src/@core/types/device'
 import checkRequiredFields from 'src/@core/utils/check-required-fields'
 import useDebouncedFetch from 'src/hooks/useDebouncedFetch'
+import useFetch from 'src/hooks/useFetch'
 import { useLang } from 'src/providers/LanguageProvider'
-import { useBnplPlans } from 'src/hooks/api'
 
 interface Response {
   data: IDevice[]
@@ -78,14 +78,12 @@ const Calculator = () => {
   const [tenure, setTenure] = useState(2)
   const [percentage, setPercentage] = useState(2)
 
-<<<<<<< HEAD
   // tenure, percentage, name
 
-  const { data: plans } =
-    useFetch<{ id: number; tenure: number; percentage: number; name: string }[]>('/api/bnpl-plans')
-=======
-  const { plans } = useBnplPlans()
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
+  const { data: plansData } =
+    useFetch<{ data: { id: number; tenure: number; percentage: number; name: string; payment_periods?: number[]; min_period_months?: number; interest_rate?: number }[] }>('/api/bnpl-plans')
+  
+  const plans = plansData?.data || []
   const { data: products, fetchData: fetchProducts } = useDebouncedFetch<
     { id: number; model: string; provider: string; price: number }[]
   >(`/api/products?model_like=${form.model}`, {
@@ -167,7 +165,7 @@ const Calculator = () => {
   }, [form])
 
   const handleSubmit = async () => {
-    console.log(monthlyPayment)
+    // console.log(monthlyPayment)
   }
   return (
     <>
@@ -337,7 +335,7 @@ const Calculator = () => {
                 <Typography>Tarif</Typography>
                 <CustomTextField select fullWidth value={plan} onChange={e => setPlan(e.target.value)}>
                   {plans && plans.length > 0 ? (
-                    plans.map(option => (
+                    plans.map((option: any) => (
                       <MenuItem key={option.id} value={option.name}>
                         {option.name}
                       </MenuItem>

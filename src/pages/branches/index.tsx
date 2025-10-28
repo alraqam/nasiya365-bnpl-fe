@@ -40,9 +40,6 @@ const Branches = () => {
     pageSize: 10
   })
 
-<<<<<<< HEAD
-  const { data } = useFetch<Response[]>('/api/branches')
-=======
   const { branches, loading, refetch, meta } = useBranches({
     page: paginationModel.page + 1,
     per_page: paginationModel.pageSize
@@ -57,7 +54,6 @@ const Branches = () => {
       // Error is already handled by the hook
     }
   }
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   const initialColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', minWidth: 50, flex: 1 },

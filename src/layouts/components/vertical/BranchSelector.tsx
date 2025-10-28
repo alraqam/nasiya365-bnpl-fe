@@ -31,12 +31,23 @@ const BranchSelector = () => {
     }
   }
 
-  // Set first branch as default if none selected
+  // Validate and set branch selection
   useEffect(() => {
-    if (!branchesLoading && branches && branches.length > 0 && branch === '') {
-      const firstBranchId = branches[0].id
-      setBranch(firstBranchId)
-      storage.setItem(BRANCH_STORAGE_KEY, String(firstBranchId))
+    if (!branchesLoading && branches) {
+      // Check if current branch exists in the list
+      const branchExists = branch !== '' && branches.some(b => b.id === branch)
+      
+      // If selected branch doesn't exist, reset to empty or set first branch
+      if (!branchExists) {
+        if (branches.length > 0) {
+          const firstBranchId = branches[0].id
+          setBranch(firstBranchId)
+          storage.setItem(BRANCH_STORAGE_KEY, String(firstBranchId))
+        } else {
+          setBranch('')
+          storage.removeItem(BRANCH_STORAGE_KEY)
+        }
+      }
     }
   }, [branches, branchesLoading, branch])
 
@@ -46,7 +57,7 @@ const BranchSelector = () => {
         select
         fullWidth
         size="small"
-        value={branch}
+        value={branchesLoading ? '' : branch}
         onChange={handleChange}
         disabled={branchesLoading}
         InputProps={{

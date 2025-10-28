@@ -5,8 +5,6 @@
 
 import { PermissionGroups } from '../utils/permission-checker'
 import { Permission } from './employee'
-import { CentralUser, TenantUser } from 'src/context/types'
-import { PermissionsMap } from 'src/@core/utils/permission-transformer'
 
 export interface LoginRequest {
   email?: string
@@ -22,16 +20,11 @@ export interface RegisterRequest {
   password_confirmation: string
 }
 
-<<<<<<< HEAD
 export interface CentralLoginResponse {
-=======
-export interface LoginResponse {
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   status: boolean
   message: string
   data: {
     token: string
-<<<<<<< HEAD
     token_type: string
     user: CentralUser & {
       roles: {
@@ -65,18 +58,10 @@ export interface EmployeeLoginResponse {
       name: string
       subdomain: string
     }
-=======
-    user?: CentralUser
-    employee?: TenantUser
-    tenant?: Tenant
-    type: 'central' | 'tenant'
-    permission_groups: PermissionsMap // API format: Record<string, string[]>
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
   }
   errors?: Record<string, string[]>
 }
 
-<<<<<<< HEAD
 export interface CentralUser {
   id: number
   name: string
@@ -118,22 +103,6 @@ export interface TenantEmployee {
   is_active: boolean
   created_at: Date
   updated_at: Date
-=======
-// Transformed response with permissions converted to internal format
-export interface TransformedLoginResponse {
-  status: boolean
-  message: string
-  data: {
-    token: string
-    user?: CentralUser
-    employee?: TenantUser
-    tenant?: Tenant
-    type: 'central' | 'tenant'
-    permissions: Permission[] // Internal format: Array of {action, subject}
-  }
-  errors?: Record<string, string[]>
-  success?: boolean
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 }
 
 export interface Merchant {
@@ -152,16 +121,8 @@ export interface Merchant {
   updated_at: Date
 }
 
-<<<<<<< HEAD
 export type User = CentralUser | TenantEmployee
 export type UserType = 'central' | 'tenant'
-=======
-export interface Tenant {
-  id: number
-  name: string
-  subdomain: string
-}
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 export interface AuthUser {
   id: number

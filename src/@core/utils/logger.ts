@@ -39,15 +39,9 @@ class Logger {
     }
   }
 
-<<<<<<< HEAD
   // log(...args: any[]): void {
   //   this.log('log', ...args)
   // }
-=======
-  log(...args: any[]): void {
-    this.writeLog('log', ...args)
-  }
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
   info(...args: any[]): void {
     this.writeLog('info', ...args)

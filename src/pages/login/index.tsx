@@ -43,12 +43,8 @@ import { Permission } from 'src/@core/utils/permission-checker'
 import { ErrorResponse } from 'src/@core/types/response'
 import { storage } from 'src/@core/utils/storage'
 import { authService } from 'src/services/authService'
-<<<<<<< HEAD
 import { EmployeeLoginResponse } from 'src/@core/types/auth'
 import useHomeRoute from 'src/layouts/components/acl/useHomeRoute'
-=======
-import { TransformedLoginResponse } from 'src/@core/types/auth'
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -79,20 +75,15 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
 
 const defaultValues: FormData = {
   phone: '+998901000001',
-  password: 'admin123'
+  password: 'admin123',
+  company_schema: 'demo'
 }
 
 interface FormData {
   phone: string
   password: string
-<<<<<<< HEAD
-}
-=======
   company_schema: string
 }
-
-// Interface moved - using LoginResponse from auth types
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -122,16 +113,13 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (data: FormData) => {
-    const { phone, password } = data
+    const { phone, password, company_schema } = data
 
     try {
-<<<<<<< HEAD
       const res: EmployeeLoginResponse & { errors?: ErrorResponse } = await authService.employeeLogin({
-=======
-      const res: TransformedLoginResponse = await authService.employeeLogin({
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
         phone,
-        password
+        password,
+        company_schema
       })
 
       if ('success' in res && !res.success) {
@@ -160,33 +148,14 @@ const LoginPage = () => {
           })
         }
       } else if (res.status && res.data) {
-<<<<<<< HEAD
         auth.setUser(res.data.employee)
         auth.setPermissions(res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.token, res.data.token)
         storage.setJSON(STORAGE_KEYS.permissions, res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.user_type, 'tenant')
+        // Store tenant ID from login form for API requests
+        storage.setItem(STORAGE_KEYS.tenant_id, company_schema)
         router.push('/dashboard')
-=======
-        // Store all data BEFORE setting auth state
-        storage.setItem(STORAGE_KEYS.token, res.data.token)
-        storage.setJSON(STORAGE_KEYS.permissions, res.data.permissions)
-        storage.setItem(STORAGE_KEYS.user_type, res.data.type || 'tenant')
-        
-        // Store tenant ID for X-Tenant-ID header
-        const tenantId = res.data.tenant?.subdomain
-        
-        if (tenantId) {
-          storage.setItem(STORAGE_KEYS.tenant_id, String(tenantId))
-        }
-        
-        // Set auth state AFTER storage (this triggers AuthContext updates)
-        auth.setUser((res.data.employee || res.data.user) ?? null)
-        auth.setPermissions(res.data.permissions)
-        
-        // Redirect to dashboard with full page reload to ensure AuthContext loads from storage
-        window.location.href = '/dashboard'
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
       }
     } catch (error: any) {
       const err = error as ErrorResponse<FormData>
@@ -266,6 +235,27 @@ const LoginPage = () => {
               <Typography sx={{ color: 'text.secondary' }}>{t['welcome-description']}</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+              {/* Company Schema */}
+              <Box sx={{ mb: 6 }}>
+                <Controller
+                  name='company_schema'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      onBlur={onBlur}
+                      label='Company Subdomain'
+                      onChange={onChange}
+                      id='auth-login-v2-subdomain'
+                      error={Boolean(errors.company_schema)}
+                      {...(errors.company_schema && { helperText: errors.company_schema.message })}
+                      type='text'
+                    />
+                  )}
+                />
+              </Box>
               {/* Phone */}
               <Box sx={{ mb: 6 }}>
                 <Controller

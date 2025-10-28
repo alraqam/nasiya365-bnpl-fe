@@ -7,7 +7,7 @@ import env from './env'
 const BASE_URL = env.baseUrl
 
 interface FetchOptions extends RequestInit {
-  headers?: Record<string, string>
+  headers?: Record<string, string> | HeadersInit
   retry?: number
   retryDelay?: number
 }
@@ -84,13 +84,8 @@ class ApiClient {
     requestOptions.headers = {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-<<<<<<< HEAD
-      ...(requestOptions.headers || {}),
-      'X-Tenant-ID': 'demo'
-=======
       ...(tenantId ? { 'X-Tenant-ID': tenantId } : {}),
       ...(requestOptions.headers || {})
->>>>>>> 14108f2 (v2.1 fix all the api issues and change color scheme)
     }
     
     // Apply request interceptors
