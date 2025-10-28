@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { clientService } from 'src/services/clientService'
 import { Client, CreateClientRequest, UpdateClientRequest, ClientQueryParams } from 'src/@core/types/client'
+import { PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
 
 /**
@@ -15,13 +16,14 @@ export function useClients(params?: ClientQueryParams) {
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchClients = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const response = await clientService.getAll(params)
+      // The API may respond with different shapes (paginated / flat array)
+      const response = (await clientService.getAll(params)) as any
       // Handle nested response structure: { status, data: { data: [...], meta... } }
       if (response.data && Array.isArray(response.data.data)) {
         setClients(response.data.data)
@@ -75,8 +77,8 @@ export function useClient(id: number) {
     try {
       setLoading(true)
       setError(null)
-      const response = await clientService.getById(id)
-      // Handle nested response structure
+      const response = (await clientService.getById(id)) as any
+      // Support both nested { data: { data: client } } and flat { data: client } shapes
       if (response.data) {
         if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
           setClient(response.data.data)

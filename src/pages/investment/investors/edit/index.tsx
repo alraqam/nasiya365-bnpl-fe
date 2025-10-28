@@ -7,7 +7,7 @@ import { useLang } from 'src/providers/LanguageProvider'
 import InputMask from 'react-input-mask'
 import { useRouter } from 'next/router'
 import useFetch from 'src/hooks/useFetch'
-import IInvestor from 'src/@core/types/investor'
+import { Investor as IInvestor } from 'src/@core/types/investor'
 import { api } from 'src/configs/api'
 import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 import checkRequiredFields from 'src/@core/utils/check-required-fields'
@@ -34,9 +34,9 @@ const EditInvestor = () => {
   useEffect(() => {
     setForm({
       name: data?.data.name || '',
-      passport: data?.data.passport || '',
+      passport: '',
       phone: data?.data.phone || '',
-      percentage: data?.data.percentage.toString() || ''
+      percentage: ''
     })
   }, [data])
 

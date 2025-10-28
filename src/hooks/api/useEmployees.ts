@@ -11,7 +11,46 @@ import {
   UpdateEmployeeRequest,
   EmployeeQueryParams
 } from 'src/@core/types/employee'
+import { PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
+
+/**
+ * Helper to normalize employee list response
+ */
+function normalizeEmployeeList(response: any): { employees: Employee[]; meta: PaginationMeta | null } {
+  // Handle nested structure: { data: { data: [...], meta... } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data && Array.isArray(response.data.data)) {
+    const { data, ...paginationMeta } = response.data
+    return { employees: data, meta: paginationMeta }
+  }
+  
+  // Handle flat structure: { data: [...], meta... }
+  if (Array.isArray(response?.data)) {
+    return { employees: response.data, meta: response.meta || null }
+  }
+  
+  return { employees: [], meta: null }
+}
+
+/**
+ * Helper to normalize single employee response
+ */
+function normalizeEmployee(response: any): Employee | null {
+  // Handle nested structure: { data: { data: {...} } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data) {
+    const innerData = response.data.data
+    if (innerData && typeof innerData === 'object' && !Array.isArray(innerData)) {
+      return innerData as Employee
+    }
+  }
+  
+  // Handle flat structure: { data: {...} }
+  if (response?.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+    return response.data as Employee
+  }
+  
+  return null
+}
 
 /**
  * Hook to fetch all employees with pagination
@@ -20,25 +59,16 @@ export function useEmployees(params?: EmployeeQueryParams) {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchEmployees = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await employeeService.getAll(params)
-      // Handle nested response structure: { status, data: { data: [...], meta... } }
-      if (response.data && Array.isArray(response.data.data)) {
-        setEmployees(response.data.data)
-        const { data: _data, ...paginationMeta } = response.data
-        setMeta(paginationMeta)
-      } else if (Array.isArray(response.data)) {
-        setEmployees(response.data)
-        setMeta(response.meta)
-      } else {
-        setEmployees([])
-        setMeta(null)
-      }
+      const normalized = normalizeEmployeeList(response)
+      setEmployees(normalized.employees)
+      setMeta(normalized.meta)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load employees')
@@ -68,18 +98,8 @@ export function useEmployee(id: number) {
       setLoading(true)
       setError(null)
       const response = await employeeService.getById(id)
-      // Handle nested response structure
-      if (response.data) {
-        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
-          setEmployee(response.data.data)
-        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
-          setEmployee(response.data)
-        } else {
-          setEmployee(null)
-        }
-      } else {
-        setEmployee(null)
-      }
+      const normalized = normalizeEmployee(response)
+      setEmployee(normalized)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load employee')

@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 import { useLang } from 'src/providers/LanguageProvider'
 import { api } from 'src/configs/api'
 import useFetch from 'src/hooks/useFetch'
-import IClient from 'src/@core/types/client'
+import { Client as IClient } from 'src/@core/types/client'
 import env from 'src/configs/env'
 import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 import checkRequiredFields from 'src/@core/utils/check-required-fields'
@@ -61,7 +61,7 @@ const HoverOverlay = styled('div')({
 })
 
 const initialFormState = {
-  surname: '',
+  last_name: '',
   name: '',
   patronymic: '',
   phones: [''],
@@ -83,7 +83,7 @@ const initialFormState = {
   passportFile: null as File | null
 }
 
-const requiredFields: (keyof typeof initialFormState)[] = ['name', 'surname']
+const requiredFields: (keyof typeof initialFormState)[] = ['name', 'last_name']
 
 const EditClient = () => {
   const { t } = useLang()
@@ -101,10 +101,10 @@ const EditClient = () => {
     if (!data) return
 
     setForm({
-      surname: data.surname || '',
-      name: data.name || '',
+      last_name: data.last_name || '',
+      name: data.first_name || '',
       patronymic: data.middle_name || '',
-      phones: data.phone || [''],
+      phones: Array.isArray(data.phone) ? data.phone : (data.phone ? [data.phone] : ['']),
       email: data.email || '',
       gender: data.gender?.toString() || '',
       workplace: data.workplace || '',
@@ -116,15 +116,15 @@ const EditClient = () => {
       birthPlace: data.place_of_birth || '',
       address: data.place_of_residence || '',
       registeredAddress: data.place_of_registration || '',
-      guarantor: data.guarantor || data.bail_name || '',
-      guarantorPhones: data.bail_phone ? [data.bail_phone] : [''],
-      status: data.family_status || '',
+      guarantor: '',
+      guarantorPhones: [''],
+      status: '',
       applicationFile: null,
       passportFile: null
     })
 
     setFilePreviews({
-      application: data.file !== 'undefined' ? data.file : null,
+      application: null,
       passport: data.file_passport ? env.baseUrl + '/files/' + data.file_passport : null
     })
   }, [client])
@@ -329,9 +329,9 @@ const EditClient = () => {
       const res = await api(`/api/updateClient/${id}`, {
         method: 'POST',
         body: JSON.stringify({
-          name: form.name,
+          first_name: form.name,
           middle_name: form.patronymic,
-          surname: form.surname,
+          last_name: form.last_name,
           passport: form.passportSeries,
           passport_status: null,
           place_of_issue: form.passportIssuer,
@@ -386,7 +386,7 @@ const EditClient = () => {
                     <Typography variant='body1'>
                       {t.forms.client.surname} <span style={{ color: 'red' }}>*</span>
                     </Typography>
-                    <CustomTextField fullWidth name='surname' value={form.surname} onChange={handleChange} />
+                    <CustomTextField fullWidth name='last_name' value={form.last_name} onChange={handleChange} />
                   </Grid>
 
                   {/* Name */}

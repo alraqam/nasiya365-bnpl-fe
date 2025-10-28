@@ -5,76 +5,49 @@
  */
 
 import { api, apiClient } from 'src/configs/api'
-import {
-  Currency,
-  CreateCurrencyRequest,
-  UpdateCurrencyRateRequest,
-  ConvertCurrencyRequest,
-  ConvertCurrencyResponse,
-  CurrencyRates,
-  CurrencyStats
-} from 'src/@core/types/currency'
+import { Currency, CurrencyRates } from 'src/@core/types/currency'
 
 export const currencyService = {
   /**
-   * Get all currencies
+   * Get available currencies
    */
-  getAll: () =>
-    api<{ data: Currency[] }>('/api/currencies'),
+  getAll: () => api<{ data: Currency[] }>('/api/currencies'),
 
   /**
-   * Get a single currency by ID
+   * Get a single currency by code
    */
-  getById: (id: number) =>
-    api<{ data: Currency }>(`/api/currencies/${id}`),
+  getByCode: (code: string) => api<{ data: Currency }>(`/api/currencies/${code}`),
 
   /**
    * Create a new currency
    */
-  create: (data: CreateCurrencyRequest) =>
+  create: (data: { code: string; name: string; symbol: string; rate: number; is_active?: boolean }) =>
     apiClient.post<{ data: Currency }>('/api/currencies', data),
 
   /**
-   * Update currency exchange rate
+   * Update currency rate
    */
-  updateRate: (id: number, data: UpdateCurrencyRateRequest) =>
+  updateRate: (id: number, data: { rate: number }) =>
     apiClient.put<{ data: Currency }>(`/api/currencies/${id}/rate`, data),
 
   /**
-   * Set a currency as base currency
+   * Convert currency
    */
-  setBase: (id: number) =>
-    apiClient.post(`/api/currencies/${id}/set-base`),
+  convert: (data: { amount: number; from_currency: string; to_currency: string }) =>
+    api<{ data: { converted_amount: number; rate: number } }>('/api/currencies/convert', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
 
   /**
-   * Convert amount between currencies
+   * Get base currency
    */
-  convert: (data: ConvertCurrencyRequest) =>
-    apiClient.post<{ data: ConvertCurrencyResponse }>('/api/currencies/convert', data),
+  getBaseCurrency: () => api<{ data: Currency }>('/api/currencies/base'),
 
   /**
-   * Get all exchange rates
+   * Get currency rates
    */
-  getAllRates: () =>
-    api<{ data: CurrencyRates }>('/api/currencies/rates'),
-
-  /**
-   * Fetch latest rates from external source
-   */
-  fetchRates: () =>
-    apiClient.post('/api/currencies/fetch-rates'),
-
-  /**
-   * Get current base currency
-   */
-  getBaseCurrency: () =>
-    api<{ data: Currency }>('/api/currencies/base'),
-
-  /**
-   * Get currency statistics
-   */
-  getStats: () =>
-    api<{ data: CurrencyStats }>('/api/currencies/stats')
+  getRates: () => api<{ data: CurrencyRates }>('/api/currencies/rates')
 }
 
 

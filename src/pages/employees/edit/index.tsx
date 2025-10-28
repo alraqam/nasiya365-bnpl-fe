@@ -15,7 +15,7 @@ import dateToString from 'src/@core/utils/date-to-string'
 import { PostResponse, Response } from 'src/@core/types/base-response'
 import useFetch from 'src/hooks/useFetch'
 import IRole from 'src/@core/types/role'
-import IEmployee from 'src/@core/types/employee'
+import { Employee as IEmployee } from 'src/@core/types/employee'
 import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 import { ApiResponse } from 'src/@core/types/api'
 
@@ -35,22 +35,22 @@ const CreateEmployee = () => {
 
   useEffect(() => {
     setForm({
-      phone1: data?.data.phone1 || '',
-      phone2: data?.data.phone2 || '',
+      phone1: data?.data.phone || '',
+      phone2: '',
       email: data?.data.email || '',
       password: '',
       confirm_password: '',
       name: data?.data.name || '',
-      surname: data?.data.surname || '',
-      middle_name: data?.data.middle_name || '',
-      passport: data?.data.passport || '',
-      place_of_issue: data?.data.place_of_issue || '',
-      date_of_issue: data?.data.date_of_issue ? new Date(data?.data.date_of_issue) : null,
-      date_of_birth: data?.data.date_of_birth ? new Date(data?.data.date_of_birth) : null,
-      gender: data?.data.gender.toString() || '0',
-      place_of_birth: data?.data.place_of_birth || '',
-      place_of_residence: data?.data.place_of_residence || '',
-      role_id: data?.data.role_id || 0
+      surname: '',
+      middle_name: '',
+      passport: '',
+      place_of_issue: '',
+      date_of_issue: null,
+      date_of_birth: null,
+      gender: '0',
+      place_of_birth: '',
+      place_of_residence: '',
+      role_id: (data?.data.role?.id) || 0
     })
   }, [data])
 
@@ -69,8 +69,7 @@ const CreateEmployee = () => {
         method: 'PUT',
         body: JSON.stringify({
           ...form,
-          phone1: form.phone1.replace(/\D/g, ''),
-          phone2: form.phone1.replace(/\D/g, ''),
+          phone: form.phone1.replace(/\D/g, ''),
           date_of_issue: dateToString(form.date_of_issue),
           date_of_birth: dateToString(form.date_of_birth)
         })

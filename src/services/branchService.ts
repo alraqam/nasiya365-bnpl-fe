@@ -14,6 +14,16 @@ import {
 } from 'src/@core/types/branch'
 import { PaginatedResponse } from 'src/@core/types/api'
 
+type BranchListResponse =
+  | PaginatedResponse<Branch>
+  | { data: Branch[]; meta?: unknown }
+  | { data: { data: Branch[]; meta?: unknown }; meta?: unknown }
+  | Branch[]
+
+type BranchSingleResponse =
+  | { data: Branch }
+  | { data: { data: Branch } }
+
 export const branchService = {
   /**
    * Get all branches with pagination
@@ -26,7 +36,7 @@ export const branchService = {
     if (params?.is_active !== undefined) query.append('is_active', params.is_active.toString())
 
     const queryString = query.toString()
-    return api<PaginatedResponse<Branch>>(
+    return api<BranchListResponse>(
       `/api/branches${queryString ? '?' + queryString : ''}`
     )
   },
@@ -35,19 +45,19 @@ export const branchService = {
    * Get a single branch by ID
    */
   getById: (id: number) =>
-    api<{ data: Branch }>(`/api/branches/${id}`),
+    api<BranchSingleResponse>(`/api/branches/${id}`),
 
   /**
    * Create a new branch
    */
   create: (data: CreateBranchRequest) =>
-    apiClient.post<{ data: Branch }>('/api/branches', data),
+    apiClient.post<BranchSingleResponse>('/api/branches', data),
 
   /**
    * Update an existing branch
    */
   update: (id: number, data: UpdateBranchRequest) =>
-    apiClient.put<{ data: Branch }>(`/api/branches/${id}`, data),
+    apiClient.put<BranchSingleResponse>(`/api/branches/${id}`, data),
 
   /**
    * Delete a branch

@@ -39,7 +39,7 @@ import { api } from 'src/configs/api'
 import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
-import { Permission } from 'src/@core/utils/permission-checker'
+import { convertToPermissionGroups } from 'src/@core/utils/permission-checker'
 import { ErrorResponse } from 'src/@core/types/response'
 import { storage } from 'src/@core/utils/storage'
 import { authService } from 'src/services/authService'
@@ -116,7 +116,7 @@ const LoginPage = () => {
     const { phone, password, company_schema } = data
 
     try {
-      const res: EmployeeLoginResponse & { errors?: ErrorResponse } = await authService.employeeLogin({
+      const res = await authService.employeeLogin({
         phone,
         password,
         company_schema
@@ -149,9 +149,10 @@ const LoginPage = () => {
         }
       } else if (res.status && res.data) {
         auth.setUser(res.data.employee)
-        auth.setPermissions(res.data.employee.permission_groups)
+        const permissionGroups = convertToPermissionGroups(res.data.employee.permissions)
+        storage.setJSON(STORAGE_KEYS.permissions, permissionGroups)
+        auth.setPermissions(permissionGroups)
         storage.setItem(STORAGE_KEYS.token, res.data.token)
-        storage.setJSON(STORAGE_KEYS.permissions, res.data.employee.permission_groups)
         storage.setItem(STORAGE_KEYS.user_type, 'tenant')
         // Store tenant ID from login form for API requests
         storage.setItem(STORAGE_KEYS.tenant_id, company_schema)

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, ZodError } from 'zod'
 
 const envSchema = z.object({
   NEXT_PUBLIC_API_BASE_URL: z.string().url('Invalid API base URL'),
@@ -14,7 +14,7 @@ function validateEnv(): Env {
       NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV
     })
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       const missingVars = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join('\n')
       throw new Error(`Environment variable validation failed:\n${missingVars}`)
     }

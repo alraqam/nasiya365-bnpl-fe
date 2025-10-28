@@ -62,11 +62,10 @@ export function useCurrency(id: number) {
     try {
       setLoading(true)
       setError(null)
-      const response = await currencyService.getById(id)
+      const response = (await currencyService.getByCode(String(id))) as any
       // Handle nested response structure: { status, data: { data: {...} } } or { data: {...} }
-      if (response.data) {
-        // Check if it's double nested
-        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
+      if (response?.data) {
+        if (response.data?.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
           setCurrency(response.data.data)
         } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
           setCurrency(response.data)
@@ -105,7 +104,7 @@ export function useCreateCurrency() {
     try {
       setLoading(true)
       setError(null)
-      const response = await currencyService.create(data)
+      const response = (await currencyService.create(data)) as any
       toast.success('Currency created successfully')
       return response.data
     } catch (err) {
@@ -131,7 +130,7 @@ export function useUpdateCurrencyRate() {
     try {
       setLoading(true)
       setError(null)
-      const response = await currencyService.updateRate(id, data)
+      const response = (await currencyService.updateRate(id, data)) as any
       toast.success('Currency rate updated successfully')
       return response.data
     } catch (err) {
@@ -157,7 +156,7 @@ export function useConvertCurrency() {
     try {
       setLoading(true)
       setError(null)
-      const response = await currencyService.convert(data)
+      const response = (await currencyService.convert(data)) as any
       return response.data
     } catch (err) {
       setError(err as Error)
@@ -183,7 +182,7 @@ export function useBaseCurrency() {
     try {
       setLoading(true)
       setError(null)
-      const response = await currencyService.getBaseCurrency()
+      const response = (await currencyService.getBaseCurrency()) as any
       // Handle nested response structure: { status, data: { data: {...} } } or { data: {...} }
       if (response.data) {
         // Check if it's double nested

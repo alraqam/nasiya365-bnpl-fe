@@ -12,7 +12,25 @@ import {
   BnplPlanQueryParams,
   CalculatePlanPreviewRequest
 } from 'src/@core/types/bnpl-plan'
+import { PaginatedResponse, PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
+
+interface ApiResponse<T> {
+  data: T
+  meta?: Record<string, any>
+}
+
+function extractData<T>(response: PaginatedResponse<T> | ApiResponse<T[]> | T[]): { items: T[]; meta: PaginationMeta | null } {
+  if (Array.isArray(response)) {
+    return { items: response, meta: null }
+  }
+
+  if ('data' in response && Array.isArray(response.data)) {
+    return { items: response.data, meta: ('meta' in response && response.meta) ? response.meta as PaginationMeta : null }
+  }
+
+  return { items: [], meta: null }
+}
 
 /**
  * Hook to fetch all BNPL plans with pagination
@@ -21,25 +39,16 @@ export function useBnplPlans(params?: BnplPlanQueryParams) {
   const [plans, setPlans] = useState<BnplPlan[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchPlans = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await bnplPlanService.getAll(params)
-      // Handle nested response structure: { status, data: { data: [...], meta... } }
-      if (response.data && Array.isArray(response.data.data)) {
-        setPlans(response.data.data)
-        const { data: _data, ...paginationMeta } = response.data
-        setMeta(paginationMeta)
-      } else if (Array.isArray(response.data)) {
-        setPlans(response.data)
-        setMeta(response.meta)
-      } else {
-        setPlans([])
-        setMeta(null)
-      }
+      const { items, meta } = extractData<BnplPlan>(response as any)
+      setPlans(items)
+      setMeta(meta)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load BNPL plans')

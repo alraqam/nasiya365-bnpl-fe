@@ -39,7 +39,7 @@ import { api } from 'src/configs/api'
 import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
-import { Permission } from 'src/@core/utils/permission-checker'
+import { PermissionGroups, convertToPermissionGroups, mergePermissionGroups } from 'src/@core/utils/permission-checker'
 import { ErrorResponse } from 'src/@core/types/response'
 import { authService } from 'src/services/authService'
 import { CentralLoginResponse } from 'src/@core/types/auth'
@@ -142,9 +142,12 @@ const AdminLogin = () => {
         }
       } else {
         auth.setUser(res.data.user)
-        auth.setPermissions(res.data.user.permission_groups)
+        const permissionGroups: PermissionGroups = Array.isArray(res.data.user.permission_groups)
+          ? mergePermissionGroups(res.data.user.permission_groups)
+          : res.data.user.permission_groups || {}
+        auth.setPermissions(permissionGroups)
         localStorage.setItem(STORAGE_KEYS.token, res.data.token)
-        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(res.data.user.permission_groups))
+        localStorage.setItem(STORAGE_KEYS.permissions, JSON.stringify(permissionGroups))
         localStorage.setItem(STORAGE_KEYS.user_type, 'central')
         router.push(homeRoute)
       }

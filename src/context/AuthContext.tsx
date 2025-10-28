@@ -5,7 +5,7 @@ import { createContext, useState, ReactNode, useEffect, useCallback } from 'reac
 import { AuthValuesType } from './types'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { api } from 'src/configs/api'
-import { PermissionGroups } from 'src/@core/utils/permission-checker'
+import { Permission, PermissionGroups, convertToPermissionGroups, mergePermissionGroups } from 'src/@core/utils/permission-checker'
 import { storage } from 'src/@core/utils/storage'
 import { logger } from 'src/@core/utils/logger'
 import { CentralUser, TenantEmployee, User, UserType } from 'src/@core/types/auth'
@@ -16,8 +16,8 @@ const defaultProvider: AuthValuesType = {
   loading: true,
   setUser: () => null,
   setLoading: () => Boolean,
-  permissions: [],
-  setPermissions: () => []
+  permissions: {},
+  setPermissions: (_value: PermissionGroups) => undefined
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -31,7 +31,7 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null>(defaultProvider.user)
   const [userType, setUserType] = useState<UserType>()
 
-  const [permissions, setPermissions] = useState<PermissionGroups[]>(defaultProvider.permissions)
+  const [permissions, setPermissions] = useState<PermissionGroups>(defaultProvider.permissions)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
@@ -60,14 +60,40 @@ const AuthProvider = ({ children }: Props) => {
     }
   }, [userType])
 
+  const normalizePermissions = (
+    cached: PermissionGroups | Permission[] | PermissionGroups[] | null | undefined
+  ): PermissionGroups => {
+    if (!cached) {
+      return {}
+    }
+
+    if (Array.isArray(cached)) {
+      if (cached.length === 0) {
+        return {}
+      }
+
+      const isPermission = (value: unknown): value is Permission =>
+        !!value && typeof value === 'object' && 'subject' in value && 'action' in value
+
+      if (isPermission(cached[0])) {
+        return convertToPermissionGroups(cached as Permission[])
+      }
+
+      return mergePermissionGroups(cached as PermissionGroups[])
+    }
+
+    return cached
+  }
+
   useEffect(() => {
     const storedToken = storage.getItem(STORAGE_KEYS.token)
     const storedUserType = storage.getItem(STORAGE_KEYS.user_type)
-    const cachedPermissions = storage.getJSON<Permission[]>(STORAGE_KEYS.permissions) || []
+    const cachedPermissions = storage.getJSON<PermissionGroups | Permission[] | PermissionGroups[]>(STORAGE_KEYS.permissions)
+    const permissionsGroup = normalizePermissions(cachedPermissions)
 
     setToken(storedToken)
     setUserType(storedUserType as UserType)
-    setPermissions(cachedPermissions)
+    setPermissions(permissionsGroup)
     setLoading(false)
   }, [])
 
@@ -78,8 +104,8 @@ const AuthProvider = ({ children }: Props) => {
       fetchUser()
     }
 
-    const cachedPermissions = storage.getJSON<PermissionGroups[]>(STORAGE_KEYS.permissions) || []
-    setPermissions(cachedPermissions)
+    const cachedPermissions = storage.getJSON<PermissionGroups | Permission[] | PermissionGroups[]>(STORAGE_KEYS.permissions)
+    setPermissions(normalizePermissions(cachedPermissions))
   }, [token, user, fetchUser])
 
   const values = {

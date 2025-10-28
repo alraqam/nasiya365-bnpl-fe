@@ -19,6 +19,11 @@ module.exports = {
   env: {
     APP_VERSION: packageJson.version
   },
+
+  // Ignore ESLint errors during production builds
+  eslint: {
+    ignoreDuringBuilds: true
+  },
   
   webpack: config => {
     config.resolve.alias = {

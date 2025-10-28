@@ -13,7 +13,46 @@ import {
   CalculateOrderPreview,
   PaymentRequest
 } from 'src/@core/types/order'
+import { PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
+
+/**
+ * Helper to normalize order list response
+ */
+function normalizeOrderList(response: any): { orders: Order[]; meta: PaginationMeta | null } {
+  // Handle nested structure: { data: { data: [...], meta... } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data && Array.isArray(response.data.data)) {
+    const { data, ...paginationMeta } = response.data
+    return { orders: data, meta: paginationMeta }
+  }
+  
+  // Handle flat structure: { data: [...], meta... }
+  if (Array.isArray(response?.data)) {
+    return { orders: response.data, meta: response.meta || null }
+  }
+  
+  return { orders: [], meta: null }
+}
+
+/**
+ * Helper to normalize single order response
+ */
+function normalizeOrder(response: any): Order | null {
+  // Handle nested structure: { data: { data: {...} } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data) {
+    const innerData = response.data.data
+    if (innerData && typeof innerData === 'object' && !Array.isArray(innerData)) {
+      return innerData as Order
+    }
+  }
+  
+  // Handle flat structure: { data: {...} }
+  if (response?.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+    return response.data as Order
+  }
+  
+  return null
+}
 
 /**
  * Hook to fetch all orders with pagination
@@ -22,25 +61,16 @@ export function useOrders(params?: OrderQueryParams) {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await orderService.getAll(params)
-      // Handle nested response structure: { status, data: { data: [...], meta... } }
-      if (response.data && Array.isArray(response.data.data)) {
-        setOrders(response.data.data)
-        const { data: _data, ...paginationMeta } = response.data
-        setMeta(paginationMeta)
-      } else if (Array.isArray(response.data)) {
-        setOrders(response.data)
-        setMeta(response.meta)
-      } else {
-        setOrders([])
-        setMeta(null)
-      }
+      const normalized = normalizeOrderList(response)
+      setOrders(normalized.orders)
+      setMeta(normalized.meta)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load orders')
@@ -70,18 +100,8 @@ export function useOrder(id: number) {
       setLoading(true)
       setError(null)
       const response = await orderService.getById(id)
-      // Handle nested response structure
-      if (response.data) {
-        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
-          setOrder(response.data.data)
-        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
-          setOrder(response.data)
-        } else {
-          setOrder(null)
-        }
-      } else {
-        setOrder(null)
-      }
+      const normalized = normalizeOrder(response)
+      setOrder(normalized)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load order')

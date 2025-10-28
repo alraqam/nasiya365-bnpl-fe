@@ -12,7 +12,73 @@ import {
   BranchQueryParams,
   BranchStats
 } from 'src/@core/types/branch'
+import { PaginatedResponse, PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
+
+type BranchListApiResponse =
+  | PaginatedResponse<Branch>
+  | { data: { data: Branch[]; meta?: unknown }; meta?: unknown }
+  | { data: Branch[]; meta?: unknown }
+  | Branch[]
+
+type BranchSingleApiResponse =
+  | { data: { data: Branch } }
+  | { data: Branch }
+  | null
+  | undefined
+
+type BranchStatsApiResponse = { data?: BranchStats | null }
+
+const extractBranchList = (response: BranchListApiResponse): { items: Branch[]; meta: PaginationMeta | null } => {
+  if (Array.isArray(response)) {
+    return { items: response, meta: null }
+  }
+
+  if (response && typeof response === 'object') {
+    const topLevel = response as { data?: unknown; meta?: unknown }
+    const topMeta = ('meta' in topLevel && topLevel.meta) ? topLevel.meta as PaginationMeta : null
+    const rawData = topLevel.data
+
+    if (Array.isArray(rawData)) {
+      return { items: rawData, meta: topMeta }
+    }
+
+    if (rawData && typeof rawData === 'object' && !Array.isArray(rawData)) {
+      const nested = rawData as { data?: unknown; meta?: unknown }
+      if (Array.isArray(nested.data)) {
+        const nestedMeta = ('meta' in nested && nested.meta) ? nested.meta as PaginationMeta : null
+        return { items: nested.data, meta: nestedMeta ?? topMeta }
+      }
+    }
+  }
+
+  return { items: [], meta: null }
+}
+
+const extractBranchSingle = (response: BranchSingleApiResponse): Branch | null => {
+  if (!response || typeof response !== 'object') {
+    return null
+  }
+
+  const topLevel = response as { data?: unknown }
+  if (!('data' in topLevel)) {
+    return null
+  }
+
+  const raw = topLevel.data
+
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    const maybeNested = raw as { data?: unknown }
+
+    if ('data' in maybeNested && maybeNested.data && typeof maybeNested.data === 'object' && !Array.isArray(maybeNested.data)) {
+      return maybeNested.data as Branch
+    }
+
+    return raw as Branch
+  }
+
+  return null
+}
 
 /**
  * Hook to fetch all branches with pagination
@@ -21,25 +87,16 @@ export function useBranches(params?: BranchQueryParams) {
   const [branches, setBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchBranches = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const response = await branchService.getAll(params)
-      // Handle nested response structure: { status, data: { data: [...], meta... } }
-      if (response.data && Array.isArray(response.data.data)) {
-        setBranches(response.data.data)
-        const { data: _data, ...paginationMeta } = response.data
-        setMeta(paginationMeta)
-      } else if (Array.isArray(response.data)) {
-        setBranches(response.data)
-        setMeta(response.meta)
-      } else {
-        setBranches([])
-        setMeta(null)
-      }
+      const response = (await branchService.getAll(params)) as BranchListApiResponse
+      const { items, meta } = extractBranchList(response)
+      setBranches(items)
+      setMeta(meta)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load branches')
@@ -50,14 +107,14 @@ export function useBranches(params?: BranchQueryParams) {
 
   useEffect(() => {
     let cancelled = false
-    
+
     const loadBranches = async () => {
       if (cancelled) return
       await fetchBranches()
     }
-    
+
     loadBranches()
-    
+
     return () => {
       cancelled = true
     }
@@ -79,19 +136,8 @@ export function useBranch(id: number) {
     try {
       setLoading(true)
       setError(null)
-      const response = await branchService.getById(id)
-      // Handle nested response structure
-      if (response.data) {
-        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
-          setBranch(response.data.data)
-        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
-          setBranch(response.data)
-        } else {
-          setBranch(null)
-        }
-      } else {
-        setBranch(null)
-      }
+      const response = (await branchService.getById(id)) as BranchSingleApiResponse
+      setBranch(extractBranchSingle(response))
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load branch')
@@ -102,16 +148,16 @@ export function useBranch(id: number) {
 
   useEffect(() => {
     let cancelled = false
-    
+
     const loadBranch = async () => {
       if (cancelled || !id) return
       await fetchBranch()
     }
-    
+
     if (id) {
       loadBranch()
     }
-    
+
     return () => {
       cancelled = true
     }
@@ -133,12 +179,8 @@ export function useBranchStats(id: number) {
     try {
       setLoading(true)
       setError(null)
-      const response = await branchService.getStats(id)
-      if (response.data) {
-        setStats(response.data)
-      } else {
-        setStats(null)
-      }
+      const response = (await branchService.getStats(id)) as BranchStatsApiResponse
+      setStats(response?.data ?? null)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load branch statistics')
@@ -149,16 +191,16 @@ export function useBranchStats(id: number) {
 
   useEffect(() => {
     let cancelled = false
-    
+
     const loadStats = async () => {
       if (cancelled || !id) return
       await fetchStats()
     }
-    
+
     if (id) {
       loadStats()
     }
-    
+
     return () => {
       cancelled = true
     }

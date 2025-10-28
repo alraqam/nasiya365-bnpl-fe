@@ -131,12 +131,12 @@ const OrderDetail = () => {
                   sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
                 >
                   <Typography>
-                    {dateToString(data?.data.order.startDate || new Date(), 'day-month-year', '.')}
+                    {dateToString(data?.data.order.created_at ? new Date(data.data.order.created_at) : new Date(), 'day-month-year', '.')}
                   </Typography>
-                  <Typography>{data?.data.order.NumberOrder}</Typography>
-                  <Typography>{data?.data.order.pay_type}</Typography>
-                  <Typography>${data?.data.order.rest_summa}</Typography>
-                  <Typography>{data?.data.order.notes}</Typography>
+                  <Typography>{data?.data.order.id}</Typography>
+                  <Typography>{data?.data.order.is_cash ? 'Cash' : 'BNPL'}</Typography>
+                  <Typography>${data?.data.order.summa}</Typography>
+                  <Typography>{data?.data.order.status}</Typography>
                 </Box>
               </Box>
               {/* middle */}
@@ -149,10 +149,10 @@ const OrderDetail = () => {
                 <Box
                   sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
                 >
-                  <Typography>{data?.data.device.model}</Typography>
-                  <Typography>{data?.data.device.imei}</Typography>
+                  <Typography>{data?.data.order.model || 'N/A'}</Typography>
+                  <Typography>{'N/A'}</Typography>
                   <Typography>
-                    {data?.data.client.name} {data?.data.client.surname}
+                    {data?.data.client.first_name} {data?.data.client.last_name}
                   </Typography>
                 </Box>
               </Box>
@@ -167,8 +167,8 @@ const OrderDetail = () => {
                 <Box
                   sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: { xs: 'right', md: 'justify' } }}
                 >
-                  <Typography>${data?.data.order.body_price.toLocaleString()}</Typography>
-                  <Typography>{data?.data.client.bail_name}</Typography>
+                  <Typography>${data?.data.order.summa.toLocaleString()}</Typography>
+                  {/* <Typography>{data?.data.client.bail_name}</Typography> */}
                   <Typography>{data?.data.order.box ? t.given : t['not-given']}</Typography>
                   {data?.data.phone.map(item => (
                     <Typography key={item}>{formatPhoneNumber(item)}</Typography>
@@ -285,7 +285,7 @@ const OrderDetail = () => {
               }}
             >
               <HeaderItemTitle>Boshlang'ich to'lov:</HeaderItemTitle>
-              <Typography>${data?.data.order.initial_payment.toLocaleString()}</Typography>
+              <Typography>${data?.data.order.initial_payment?.toLocaleString()}</Typography>
             </Box>
             <Box
               sx={{
@@ -298,7 +298,7 @@ const OrderDetail = () => {
               }}
             >
               <HeaderItemTitle>Qolgan summa:</HeaderItemTitle>
-              <Typography>${data?.data.order.rest_summa.toLocaleString()}</Typography>
+              <Typography>${data?.data.order.rest_summa?.toLocaleString()}</Typography>
             </Box>
             <Box
               sx={{

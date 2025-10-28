@@ -103,6 +103,11 @@ export interface TenantEmployee {
   is_active: boolean
   created_at: Date
   updated_at: Date
+  role?: {
+    id: number
+    name: string
+    label: string
+  }
 }
 
 export interface Merchant {

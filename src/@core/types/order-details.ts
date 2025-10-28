@@ -1,6 +1,6 @@
-import IClient from 'src/@core/types/client'
+import { Client as IClient } from 'src/@core/types/client'
 import IDevice from 'src/@core/types/device'
-import IOrder from 'src/@core/types/order'
+import { Order as IOrder } from 'src/@core/types/order'
 
 export interface Payment {
   amount: number

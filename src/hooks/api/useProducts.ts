@@ -12,7 +12,46 @@ import {
   UpdateProductRequest,
   ProductQueryParams
 } from 'src/@core/types/product'
+import { PaginationMeta } from 'src/@core/types/api'
 import toast from 'react-hot-toast'
+
+/**
+ * Helper to normalize product list response
+ */
+function normalizeProductList(response: any): { products: Product[]; meta: PaginationMeta | null } {
+  // Handle nested structure: { data: { data: [...], meta... } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data && Array.isArray(response.data.data)) {
+    const { data, ...paginationMeta } = response.data
+    return { products: data, meta: paginationMeta }
+  }
+  
+  // Handle flat structure: { data: [...], meta... }
+  if (Array.isArray(response?.data)) {
+    return { products: response.data, meta: response.meta || null }
+  }
+  
+  return { products: [], meta: null }
+}
+
+/**
+ * Helper to normalize single product response
+ */
+function normalizeProduct(response: any): Product | null {
+  // Handle nested structure: { data: { data: {...} } }
+  if (response?.data && typeof response.data === 'object' && 'data' in response.data) {
+    const innerData = response.data.data
+    if (innerData && typeof innerData === 'object' && !Array.isArray(innerData)) {
+      return innerData as Product
+    }
+  }
+  
+  // Handle flat structure: { data: {...} }
+  if (response?.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+    return response.data as Product
+  }
+  
+  return null
+}
 
 /**
  * Hook to fetch all products with pagination
@@ -21,25 +60,16 @@ export function useProducts(params?: ProductQueryParams) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [meta, setMeta] = useState<any>(null)
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
 
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await productService.getAll(params)
-      // Handle nested response structure: { status, data: { data: [...], meta... } }
-      if (response.data && Array.isArray(response.data.data)) {
-        setProducts(response.data.data)
-        const { data: _data, ...paginationMeta } = response.data
-        setMeta(paginationMeta)
-      } else if (Array.isArray(response.data)) {
-        setProducts(response.data)
-        setMeta(response.meta)
-      } else {
-        setProducts([])
-        setMeta(null)
-      }
+      const normalized = normalizeProductList(response)
+      setProducts(normalized.products)
+      setMeta(normalized.meta)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load products')
@@ -89,18 +119,8 @@ export function useProduct(id: number) {
       setLoading(true)
       setError(null)
       const response = await productService.getById(id)
-      // Handle nested response structure
-      if (response.data) {
-        if (response.data.data && typeof response.data.data === 'object' && !Array.isArray(response.data.data)) {
-          setProduct(response.data.data)
-        } else if (typeof response.data === 'object' && !Array.isArray(response.data)) {
-          setProduct(response.data)
-        } else {
-          setProduct(null)
-        }
-      } else {
-        setProduct(null)
-      }
+      const normalized = normalizeProduct(response)
+      setProduct(normalized)
     } catch (err) {
       setError(err as Error)
       toast.error('Failed to load product')

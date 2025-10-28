@@ -14,6 +14,6 @@ export type AuthValuesType = {
   user: User | null
   setLoading: (value: boolean) => void
   setUser: (value: User | null) => void
-  permissions: PermissionGroups[]
-  setPermissions: (value: PermissionGroups[]) => void
+  permissions: PermissionGroups
+  setPermissions: (value: PermissionGroups) => void
 }
