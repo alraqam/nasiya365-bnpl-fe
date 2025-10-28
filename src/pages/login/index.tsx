@@ -122,9 +122,13 @@ const LoginPage = () => {
         company_schema
       })
 
-      if ('success' in res && !res.success) {
+      console.log('Login response:', res)
+      
+      if (res.status === false) {
+        console.log('Login failed')
+        toast.error(res.message || t['login-error'] || 'Invalid credentials')
+        
         if (!res.errors) {
-          toast.error(t['login-error'] || 'Something went wrong')
           return
         }
 
@@ -148,6 +152,7 @@ const LoginPage = () => {
           })
         }
       } else if (res.status && res.data) {
+        console.log('Login successful')
         auth.setUser(res.data.employee)
         const permissionGroups = convertToPermissionGroups(res.data.employee.permissions)
         storage.setJSON(STORAGE_KEYS.permissions, permissionGroups)
@@ -156,11 +161,30 @@ const LoginPage = () => {
         storage.setItem(STORAGE_KEYS.user_type, 'tenant')
         // Store tenant ID from login form for API requests
         storage.setItem(STORAGE_KEYS.tenant_id, company_schema)
-        router.push('/dashboard')
+        
+        console.log('Showing success toast')
+        toast.success(t['successfully-logged-in'] || 'Successfully logged in', {
+          duration: 2000,
+          position: 'top-center'
+        })
+        
+        setTimeout(() => {
+          console.log('Redirecting to dashboard')
+          router.push('/dashboard')
+        }, 2000)
+      } else {
+        console.log('Unexpected response format:', res)
       }
     } catch (error: any) {
+      console.log('Error caught:', error)
+      console.log('Error properties:', Object.keys(error))
+      console.log('Error status:', error.status)
+      
       const err = error as ErrorResponse<FormData>
 
+      // Show toast for any error
+      toast.error(t['invalid-credentials'] || error.message || 'Invalid credentials')
+      
       if (err.errors) {
         Object.entries(err.errors).forEach(([key, value]) => {
           value.forEach((msg: string) => {
@@ -172,8 +196,8 @@ const LoginPage = () => {
         })
       }
 
-      if (typeof err.status === 'number') {
-        if (err.status === 401) {
+      if (typeof error.status === 'number') {
+        if (error.status === 401) {
           setError('phone', {
             type: 'manual',
             message: error.message
@@ -247,7 +271,7 @@ const LoginPage = () => {
                       fullWidth
                       value={value}
                       onBlur={onBlur}
-                      label='Company Subdomain'
+                      label={t['company-name'] || 'Company Name'}
                       onChange={onChange}
                       id='auth-login-v2-subdomain'
                       error={Boolean(errors.company_schema)}
