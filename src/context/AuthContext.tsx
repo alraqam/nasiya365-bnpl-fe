@@ -45,12 +45,25 @@ const AuthProvider = ({ children }: Props) => {
 
       if (userType === 'tenant') {
         const tenantId = storage.getItem(STORAGE_KEYS.tenant_id)
-        const response = await api<{ data: TenantEmployee }>('/api/employee/me', {
+        const response = await api<{ data: TenantEmployee & { permissions?: Permission[]; permission_groups?: PermissionGroups[] } }>('/api/employee/me', {
           headers: {
             'X-Tenant-ID': tenantId || 'demo'
           }
         })
         setUser(response.data)
+        
+        // Extract and save permissions - prefer permission_groups over permissions
+        let permissionGroups: PermissionGroups = {}
+        if (response.data.permission_groups && Array.isArray(response.data.permission_groups) && response.data.permission_groups.length > 0) {
+          permissionGroups = mergePermissionGroups(response.data.permission_groups)
+        } else if (response.data.permissions && Array.isArray(response.data.permissions)) {
+          permissionGroups = convertToPermissionGroups(response.data.permissions)
+        }
+        
+        if (Object.keys(permissionGroups).length > 0) {
+          setPermissions(permissionGroups)
+          storage.setJSON(STORAGE_KEYS.permissions, permissionGroups)
+        }
       }
     } catch (error) {
       logger.error('Failed to fetch user:', error)
@@ -103,10 +116,15 @@ const AuthProvider = ({ children }: Props) => {
     if (token && user === null && userType) {
       fetchUser()
     }
+    // Note: We don't reload permissions here to avoid overwriting permissions
+    // that were just set during login or user fetch
+  }, [token, user, fetchUser, userType])
 
-    const cachedPermissions = storage.getJSON<PermissionGroups | Permission[] | PermissionGroups[]>(STORAGE_KEYS.permissions)
-    setPermissions(normalizePermissions(cachedPermissions))
-  }, [token, user, fetchUser])
+  // Wrapper function that saves permissions to storage
+  const setPermissionsWithStorage = useCallback((value: PermissionGroups) => {
+    setPermissions(value)
+    storage.setJSON(STORAGE_KEYS.permissions, value)
+  }, [])
 
   const values = {
     user,
@@ -114,7 +132,7 @@ const AuthProvider = ({ children }: Props) => {
     setUser,
     setLoading,
     permissions,
-    setPermissions
+    setPermissions: setPermissionsWithStorage
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

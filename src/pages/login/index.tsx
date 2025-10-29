@@ -39,7 +39,7 @@ import { api } from 'src/configs/api'
 import toast from 'react-hot-toast'
 import { STORAGE_KEYS } from 'src/@core/utils/constants'
 import { useRouter } from 'next/router'
-import { convertToPermissionGroups } from 'src/@core/utils/permission-checker'
+import { convertToPermissionGroups, mergePermissionGroups, PermissionGroups } from 'src/@core/utils/permission-checker'
 import { ErrorResponse } from 'src/@core/types/response'
 import { storage } from 'src/@core/utils/storage'
 import { authService } from 'src/services/authService'
@@ -122,11 +122,8 @@ const LoginPage = () => {
         company_schema
       })
 
-      console.log('Login response:', res)
-      
       if (res.status === false) {
-        console.log('Login failed')
-        toast.error(res.message || t['login-error'] || 'Invalid credentials')
+        toast.error(res.message || t['invalid-credentials'] || 'Invalid credentials')
         
         if (!res.errors) {
           return
@@ -152,9 +149,24 @@ const LoginPage = () => {
           })
         }
       } else if (res.status && res.data) {
-        console.log('Login successful')
         auth.setUser(res.data.employee)
-        const permissionGroups = convertToPermissionGroups(res.data.employee.permissions)
+        
+        // Use permission_groups if available, otherwise convert permissions array
+        let permissionGroups: PermissionGroups = {}
+        
+        if (res.data.employee.permission_groups) {
+          if (Array.isArray(res.data.employee.permission_groups) && res.data.employee.permission_groups.length > 0) {
+            permissionGroups = mergePermissionGroups(res.data.employee.permission_groups)
+          } else if (typeof res.data.employee.permission_groups === 'object' && !Array.isArray(res.data.employee.permission_groups)) {
+            // Already a PermissionGroups object
+            permissionGroups = res.data.employee.permission_groups
+          }
+        }
+        
+        if (Object.keys(permissionGroups).length === 0 && res.data.employee.permissions && Array.isArray(res.data.employee.permissions)) {
+          permissionGroups = convertToPermissionGroups(res.data.employee.permissions)
+        }
+        
         storage.setJSON(STORAGE_KEYS.permissions, permissionGroups)
         auth.setPermissions(permissionGroups)
         storage.setItem(STORAGE_KEYS.token, res.data.token)
@@ -162,23 +174,16 @@ const LoginPage = () => {
         // Store tenant ID from login form for API requests
         storage.setItem(STORAGE_KEYS.tenant_id, company_schema)
         
-        console.log('Showing success toast')
         toast.success(t['successfully-logged-in'] || 'Successfully logged in', {
           duration: 2000,
           position: 'top-center'
         })
         
         setTimeout(() => {
-          console.log('Redirecting to dashboard')
           router.push('/dashboard')
         }, 2000)
-      } else {
-        console.log('Unexpected response format:', res)
       }
     } catch (error: any) {
-      console.log('Error caught:', error)
-      console.log('Error properties:', Object.keys(error))
-      console.log('Error status:', error.status)
       
       const err = error as ErrorResponse<FormData>
 
