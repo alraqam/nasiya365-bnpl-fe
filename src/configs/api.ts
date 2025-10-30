@@ -84,6 +84,7 @@ class ApiClient {
     // Set default headers
     requestOptions.headers = {
       'Content-Type': 'application/json',
+      'Accept-Language': (storage.getItem(STORAGE_KEYS.lang) as string) || 'uz',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(tenantId ? { 'X-Tenant-ID': tenantId } : {}),
       ...(requestOptions.headers || {})
