@@ -3,6 +3,7 @@ import { parseApiError, NetworkError } from 'src/@core/utils/errors'
 import { storage } from 'src/@core/utils/storage'
 import { logger } from 'src/@core/utils/logger'
 import env from './env'
+import toast from 'react-hot-toast'
 
 const BASE_URL = env.baseUrl
 
@@ -128,6 +129,24 @@ class ApiClient {
     }
 
     // Handle response
+    const method = (requestOptions.method || 'GET').toString().toUpperCase()
+
+    // Header helpers (case-insensitive access for Fetch headers init)
+    const getHeader = (key: string): string | undefined => {
+      const headers = requestOptions.headers as Record<string, string> | Headers | undefined
+      if (!headers) return undefined
+      if (headers instanceof Headers) {
+        return headers.get(key) ?? undefined
+      }
+      const found = Object.keys(headers).find(k => k.toLowerCase() === key.toLowerCase())
+      return found ? (headers as Record<string, string>)[found] : undefined
+    }
+
+    const toastDisabled = (getHeader('x-toast-disable') || '').toLowerCase() === 'true'
+    const toastSuccessEnable = (getHeader('x-toast-success-enable') || '').toLowerCase() === 'true'
+    const toastSuccessMessage = getHeader('x-toast-success')
+    const toastErrorMessageOverride = getHeader('x-toast-error')
+
     if (!response.ok) {
       const errorBody = await response.json().catch(() => ({
         message: `HTTP ${response.status}: ${response.statusText}`
@@ -139,7 +158,54 @@ class ApiClient {
       })
 
       logger.error('API Error:', error)
+
+      // Global error toast (unless disabled)
+      if (!toastDisabled) {
+        const messageFromApi = (error as any)?.message || (errorBody as any)?.message || `HTTP ${response.status}`
+        // If validation errors exist, append field messages
+        const validation = (error as any)?.errors
+        let composed = toastErrorMessageOverride || messageFromApi
+        if (validation && typeof validation === 'object') {
+          const lines: string[] = []
+          for (const [field, messages] of Object.entries(validation as Record<string, any>)) {
+            if (Array.isArray(messages) && messages.length > 0) {
+              lines.push(`${field}: ${messages[0]}`)
+            }
+          }
+          if (lines.length > 0) {
+            composed = `${messageFromApi}\n${lines.join('\n')}`
+          }
+        }
+        toast.error(composed)
+      }
+
       throw error
+    }
+
+    // Success handling
+    const isMutating = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
+
+    if (isMutating && !toastDisabled) {
+      // Attempt to parse response to get message for toast, but do not consume the stream twice
+      // We will clone and read once for message, then return the parsed JSON below
+      const cloned = response.clone()
+      let successPayload: any = null
+      try {
+        successPayload = await cloned.json()
+      } catch (e) {
+        // ignore parse error for toast purposes
+      }
+
+      const defaultMessage = 'Operation successful'
+      const messageFromApi =
+        (successPayload && (successPayload.message || successPayload?.data?.message)) || undefined
+
+      const messageToShow = toastSuccessMessage || messageFromApi || defaultMessage
+
+      // Show success toast by default for mutating methods, or when explicitly enabled
+      if (toastSuccessEnable || !toastSuccessMessage || messageToShow) {
+        toast.success(messageToShow)
+      }
     }
 
     return response.json() as Promise<T>
