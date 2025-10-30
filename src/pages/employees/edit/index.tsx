@@ -35,7 +35,7 @@ const CreateEmployee = () => {
 
   useEffect(() => {
     setForm({
-      phone1: data?.data.phone || '',
+      phone: data?.data.phone || '',
       phone2: '',
       email: data?.data.email || '',
       password: '',
@@ -69,7 +69,8 @@ const CreateEmployee = () => {
         method: 'PUT',
         body: JSON.stringify({
           ...form,
-          phone: form.phone1.replace(/\D/g, ''),
+          phone: form.phone ? form.phone.replace(/\D/g, '') : '',
+          phone2: form.phone2 ? form.phone2.replace(/\D/g, '') : '',
           date_of_issue: dateToString(form.date_of_issue),
           date_of_birth: dateToString(form.date_of_birth)
         })
@@ -107,7 +108,7 @@ const CreateEmployee = () => {
             <Typography>
               {t.forms.employees.phone} <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <InputMask mask='99 999 99 99' value={form.phone1} onChange={handleChange('phone1')}>
+            <InputMask mask='99 999 99 99' value={form.phone} onChange={handleChange('phone')}>
               {(inputProps: any) => (
                 <CustomTextField
                   {...inputProps}
@@ -147,7 +148,7 @@ const CreateEmployee = () => {
             <CustomTextField select fullWidth value={form.role_id} onChange={handleChange('role_id')}>
               {(roles?.data || []).map(role => (
                 <MenuItem key={role.id} value={role.id}>
-                  {role.label}
+                  {role.name || role.label}
                 </MenuItem>
               ))}
             </CustomTextField>

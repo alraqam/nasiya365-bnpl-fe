@@ -274,10 +274,10 @@ export function useDeleteBranch() {
       setLoading(true)
       setError(null)
       await branchService.delete(id)
-      toast.success('Branch deleted successfully')
+      // Toast is handled by global API interceptor
     } catch (err) {
       setError(err as Error)
-      toast.error('Failed to delete branch')
+      // Toast is handled by global API interceptor
       throw err
     } finally {
       setLoading(false)

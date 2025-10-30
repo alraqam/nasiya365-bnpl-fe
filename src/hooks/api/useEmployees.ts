@@ -182,10 +182,10 @@ export function useDeleteEmployee() {
       setLoading(true)
       setError(null)
       await employeeService.delete(id)
-      toast.success('Employee deleted successfully')
+      // Toast is handled by global API interceptor
     } catch (err) {
       setError(err as Error)
-      toast.error('Failed to delete employee')
+      // Toast is handled by global API interceptor
       throw err
     } finally {
       setLoading(false)

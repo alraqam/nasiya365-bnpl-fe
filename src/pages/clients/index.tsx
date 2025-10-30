@@ -7,6 +7,7 @@ import {
   DialogTitle,
   Typography,
   InputAdornment,
+  DialogActions,
   styled
 } from '@mui/material'
 import React, { useState } from 'react'
@@ -192,7 +193,7 @@ const Clients = () => {
             </Link>
             <Button
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
-              onClick={() => handleDelete(id)}
+              onClick={() => handleDeleteClick(id)}
               disabled={deleting}
             >
               <Icon
@@ -234,16 +235,32 @@ const Clients = () => {
 
   const { clients, loading, refetch, meta } = useClients({ page: paginationModel.page, per_page: paginationModel.pageSize })
   const { deleteClient, loading: deleting } = useDeleteClient()
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
 
   const data = { data: clients }
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteClient(id)
-      refetch() // Refresh the list after deletion
-    } catch (error) {
-      // Error is already handled by the hook
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (deleteId !== null) {
+      try {
+        await deleteClient(deleteId)
+        refetch() // Refresh the list after deletion
+        setDeleteConfirmOpen(false)
+        setDeleteId(null)
+      } catch (error) {
+        // Error is already handled by the hook
+      }
     }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmOpen(false)
+    setDeleteId(null)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -442,6 +459,28 @@ const Clients = () => {
             </Box>
           </Form>
         </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>
+          <Typography variant='h4' align='center'>
+            {t.delete || 'Delete'}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t['confirm-delete'] || 'Are you sure you want to delete this client? This action cannot be undone.'}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' onClick={handleDeleteCancel}>
+            {t.cancel || 'Cancel'}
+          </Button>
+          <Button variant='contained' color='error' onClick={handleDeleteConfirm} disabled={deleting}>
+            {t.delete || 'Delete'}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )

@@ -226,4 +226,56 @@ export function useInventorySummary() {
   return { summary, loading, error }
 }
 
+/**
+ * Hook to create a new product
+ */
+export function useCreateProduct() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const createProduct = async (data: CreateProductRequest) => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await productService.create(data)
+      toast.success('Product created successfully')
+      return response.data
+    } catch (err) {
+      setError(err as Error)
+      toast.error('Failed to create product')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return { createProduct, loading, error }
+}
+
+/**
+ * Hook to update a product
+ */
+export function useUpdateProduct() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const updateProduct = async (id: number, data: UpdateProductRequest) => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await productService.update(id, data)
+      toast.success('Product updated successfully')
+      return response.data
+    } catch (err) {
+      setError(err as Error)
+      toast.error('Failed to update product')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return { updateProduct, loading, error }
+}
+
 

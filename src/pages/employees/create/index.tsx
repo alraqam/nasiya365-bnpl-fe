@@ -18,7 +18,7 @@ import CollapsibleSection from 'src/@core/components/CollapsibleSection'
 import { ApiResponse } from 'src/@core/types/api'
 
 export const initialEmployeeForm = {
-  phone1: '',
+  phone: '',
   phone2: '',
   email: '',
   password: '',
@@ -37,7 +37,7 @@ export const initialEmployeeForm = {
 }
 
 export const requiredEmployeeFormFields: (keyof typeof initialEmployeeForm)[] = [
-  'phone1',
+  'phone',
   'surname',
   'name',
   'passport',
@@ -51,10 +51,20 @@ const CreateEmployee = () => {
   const [form, setForm] = useState(initialEmployeeForm)
   const [loading, setLoading] = useState(false)
 
-  const { data: roles } = useFetch<ApiResponse<IRole[]>>('/api/tenant-roles')
+  const { data: rolesData, loading: rolesLoading, error: rolesError } = useFetch<any>('/api/tenant-roles')
+  
+  // Handle both ApiResponse and Response types
+  const roles = rolesData?.data 
+    ? (Array.isArray(rolesData.data) ? rolesData.data : (rolesData.data?.data || []))
+    : (Array.isArray(rolesData) ? rolesData : [])
 
   const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({ ...prev, [field]: event.target.value }))
+    const value = event.target.value
+    if (field === 'role_id') {
+      setForm(prev => ({ ...prev, [field]: value === '' ? null : Number(value) }))
+    } else {
+      setForm(prev => ({ ...prev, [field]: value }))
+    }
   }
 
   const handleDateChange = (field: keyof typeof form) => (date: Date | null) => {
@@ -72,7 +82,7 @@ const CreateEmployee = () => {
         method: 'POST',
         body: JSON.stringify({
           ...form,
-          phone1: form.phone1 ? form.phone1.replace(/\D/g, '') : '',
+          phone: form.phone ? form.phone.replace(/\D/g, '') : '',
           phone2: form.phone2 ? form.phone2.replace(/\D/g, '') : '',
           date_of_issue: dateToString(form.date_of_issue!),
           date_of_birth: dateToString(form.date_of_birth!)
@@ -111,7 +121,7 @@ const CreateEmployee = () => {
             <Typography>
               {t.forms.employees.phone} <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <InputMask mask='99 999 99 99' value={form.phone1} onChange={handleChange('phone1')}>
+            <InputMask mask='99 999 99 99' value={form.phone} onChange={handleChange('phone')}>
               {(inputProps: any) => (
                 <CustomTextField
                   {...inputProps}
@@ -148,10 +158,16 @@ const CreateEmployee = () => {
 
           <Grid item xs={12} md={6}>
             <Typography>{t.forms.employees['role']}</Typography>
-            <CustomTextField select fullWidth value={form.role_id} onChange={handleChange('role_id')}>
-              {(roles?.data || []).map(role => (
+            <CustomTextField 
+              select 
+              fullWidth 
+              value={form.role_id || ''} 
+              onChange={handleChange('role_id')}
+              disabled={rolesLoading || rolesError || !Array.isArray(roles) || roles.length === 0}
+            >
+              {Array.isArray(roles) && roles.map((role: IRole) => (
                 <MenuItem key={role.id} value={role.id}>
-                  {role.label}
+                  {role.name || role.label}
                 </MenuItem>
               ))}
             </CustomTextField>

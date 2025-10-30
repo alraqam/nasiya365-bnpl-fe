@@ -183,10 +183,10 @@ export function useDeleteClient() {
       setLoading(true)
       setError(null)
       await clientService.delete(id)
-      toast.success('Client deleted successfully')
+      // Toast is handled by global API interceptor
     } catch (err) {
       setError(err as Error)
-      toast.error('Failed to delete client')
+      // Toast is handled by global API interceptor
       throw err
     } finally {
       setLoading(false)

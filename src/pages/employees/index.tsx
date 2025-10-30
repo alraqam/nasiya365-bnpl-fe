@@ -7,7 +7,8 @@ import {
   DialogTitle,
   Typography,
   InputAdornment,
-  MenuItem
+  MenuItem,
+  DialogActions
 } from '@mui/material'
 import React, { useState } from 'react'
 import Title from 'src/@core/components/title'
@@ -48,6 +49,8 @@ const Employees = () => {
     ...searchParams
   })
   const { deleteEmployee, loading: deleting } = useDeleteEmployee()
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
 
   const initialColumns: GridColDef[] = [
     { field: 'name', headerName: 'F.I.O', minWidth: 200, flex: 1 },
@@ -97,7 +100,7 @@ const Employees = () => {
             </Link>
             <Button
               sx={{ padding: '4px', width: 'fit-content', '&:hover': { backgroundColor: 'transparent' } }}
-              onClick={() => handleDelete(id)}
+              onClick={() => handleDeleteClick(id)}
               disabled={deleting}
             >
               <Icon
@@ -155,13 +158,27 @@ const Employees = () => {
     }
   }
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteEmployee(id)
-      refetch()
-    } catch (error) {
-      // Error is already handled by the hook
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (deleteId !== null) {
+      try {
+        await deleteEmployee(deleteId)
+        refetch()
+        setDeleteConfirmOpen(false)
+        setDeleteId(null)
+      } catch (error) {
+        // Error is already handled by the hook
+      }
     }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmOpen(false)
+    setDeleteId(null)
   }
 
   return (
@@ -317,6 +334,28 @@ const Employees = () => {
             </Box>
           </Form>
         </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>
+          <Typography variant='h4' align='center'>
+            {t.delete || 'Delete'}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t['confirm-delete'] || 'Are you sure you want to delete this employee? This action cannot be undone.'}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' onClick={handleDeleteCancel}>
+            {t.cancel || 'Cancel'}
+          </Button>
+          <Button variant='contained' color='error' onClick={handleDeleteConfirm} disabled={deleting}>
+            {t.delete || 'Delete'}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )
