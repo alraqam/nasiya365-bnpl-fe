@@ -163,7 +163,7 @@ const CreateEmployee = () => {
               fullWidth 
               value={form.role_id || ''} 
               onChange={handleChange('role_id')}
-              disabled={rolesLoading || rolesError || !Array.isArray(roles) || roles.length === 0}
+              disabled={rolesLoading || !!rolesError || !Array.isArray(roles) || roles.length === 0}
             >
               {Array.isArray(roles) && roles.map((role: IRole) => (
                 <MenuItem key={role.id} value={role.id}>

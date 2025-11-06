@@ -11,7 +11,7 @@ export type AppLang = (typeof LANGS)[number]
 interface LanguageProviderProps {
   lang: AppLang
   changeLang: (lang: AppLang) => void
-  t: typeof uz | typeof ru
+  t: (typeof uz | typeof ru) & Record<string, any>
   // t: typeof uz
 }
 interface Props {
@@ -25,7 +25,7 @@ const translations = { uz, ru }
 
 export const LanguageProvider = ({ children }: Props) => {
   const [lang, setLang] = useState<AppLang>('uz')
-  const [t, setT] = useState<typeof uz | typeof ru>(translations[lang])
+  const [t, setT] = useState<(typeof uz | typeof ru) & Record<string, any>>(translations[lang])
   // const [t, setT] = useState<typeof uz>(uz)
 
   const changeLang = (newLang: AppLang) => {
