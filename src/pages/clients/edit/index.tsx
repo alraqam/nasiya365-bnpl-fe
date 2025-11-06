@@ -70,6 +70,7 @@ const initialFormState = {
   workplace: '',
   profession: '',
   passportSeries: '',
+  pinfl: '',
   passportIssuer: '',
   passportIssueDate: null as Date | null,
   birthDate: null as Date | null,
@@ -83,7 +84,7 @@ const initialFormState = {
   passportFile: null as File | null
 }
 
-const requiredFields: (keyof typeof initialFormState)[] = ['name', 'last_name']
+const requiredFields: (keyof typeof initialFormState)[] = ['name', 'last_name', 'passportSeries', 'pinfl']
 
 const EditClient = () => {
   const { t } = useLang()
@@ -104,12 +105,13 @@ const EditClient = () => {
       last_name: data.last_name || '',
       name: data.first_name || '',
       patronymic: data.middle_name || '',
-      phones: Array.isArray(data.phone) ? data.phone : (data.phone ? [data.phone] : ['']),
+      phones: Array.isArray(data.phones) ? data.phones : (data.phones ? [data.phones] : ['']),
       email: data.email || '',
       gender: data.gender?.toString() || '',
       workplace: data.workplace || '',
       profession: data.specialization || '',
       passportSeries: data.passport || '',
+      pinfl: data.pinfl || '',
       passportIssuer: data.place_of_issue || '',
       passportIssueDate: data.date_of_issue ? new Date(data.date_of_issue) : null,
       birthDate: data.date_of_birth ? new Date(data.date_of_birth) : null,
@@ -327,12 +329,13 @@ const EditClient = () => {
   const onSubmit = async () => {
     try {
       const res = await api(`/api/updateClient/${id}`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
           first_name: form.name,
           middle_name: form.patronymic,
           last_name: form.last_name,
           passport: form.passportSeries,
+          pinfl: form.pinfl,
           passport_status: null,
           place_of_issue: form.passportIssuer,
           date_of_issue: form.passportIssueDate,
@@ -406,6 +409,19 @@ const EditClient = () => {
                       fullWidth
                       name='passportSeries'
                       value={form.passportSeries}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+
+                  {/* PINFL */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.pinfl || 'PINFL'} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='pinfl'
+                      value={form.pinfl}
                       onChange={handleChange}
                     />
                   </Grid>

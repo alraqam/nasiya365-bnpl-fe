@@ -7,8 +7,9 @@ export interface Client {
   id: number
   first_name: string
   last_name: string
-  phone: string
+  phones: string
   passport: string
+  pinfl: string
   address: string
   created_at: string
   updated_at: string
@@ -30,8 +31,9 @@ export interface Client {
 export interface CreateClientRequest {
   first_name: string
   last_name: string
-  phone: string
+  phones: string
   passport: string
+  pinfl: string
   address: string
   email?: string
   date_of_birth?: string
@@ -54,5 +56,5 @@ export interface ClientQueryParams {
   search?: string
   status?: string
   passport?: string
-  phone?: string
+  phones?: string
 }

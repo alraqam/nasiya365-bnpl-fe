@@ -44,7 +44,7 @@ export function useClients(params?: ClientQueryParams) {
     } finally {
       setLoading(false)
     }
-  }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phone])
+  }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phones])
 
   useEffect(() => {
     let cancelled = false
@@ -60,7 +60,7 @@ export function useClients(params?: ClientQueryParams) {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phone])
+  }, [params?.page, params?.per_page, params?.search, params?.status, params?.passport, params?.phones])
 
   return { clients, loading, error, meta, refetch: fetchClients }
 }

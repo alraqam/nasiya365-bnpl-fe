@@ -67,6 +67,7 @@ const initialFormState = {
   workplace: '',
   profession: '',
   passportSeries: '',
+  pinfl: '',
   passportIssuer: '',
   passportIssueDate: null as Date | null,
   birthDate: null as Date | null,
@@ -84,6 +85,7 @@ const requiredFields: (keyof typeof initialFormState)[] = [
   'name',
   'surname',
   'passportSeries',
+  'pinfl',
   'birthPlace',
   'birthDate',
   'registeredAddress',
@@ -301,6 +303,7 @@ const CreateClient = () => {
           middle_name: form.patronymic,
           surname: form.surname,
           passport: form.passportSeries,
+          pinfl: form.pinfl,
           passport_status: null,
           place_of_issue: form.passportIssuer,
           date_of_issue: form.passportIssueDate,
@@ -376,6 +379,19 @@ const CreateClient = () => {
                       fullWidth
                       name='passportSeries'
                       value={form.passportSeries}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+
+                  {/* PINFL */}
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Typography variant='body1'>
+                      {t.forms.client.pinfl || 'PINFL'} <span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                    <CustomTextField
+                      fullWidth
+                      name='pinfl'
+                      value={form.pinfl}
                       onChange={handleChange}
                     />
                   </Grid>

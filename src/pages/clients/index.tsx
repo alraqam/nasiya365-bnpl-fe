@@ -153,7 +153,7 @@ const Clients = () => {
         return formatDate(params.value)
       }
     },
-    { field: 'phone', headerName: t.forms.client.phone, flex: 1, minWidth: 150 },
+    { field: 'phones', headerName: t.forms.client.phone, flex: 1, minWidth: 150 },
     {
       field: 'status',
       headerName: t.forms.client.status,
@@ -230,7 +230,7 @@ const Clients = () => {
   const [filters, setFilters] = useState({
     name: '',
     passport: '',
-    phone: ''
+    phones: ''
   })
 
   const { clients, loading, refetch, meta } = useClients({ page: paginationModel.page, per_page: paginationModel.pageSize })
@@ -430,7 +430,7 @@ const Clients = () => {
             </Box>
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography>{t.forms.client.phone}</Typography>
-              <InputMask mask='99 999 99 99' name='phone' value={filters.phone} onChange={handleChange}>
+              <InputMask mask='99 999 99 99' name='phones' value={filters.phones} onChange={handleChange}>
                 {(inputProps: any) => (
                   <CustomTextField
                     {...inputProps}

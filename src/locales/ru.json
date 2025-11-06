@@ -183,6 +183,7 @@
             "passport": "Паспорт",
             "client": "Клиент",
             "passportSeries": "Серия паспорта",
+            "pinfl": "ПИНФЛ",
             "passportIssuer": "Кем выдан",
             "passportIssueDate": "Когда выдан",
             "birthday": "День рождения",

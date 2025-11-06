@@ -19,7 +19,7 @@ export const clientService = {
     if (params?.search) query.append('search', params.search)
     if (params?.status) query.append('status', params.status)
     if (params?.passport) query.append('passport', params.passport)
-    if (params?.phone) query.append('phone', params.phone)
+    if (params?.phones) query.append('phones', params.phones)
 
     const queryString = query.toString()
     return api<PaginatedResponse<Client>>(`/api/clients${queryString ? '?' + queryString : ''}`)
